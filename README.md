@@ -3,11 +3,11 @@ By Dongmei Chen (dchen@lcog.org)
 
 June 2020
 
-This is a repository to track the data organization for the [Central Lane Metropolitan Planning Organization Data Portal] (https://www.thempo.org/887/Data). The process is coded in R. The repo folders are organized by data categories: crash, transit, traffic count, population, and commuter. Each folder includes a README.md to explain the data sources and data processing and R scripts to show the data processing. More information about datasets, dashboards and projects is shared on the Wiki pages.
+This is a repository to track the data organization for the [Central Lane Metropolitan Planning Organization Data Portal](https://www.thempo.org/887/Data). The process is coded in R. The repo folders are organized by data categories: crash, transit, traffic count, population, and commuter. Each folder includes a README.md to explain the data sources and data processing and R scripts to show the data processing. More information about datasets, dashboards and projects is shared on the Wiki pages.
 
 ## Crash Data
 
-The CrashData folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.thempo.org/912/Transportation-Safety-Emphasis-Areas) viz, and *US_FARS.r* to organize [VMT] (https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS] (https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the 
+The CrashData folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.thempo.org/912/Transportation-Safety-Emphasis-Areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the 
 
 ## Transit Data
 
