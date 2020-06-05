@@ -7,7 +7,7 @@ This is a repository to track the data organization for the [Central Lane Metrop
 
 ## Crash Data
 
-The CrashData folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.thempo.org/912/Transportation-Safety-Emphasis-Areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the 
+The CrashData folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.thempo.org/912/Transportation-Safety-Emphasis-Areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the [FARS Data](https://www.lcog.org/920/FARS-Data) viz.
 
 ## Transit Data
 
