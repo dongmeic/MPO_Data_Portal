@@ -1,5 +1,52 @@
 # Explanations
 
+This dashboad maintenance requires five data tables downloaded from the [US Census Bureau](https://data.census.gov/cedsci/). The work is a continued effort from the former LCOG GIS staff Bill Clingman. The two dashboards including Commute Share and Commute Length are updated annually. To updated the dashboards, the script requires three input files: ModeShare_ALL_Years.csv (from B08301), ModeByVehiclesAvailable_AllYears.csv (from B08141), and ModeByPovertyStatus_AllYears.csv (from B08122).   
+
 ## Data Sources
 
+1. [Tables B08301 Means Of Transportation To Work](https://data.census.gov/cedsci/table?q=B08301&tid=ACSDT5Y2018.B08301&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
+
+The script uses the data columns:
+
+B08301_001E Total;
+
+B08301_003E Car, truck, or van - Drove alone;
+
+B08301_004E Car, truck, or van - Carpooled;
+
+B08301_010E Public transportation (excluding taxicab);
+
+B08301_016E Taxicab;
+
+B08301_017E Motorcycle;
+
+B08301_018E Bicycle;
+
+B08301_019E Walked;
+
+B08301_020E Other means;
+
+B08301_021E Worked at home.
+
+2. [B08302 Time Leaving Home To Go To Work](https://data.census.gov/cedsci/table?q=B08302&tid=ACSDT5Y2018.B08302&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
+
+3. [B08303 Travel Time To Work](https://data.census.gov/cedsci/table?tid=ACSDT5Y2018.B08303&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
+
+4. [B08122 Means Of Transportation To Work by Poverty Status](https://data.census.gov/cedsci/table?tid=ACSDT5Y2018.B08122&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
+
+5. [B08141 Means Of Transportation To Work by Vehicles Available](https://data.census.gov/cedsci/table?tid=ACSDT5Y2018.B08141&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
+
+The links above are different only on the table ID. Below descibes how to get the link: 
+1. https://data.census.gov/cedsci/advanced;
+
+2. Geography --> Select "Principal City" --> Type in Eugene, Coburg and Springfield;
+
+3. Check "Show Summary Levels" --> Select "400 - Urban Area" --> Type in Eugene, Salem;
+
+4. Hit "Search" after the geographies are all selected;
+
+5. View all table, scroll down and choose the table ID.
+
 ## Functions
+Four functions are applied to read and reorganize the tables to get the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric; *get.data.by.mode* to reorganize the table B08141 and calculate mode share percent; *add.colon* to add colon to the time format from the tables B08302 and B08303; *get.time.data* to reorganize the tables B08302 and B08303 and calculate share percent.   
+
