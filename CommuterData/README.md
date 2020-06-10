@@ -6,28 +6,6 @@ This dashboad maintenance requires five data tables downloaded from the [US Cens
 
 1. [Tables B08301 Means Of Transportation To Work](https://data.census.gov/cedsci/table?q=B08301&tid=ACSDT5Y2018.B08301&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
 
-The script uses the data columns:
-
-B08301_001E Total;
-
-B08301_003E Car, truck, or van - Drove alone;
-
-B08301_004E Car, truck, or van - Carpooled;
-
-B08301_010E Public transportation (excluding taxicab);
-
-B08301_016E Taxicab;
-
-B08301_017E Motorcycle;
-
-B08301_018E Bicycle;
-
-B08301_019E Walked;
-
-B08301_020E Other means;
-
-B08301_021E Worked at home.
-
 2. [B08302 Time Leaving Home To Go To Work](https://data.census.gov/cedsci/table?q=B08302&tid=ACSDT5Y2018.B08302&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
 
 3. [B08303 Travel Time To Work](https://data.census.gov/cedsci/table?tid=ACSDT5Y2018.B08303&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
@@ -37,7 +15,7 @@ B08301_021E Worked at home.
 5. [B08141 Means Of Transportation To Work by Vehicles Available](https://data.census.gov/cedsci/table?tid=ACSDT5Y2018.B08141&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
 
 The links above are different only on the table ID. Below descibes how to get the link: 
-1. https://data.census.gov/cedsci/advanced;
+1. Vist [the website](https://data.census.gov/cedsci/advanced);
 
 2. Geography --> Select "Principal City" --> Type in Eugene, Coburg and Springfield;
 
