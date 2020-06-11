@@ -7,22 +7,22 @@ This is a repository to track the data organization for the [Central Lane Metrop
 
 ## Crash Data
 
-The **CrashData** folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.thempo.org/912/Transportation-Safety-Emphasis-Areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the [FARS Data](https://www.lcog.org/920/FARS-Data) viz.
+The [**CrashData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CrashData) folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.thempo.org/912/Transportation-Safety-Emphasis-Areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the [FARS Data](https://www.lcog.org/920/FARS-Data) viz.
 
 ## Transit Data
 
-The **TransitData** folder includes scripts *LTDTransit.r* to organize LTD passenger counts and merge with stop coordinates for the [Transit Ridership Data](https://www.thempo.org/903/Transit-Ridership-Data) viz, and *Bikes_on_Buses.r* to organize LTD bike counts and merge with stop coordinates for the [Bikes on Buses](https://www.thempo.org/906/Bikes-on-Buses) viz.  
+The [**TransitData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/TransitData) folder includes scripts *LTDTransit.r* to organize LTD passenger counts and merge with stop coordinates for the [Transit Ridership Data](https://www.thempo.org/903/Transit-Ridership-Data) viz, and *Bikes_on_Buses.r* to organize LTD bike counts and merge with stop coordinates for the [Bikes on Buses](https://www.thempo.org/906/Bikes-on-Buses) viz.  
 
 ## Traffic Count Data
 
-The **TrafficCountData** folder includes scripts *ODOT_Counts.r* and *ODOT_Counts_Functions.r* to organize ODOT counts for the [Motorized Traffic Counts](https://www.thempo.org/902/Motorized-Traffic-Counts) viz.
+The [**TrafficCountData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/TrafficCountData) folder includes scripts *ODOT_Counts.r* and *ODOT_Counts_Functions.r* to organize ODOT counts for the [Motorized Traffic Counts](https://www.thempo.org/902/Motorized-Traffic-Counts) viz.
 
 ## Population Data
 
-The **PopulationData** folder includes the script *Census_TitleVI.r* to define the variables and organize data for the [Socio-economic Data](https://www.thempo.org/958/Socio-Economic-Data) viz.
+The [**PopulationData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData) folder includes the script *Census_TitleVI.r* to define the variables and organize data for the [Socio-economic Data](https://www.thempo.org/958/Socio-Economic-Data) viz.
 
 
 ## Commuter Data
 
-The **CommuterData** folder includes the script *ModeShare.r* to organize data tables for the viz [Commute Mode Shares](https://www.thempo.org/905/Commute-Mode-Share) and [Length of Commute](https://www.thempo.org/907/Length-of-Commute). 
+The [**CommuterData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CommuterData) folder includes the script *ModeShare.r* to organize data tables for the viz [Commute Mode Shares](https://www.thempo.org/905/Commute-Mode-Share) and [Length of Commute](https://www.thempo.org/907/Length-of-Commute). 
 
