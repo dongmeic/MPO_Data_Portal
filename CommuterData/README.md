@@ -1,6 +1,6 @@
 # Explanations
 
-Three dashboards are in this data category but the [Local and Regional Commute Patterns](https://www.lcog.org/1001/Local-and-Regional-Commute-Patterns) dashboard uses raw data without further processing with scripts. This dashboad maintenance requires five data tables downloaded from the [US Census Bureau](https://data.census.gov/cedsci/). The work is a continued effort from the former LCOG GIS staff Bill Clingman. The two dashboards including Commute Share and Commute Length are updated annually. To updated the dashboards, the script requires three input files: ModeShare_ALL_Years.csv (from B08301), ModeByVehiclesAvailable_AllYears.csv (from B08141), and ModeByPovertyStatus_AllYears.csv (from B08122).   
+Three dashboards are in this data category but the [Local and Regional Commute Patterns](https://www.lcog.org/1001/Local-and-Regional-Commute-Patterns) dashboard uses raw data without further processing with scripts. This dashboad maintenance requires five data tables downloaded from the [US Census Bureau](https://data.census.gov/cedsci/). The work is a continued effort from the former LCOG GIS staff Bill Clingman. The two dashboards including [Commute Mode Share](https://www.lcog.org/905/Commute-Mode-Share) and [Commute Length](https://www.lcog.org/907/Length-of-Commute) are updated annually. To update these two dashboards, the script requires three input files: ModeShare_ALL_Years.csv (from B08301), ModeByVehiclesAvailable_AllYears.csv (from B08141), and ModeByPovertyStatus_AllYears.csv (from B08122).   
 
 ## Data Sources
 
