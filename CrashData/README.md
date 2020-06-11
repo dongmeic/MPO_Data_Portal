@@ -4,15 +4,15 @@ Crash data is used in five mapping and five crash rates dashboards listed as bel
 
 1. Crash data mapping
 
-        [Motor Vehicle Crashes](https://www.lcog.org/914/Motor-Vehicle-Crashes)
+      [Motor Vehicle Crashes](https://www.lcog.org/914/Motor-Vehicle-Crashes)
 
-        [Bicycle-Involved Crashes](https://www.lcog.org/916/Bicycle-Involved-Crashes) 
+      [Bicycle-Involved Crashes](https://www.lcog.org/916/Bicycle-Involved-Crashes) 
 
-        [Pedestrian-Involved Crashes](https://www.lcog.org/917/Pedestrian-Involved-Crashes)
+      [Pedestrian-Involved Crashes](https://www.lcog.org/917/Pedestrian-Involved-Crashes)
 
-        [Advanced User Data](https://www.lcog.org/913/Advanced-User-Data)
+      [Advanced User Data](https://www.lcog.org/913/Advanced-User-Data)
 
-        [Crash Conditions](https://www.lcog.org/938/Crash-Conditions)
+      [Crash Conditions](https://www.lcog.org/938/Crash-Conditions)
 
 2. [Population Crash Rates](https://www.lcog.org/891/Population-Crash-Rates)
 
