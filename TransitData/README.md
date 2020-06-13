@@ -8,4 +8,4 @@ Data on the counts of passengers and bikes on the buses are provided by LTD via 
 
 ## Functions
 
-A list of functions are applied to organize counts data and merge them with the stops.
+A list of functions are applied to organize counts data and merge them with the stops to have stable coordinates.
