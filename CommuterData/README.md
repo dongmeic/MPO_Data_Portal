@@ -4,7 +4,7 @@ Three dashboards are in this data category but the [Local and Regional Commute P
 
 ## Data Sources
 
-1. [Tables B08301 Means Of Transportation To Work](https://data.census.gov/cedsci/table?q=B08301&tid=ACSDT5Y2018.B08301&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
+1. [B08301 Means Of Transportation To Work](https://data.census.gov/cedsci/table?q=B08301&tid=ACSDT5Y2018.B08301&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
 
 2. [B08302 Time Leaving Home To Go To Work](https://data.census.gov/cedsci/table?q=B08302&tid=ACSDT5Y2018.B08302&g=1600000US4114400,4123850,4169600_400C100US28117,78229)
 
