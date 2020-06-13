@@ -8,4 +8,4 @@ Data on traffic counts with lenghth reports are provided by ODOT via email.
 
 ## Functions
 
-A list of functions applied to convert string formats, read Excel sheets and files from a folder, reorganize and combine tables.
+A list of functions are applied to convert string formats, read Excel sheets and files from a folder, reorganize and combine tables.
