@@ -4,7 +4,7 @@ Two dashboards are in this data category and the [Population Data](https://www.l
 
 ## Data Sources
 
-Data from ten tables within block group and one table within census tract (for 1 year and 5 year respectively) were collected for the Title VI dashboard:
+Data from ten tables (1 - 10) within block group and one table (11) within census tract (for 1 year and 5 year respectively) were collected for the Title VI dashboard:
 
 1. [B01003 Total Population](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2018.B01003&hidePreview=false&cid=B01003_001E&vintage=2018)
 
