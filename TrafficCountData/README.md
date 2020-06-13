@@ -4,7 +4,7 @@ Three databoards are in this data category and the scripts *ODOT_Counts.r* and *
 
 ## Data Sources
 
-Data on traffic counts with lenghth reports are provided by ODOT via email.
+Data on traffic counts with length reports are provided by ODOT via email.
 
 ## Functions
 
