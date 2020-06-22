@@ -8,4 +8,4 @@ Annual Average Daily Bicycle Traffic (AADBT) is the yearly total of bike counts 
 ## Methods
 
 
-## Reports
+## Functions
