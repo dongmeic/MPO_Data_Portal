@@ -4,8 +4,8 @@ Three databoards are in this data category and the scripts *ODOT_Counts.r* and *
 
 ## Data Sources
 
-Data on traffic counts with length reports are provided by ODOT via email.
+Data on traffic counts with length reports are provided by ODOT via email. Data on [AADBT](https://github.com/dongmeic/MPO_Data_Portal/tree/master/TrafficCountData/AADBT#explanations) are from NOAA, [Eco-Visio](https://www.eco-visio.net/v5/login/#::) and LCOG.
 
 ## Functions
 
-A list of functions are applied to convert string formats, read Excel sheets and files from a folder, reorganize and combine tables.
+A list of functions are applied to convert string formats, read Excel sheets and files from a folder, reorganize and combine tables. Functions applied on the computation of AADBT are explained in [the folder](https://github.com/dongmeic/MPO_Data_Portal/tree/master/TrafficCountData/AADBT#explanations).
