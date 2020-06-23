@@ -1,4 +1,4 @@
-# This script was created to update data for the tableau dashboard "EmphasisAreas_DC"
+# Objective: to update data for the tableau dashboard "EmphasisAreas_DC"
 # By Dongmei Chen (dchen@lcog.org)
 # On March 11th, 2020
 
@@ -21,7 +21,7 @@ fgdb <- "T:/Data/Safety/Lane_County_Crashes/LaneCounty_Crashes_SpatializedDecode
 outpath <- "//clsrv111.int.lcog.org/transpor/Tableau/tableauSafetyEmphasisAreas/Datasources/"
 
 # What output should look like
-CheckOldData = FALSE
+CheckOldData = TRUE
 if(CheckOldData){
   trend <- read.csv(paste0(outpath, "OldData/Trend_Tableau.csv"), stringsAsFactors = FALSE)
   head(trend)
