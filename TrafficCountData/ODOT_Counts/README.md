@@ -8,4 +8,4 @@ Data are provided by Josh Lucas (Traffic Data Analyst, Josh.lucas@odot.state.or.
 
 ## Dashboard update
 
-Dashboard has been updated to May 2020.
+The dashboard shows the spatial and temporal patterns of the counts and it has been updated to May 2020.
