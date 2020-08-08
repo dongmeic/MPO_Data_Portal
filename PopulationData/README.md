@@ -35,13 +35,13 @@ Two main functions are applied to read and reorganize the tables to the input fi
 
 ## Steps for Kyle's data requests
 
-1. Identify variables required and check data sources and output formats;
+1. Identify variables required and check data sources and output formats
 
 Variables required by checking Tableau dashboard: 'TotalPOP', 'PopEld', 'PctElderly', PctDisab', 'PopNInst5', 'PopNI5Disa', 'PctPoor', 'HH', 'HHPoor', 'PctPoor', 'PopMinor' and 'PctMinor'; the average percentage for the four factors at a certain geography; condition variables - whether the percentage factor is higher than the average (1-yes, 0-no); and finally, 'ComofConce' - the sum of the condition variables. 
 
 * Check the *Census_TitleVI.r* for the detailed calculation of the listed variables above. Need to check whether there is NA in the percentage variables.   
 
-2. Download and organize data;
+2. Download and organize data
 
 Go to [US Census Advanced](https://data.census.gov/cedsci/advanced), Geogrpahy --> Block Group --> Oregon --> Lane County --> Check the needed census tracts and review the filter before hitting SEARCH. The VIEW ALL TABLES. Select [B01001](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2018.B01001&layer=VT_2018_150_00_PY_D1&vintage=2018&hidePreview=false&cid=B00001_001E), [B03002](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2018.B03002&layer=VT_2018_150_00_PY_D1&vintage=2018&hidePreview=false&cid=B00001_001E), and [B17017](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2018.B17017&layer=VT_2018_150_00_PY_D1&vintage=2018&hidePreview=false&cid=B00001_001E). Need to scroll down and load more for the later tables. Hit Download and check the three tables. Scroll up to hit Download Selected (3) on the top left. Then hit DOWNLOAD on the bottom right. The default year is the most recent one. Finally, hit Download Now after file loading. 
 
@@ -53,10 +53,10 @@ Extract and save files at T Drive (\\clsrv111.int.lcog.org\transpor\Data\CENSUS\
 
 Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=Block+Groups). Save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties (only to check whether the census tracts are connected)
 
-3. Process data;
+3. Process data
 
 The detailed data processing steps follow the script *TitleVI_for_Kyle.r*, adjusted from the script *Census_TitleVI.r*. Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only). 
 
-4. Visualize data.
+4. Visualize data
 
 Read the shapefile in Tableau. Create the map and plots following the 'Communities of Concern' dashboard settings.
