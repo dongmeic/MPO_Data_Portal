@@ -55,6 +55,8 @@ Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cg
 
 3. Process data;
 
-The detailed data processing steps follow the script *TitleVI_for_Kyle.r*, adjusted from the script *Census_TitleVI.r*. Two summary tables are generated and joined with the county boundaries by GEO_ID and only matched ID are kept (need to create a double type field GEO_ID). Merge shapefiles for both counties using [Append](https://desktop.arcgis.com/en/arcmap/10.3/tools/data-management-toolbox/append.htm)(Create Feature Class --> Append (Schema Type: NO_TEST)). Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only).
+The detailed data processing steps follow the script *TitleVI_for_Kyle.r*, adjusted from the script *Census_TitleVI.r*. Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only). 
 
 4. Visualize data.
+
+Read the shapefile in Tableau. Create the map and plots following the 'Communities of Concern' dashboard settings.
