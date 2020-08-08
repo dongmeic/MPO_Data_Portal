@@ -51,10 +51,10 @@ Repeat the above two steps for Douglas County.
 
 Extract and save files at T Drive (\\clsrv111.int.lcog.org\transpor\Data\CENSUS\ACS20142018\TitleVI\Others\). 
 
-Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=Block+Groups) and save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties. 
+Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=Block+Groups). Save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties (only to check whether the census tracts are connected)
 
 3. Process data;
 
-The detailed data processing steps follow the script *TitleVI_for_Kyle.r*, adjusted from the script *Census_TitleVI.r*. 
+The detailed data processing steps follow the script *TitleVI_for_Kyle.r*, adjusted from the script *Census_TitleVI.r*. Two summary tables are generated and joined with the county boundaries by GEO_ID and only matched ID are kept (need to create a double type field GEO_ID). Merge shapefiles for both counties using [Append](https://desktop.arcgis.com/en/arcmap/10.3/tools/data-management-toolbox/append.htm)(Create Feature Class --> Append (Schema Type: NO_TEST)). Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only).
 
 4. Visualize data.
