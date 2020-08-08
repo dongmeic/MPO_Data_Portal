@@ -51,7 +51,7 @@ Repeat the above two steps for Douglas County.
 
 Extract and save files at T Drive (\\clsrv111.int.lcog.org\transpor\Data\CENSUS\ACS20142018\TitleVI\Others\). 
 
-Download Oregon block group boundary and save separately block groups of Lane and Douglas counties. 
+Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=Block+Groups) and save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties. 
 
 3. Process data;
 
