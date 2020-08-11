@@ -1,6 +1,7 @@
 # Objective: organize and map data for Kyle's requests - 
 # to create data and visualization for places outside of MPO following the reference below
 # Dongmei CHEN (dchen@lcog.org)
+# August 7th, 2020
 # Reference: https://www.lcog.org/958/Socio-Economic-Data 
 # Geography is shown below 
 # LANE COUNTY 
