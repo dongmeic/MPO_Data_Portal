@@ -51,11 +51,11 @@ if(valid){
   partic.unlic <- partic.drvr[(partic.drvr$drvr_lic_stat_cd %in% 
                                  c("0", "3", "8")),]
 }
-table(partic.drvr$drvr_lic_stat_cd)
-table(partic.drvr$drvr_lic_stat_long_desc)
-length(na.omit(partic.drvr$drvr_lic_stat_long_desc))/dim(partic.drvr)[1]
-length(na.omit(partic.drvr$drvr_lic_stat_cd))/dim(partic.drvr)[1]
-unique(partic.drvr$drvr_lic_stat_cd[is.na(partic.drvr$drvr_lic_stat_long_desc)])
+# table(partic.drvr$drvr_lic_stat_cd)
+# table(partic.drvr$drvr_lic_stat_long_desc)
+# length(na.omit(partic.drvr$drvr_lic_stat_long_desc))/dim(partic.drvr)[1]
+# length(na.omit(partic.drvr$drvr_lic_stat_cd))/dim(partic.drvr)[1]
+# unique(partic.drvr$drvr_lic_stat_cd[is.na(partic.drvr$drvr_lic_stat_long_desc)])
 
 data$unlic_drvr <- ifelse(data$crash_id %in% partic.unlic$crash_id, 1, 0)
 length(data$unlic_drvr[data$unlic_drvr == 1])/dim(data)[1]

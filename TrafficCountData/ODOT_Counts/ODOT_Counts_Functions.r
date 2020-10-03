@@ -221,8 +221,6 @@ Update.ODOD.Counts.By.Month <- function(path, range, year, month, LR=FALSE, HD=F
     }else{
       LR.df <- get.length.reports(path)
     }
-    
-    #write.csv(LR.df, "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/2020/Jan/HourlyForTableau_LengthJan2020.csv", row.names = FALSE)
     new.LR <- rbind(old.LR, LR.df)
     write.csv(new.LR, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableaU_LongVehicles.csv", row.names = FALSE)
   }else{

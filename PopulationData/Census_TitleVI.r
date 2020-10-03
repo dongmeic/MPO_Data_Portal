@@ -289,3 +289,43 @@ bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
 bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
 writeOGR(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
          overwrite_layer=TRUE)
+
+# further notes for mapping: determine the classification of the percentage of 
+# concerns based on the quantile of population
+
+bgdata <- read.csv(paste0(outpath, "/MPO_summary.csv"),  stringsAsFactors = FALSE)
+tot.vars <- c("TotalPOP", "PopWrkF16", "PopGE5", "HH", "PopNInst5", "TotalPOP")
+pop.vars <- c("PopMinor", "PopWFUnEmp", "Pop5yrLEP", "HH0car", "PopNI5Disa", "PopEld")
+pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctElderly")
+
+# test some functions
+# library(Hmisc)
+# cuts <- split(bgdata[,pct.vars[5]], cut2(bgdata[,pop.vars[5]], g=6))
+# library(gtools)
+# levels(quantcut(bgdata[,pop.vars[5]], 6))
+# range(bgdata[bgdata[,pop.vars[5]]>=0.326 & bgdata[,pop.vars[5]]<= 97.9,
+#        pct.vars[5]])
+
+notes <- c("1st", "2nd", "3rd", "4th", "5th", "6th")
+for(var in pct.vars){
+  tot.var <- tot.vars[which(pct.vars==var)]
+  df <- bgdata[,c(tot.var, var)]
+  df <- df[order(df[,var]),]
+  df$cumsum <-  cumsum(df[, tot.var])
+  avg <- sum(df[, tot.var])/6
+  cuts <- avg * c(1:6)
+  for(cut in cuts){
+    df$diff <- df$cumsum - cut
+    cat(paste0('The ', notes[which(cuts==cut)], ' cut for ', var, ' is ', 
+               df[abs(df$diff) == min(abs(df$diff)),var], '\n'))
+    if(which(cuts==cut)==1){
+      cat(paste0('The total population for this cut is ', df$cumsum[which(abs(df$diff) == min(abs(df$diff)))],'\n'))
+      last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+    }else{
+      cat(paste0('The total population for this cut is ', df$cumsum[which(abs(df$diff) == min(abs(df$diff)))] - last.cum,'\n'))
+      last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+    }
+  }
+  cat("\n")
+}
+
