@@ -27,14 +27,37 @@ library(readxl)
 library(rgdal)
 library(dplyr)
 
+year <- 2019
+rangeyr <- "20152019"
+
+mainDir <- "T:/Data/CENSUS"
+subDir <- sprintf("ACS%s", yrrange)
+#county <- "Lane"
+county <- "Douglas"
+newDir <- paste0("TitleVI/Others/", county)
+path <- file.path(mainDir, subDir, newDir)
+dir.create(path)
+
+zipfiles <- list.files(path = path, 
+                       pattern = "zip", all.files = TRUE)
+for(zipfile in zipfiles){
+  unzip(zipfile = file.path(path, zipfile), 
+        exdir = path)
+}
+
 # functions
-readtable <- function(filenm.start= "ACSDT5Y2018.", 
-                      tablenm="B01001", stren = 21, # string end number
-                      filenm.end = "_data_with_overlays_2020-08-07T191626.csv",
-                      folder = "productDownload_2020-08-07T191649",
+# the functions have been updated for the 2019 data
+readtable <- function(filenm.start= sprintf("ACSDT5Y%d.", year),
+                      tablenm="B01001", stren = 21, yrrange = rangeyr,
                       county="Lane"){
-  filenm <- paste0(filenm.start, tablenm, filenm.end)
-  dat <- read.csv(paste0(path, county, "/", folder, "/", filenm), stringsAsFactors = FALSE)
+  
+  inpath <- paste0("T:/Data/CENSUS/ACS", rangeyr,"/TitleVI/others/")
+  inpath <- paste0(inpath, county)
+  filenm <- list.files(path = inpath, 
+                       pattern = paste0(filenm.start,
+                                        tablenm,
+                                        "_data_with_overlays_"))
+  dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
   dat2 <- dat[-1,-2:-1]
   dat2 <- apply(dat2, 2, as.numeric)
   dat <- cbind(as.data.frame(dat[-1,1]), as.data.frame(dat2))
@@ -43,33 +66,17 @@ readtable <- function(filenm.start= "ACSDT5Y2018.",
   return(dat)
 }
 
-path <- "T:/Data/CENSUS/ACS20142018/TitleVI/others/"
+path <- paste0("T:/Data/CENSUS/ACS", yrrange, "/TitleVI/others/")
 outpath <- paste0(path, "processed/")
+dir.create(outpath)
 
-# setup: run the country name (cnt.name) each a time
-cnt.name <- 'Lane'
-cnt.name <- 'Douglas'
-
-if(cnt.name=='Lane'){
-  folder.nm1 <- 'productDownload_2020-08-07T191649'
-  folder.nm2 <- 'ACSDT5Y2018.B18101_2020-08-07T201155'
-  filenm.end1 <- '_data_with_overlays_2020-08-07T191626.csv'
-  filenm.end2 <- '_data_with_overlays_2020-08-07T201149.csv'
-}else{
-  folder.nm1 <- 'productDownload_2020-08-07T201659'
-  folder.nm2 <- 'ACSDT5Y2018.B18101_2020-08-07T201840'
-  filenm.end1 <- '_data_with_overlays_2020-08-07T201650.csv'
-  filenm.end2 <- '_data_with_overlays_2020-08-07T201837.csv'
-}
-
-sex.by.age <- readtable(filenm.end = filenm.end1, folder = folder.nm1, county=cnt.name)
-race <- readtable(tablenm = 'B03002', filenm.end = filenm.end1, folder = folder.nm1,
-                  county=cnt.name)
-poverty <- readtable(tablenm = 'B17017', filenm.end = filenm.end1, 
-                     folder = folder.nm1, county=cnt.name)
-disability <- readtable(tablenm = 'B18101', stren = 20,
-                        filenm.end = filenm.end2, 
-                        folder = folder.nm2, county=cnt.name)
+#cnt.name <- "Lane"
+cnt.name <- "Douglas"
+sex.by.age <- readtable(county=cnt.name)
+race <- readtable(tablenm = 'B03002', county=cnt.name)
+poverty <- readtable(tablenm = 'B17017', county=cnt.name)
+disability <- readtable(tablenm = 'B18101', stren = 20, 
+                        county=cnt.name)
 
 # get disability data for block group using census tract data
 get.disab.dt <- function(df.tract =  disability, df.bg = sex.by.age){
@@ -112,7 +119,6 @@ pop.bg <- get.disab.dt()
 #head(pop.bg)
 
 # collect block group data
-
 collect.bg.dt <- function(){
   bgdata <- pop.bg[, c('CT_ID', 'GEO_ID', 'B01001_001E', 'ps_65plus', 'pc_65plus', 
                        'pc_ni_5plus_dis', 'PopNInst5', 'PopNI5Disa')]
@@ -132,8 +138,11 @@ collect.bg.dt <- function(){
 
 bgdata <- collect.bg.dt()
 
+# get average data
 get.avg.dt <- function(){
-  selected <- names(bgdata)[names(bgdata) %in% grep('Pct', names(bgdata), value = TRUE)]
+  selected <- names(bgdata)[names(bgdata) %in% 
+                              grep('Pct', names(bgdata), 
+                                   value = TRUE)][1:4]
   cnt.avg <- c(sum(bgdata$PopEld)/sum(bgdata$TotalPOP), 
                sum(bgdata$PopNI5Disa)/sum(bgdata$PopNInst5),
                sum(bgdata$HHPoor)/sum(bgdata$HH),
@@ -148,10 +157,11 @@ get.avg.dt <- function(){
   bgdata$ComofConce <- rowSums(bgdata[, c("Minority", "Elderly", "Poor", "Disabled")])
   return(bgdata)
 }
-
+                                                                
 bgdata <- get.avg.dt()
 
-write.csv(bgdata, paste0(outpath, cnt.name, "_summary.csv"), row.names = FALSE)
+write.csv(bgdata, paste0(outpath, cnt.name, "_summary.csv"), 
+          row.names = FALSE)
 
 # combine both counties to calculate average
 lane <- read.csv(paste0(outpath, "Lane_summary.csv"), stringsAsFactors = FALSE)
@@ -161,7 +171,3 @@ bgdata <- rbind(lane, douglas)
 write.csv(bgdata, paste0(outpath, "separated_summary.csv"), row.names = FALSE)
 bgdata <- get.avg.dt()
 write.csv(bgdata, paste0(outpath, "combined_summary.csv"), row.names = FALSE)
-
-# [1] "The average values:"
-# PctElderly   PctDisab    PctPoor   PctMinor 
-# 0.2231523  0.2214093  0.1365796  0.1205552 

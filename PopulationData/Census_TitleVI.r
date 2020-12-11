@@ -5,17 +5,73 @@
 library(readxl)
 library(rgdal)
 library(dplyr)
-inpath <- "T:/Data/CENSUS/ACS20142018/TitleVI/"
-outpath <- "T:/Tableau/tableauTitleVI/Datasources"
 
+
+############################## Download data ##############################
+
+# update year information here
+yrrange <- "20152019"
+year <- 2019
+yr = 19
+
+# create a new folder if not exist
+mainDir <- "T:/Data/CENSUS"
+subDir <- sprintf("ACS%s.", yrrange)
+dir.create(file.path(mainDir, subDir))
+newDir <- "TitleVI"
+dir.create(file.path(mainDir, subDir, newDir))
+# set the work directory for downloads
+setwd(file.path(mainDir, subDir))
+#### manual download ####
+# extract the downloaded files
+zipfiles <- list.files(path = ".", pattern = "zip", all.files = TRUE)
+for(zipfile in zipfiles){
+  unzip(zipfile = zipfile, exdir = paste0(getwd(), "/", newDir))
+}
+
+# repeat the process for the 1-year data
+subDir1yr <- sprintf("ACS%d.", year)
+path1yr <- file.path(mainDir, subDir1yr)
+dir.create(path1yr)
+#### manual download 1-yr data #### 
+# the geography is urbanized area instead 
+# then extract the files
+zipfiles <- list.files(path = path1yr, pattern = "zip", all.files = TRUE)
+for(zipfile in zipfiles){
+  unzip(zipfile = paste0(path1yr, "/", zipfile), exdir = path1yr)
+}
+
+# move the 1-year table B18101 from the 5-year folder to the 1-year folder
+
+# alternatively, use API to access Census.Gov
+# install API - one time setting
+library("devtools")
+# require Rtools to build R package
+devtools::install_github("hrecht/censusapi")
+library(censusapi)
+# notes on December 10th, 2020 - having trouble getting an API key
+# and installing Rtools
+
+############################## Read data ##############################
+# set-ups
+outpath <- "T:/Tableau/tableauTitleVI/Datasources"
 tablenm <- "B01001"
 
 # functions
-readtable <- function(filenm.start= "ACSDT5Y2018.", 
-                      tablenm="B01001", stren = 21, # string end number
-                      filenm.end = "_data_with_overlays_2020-05-05T123638.csv"){
-  filenm <- paste0(filenm.start, tablenm, filenm.end)
-  dat <- read.csv(paste0(inpath, filenm), stringsAsFactors = FALSE)
+# stren - string end number in the GeoID
+readtable <- function(filenm.start= sprintf("ACSDT5Y%d.", year), 
+                      tablenm="B01001", stren = 21){
+  mainDir <- "T:/Data/CENSUS"
+  subDir <- sprintf("ACS%s.", yrrange)
+  newDir <- "TitleVI"
+  inpath <- file.path(mainDir, subDir, newDir)
+  
+  filenm <- list.files(path = inpath, 
+                       pattern = paste0(filenm.start,
+                                        tablenm,
+                                        "_data_with_overlays_"))
+  
+  dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
   dat2 <- dat[-1,-2:-1]
   dat2 <- apply(dat2, 2, as.numeric)
   dat <- cbind(as.data.frame(dat[-1,1]), as.data.frame(dat2))
@@ -24,9 +80,12 @@ readtable <- function(filenm.start= "ACSDT5Y2018.",
   return(dat)
 }
 
-read1yrtable <- function(yr, tablenm){
-  dat <- read.csv(paste0("T:/Data/CENSUS/ACS20", yr, "/ACS_", yr, "_1YR_", tablenm, "_with_ann.csv"), 
-                  stringsAsFactors = FALSE)
+read1yrtable <- function(yr = 18, tablenm = "B01001"){
+  inpath <- paste0("T:/Data/CENSUS/ACS20", yr)
+  filenm <- list.files(path = inpath, 
+                       pattern = paste0(yr,".",tablenm,
+                                        "_data_with_overlays_"))
+  dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
   dat2 <- dat[-1,-2:-1]
   dat2 <- apply(dat2, 2, as.numeric)
   return(dat2)
@@ -34,7 +93,6 @@ read1yrtable <- function(yr, tablenm){
 
 # get data for change over time
 # factor
-yr = 18
 disabled = sum(read1yrtable(yr, "B18101")[c("B18101_004E","B18101_007E", 
                                             "B18101_010E", "B18101_013E",
                                             "B18101_016E", "B18101_019E",
@@ -62,8 +120,7 @@ renters.mpo = read1yrtable(yr, "B25044")["B25044_001E"]
 unemployed.mpo = read1yrtable(yr, "B23025")["B23025_002E"]
 zero_cars.mpo = read1yrtable(yr, "B25044")["B25044_001E"]
 
-year = 2018
-year = rep(year, 7)
+years = rep(year, 7)
 factor = c("Disabled",
            "Elderly",
            "Minority",
@@ -95,30 +152,44 @@ mpototal = c(disabled.mpo,
              unemployed.mpo,
              zero_cars.mpo)
 
-outdata <- data.frame(Year=year, Factor=factor, Universe=universe, 
+outdata <- data.frame(Year=years, Factor=factor, Universe=universe, 
                       FactorTotal=factortotal, MPOTotal=mpototal)
 outdata$MPOavg = outdata$FactorTotal / outdata$MPOTotal
-
+############################## Update change over time ##############################
 # output should look like this, use data from ACS2013-2017
-change <- read_excel(paste0(outpath, "/TitleVIchangeovertime.xlsx"))
-# change2017 <- subset(change, Year==2017)
-# change2017
-change <- rbind(change, outdata)
+# change <- read_excel(paste0(outpath, "/TitleVIchangeovertime.xlsx"))
+# # change2017 <- subset(change, Year==2017)
+# # change2017
+# change <- rbind(change, outdata)
+# write.csv(change, paste0(outpath, "/TitleVIchangeovertime.csv"), row.names = FALSE)
+
+change <- read.csv(paste0(outpath, "/TitleVIchangeovertime.csv"), 
+                   stringsAsFactors = FALSE)
+
+# # if you run into errors after the table update for the most recent year
+# change <- subset(change, Year < year)
+
+if(max(change$Year) == (year - 1)){
+  change <- rbind(change, outdata)
+  cat("Added the new data!")
+}else if(max(change$Year) == year){
+  cat("You are good to go!")
+}else{
+  cat("Have you updated the data last year?")
+}
 write.csv(change, paste0(outpath, "/TitleVIchangeovertime.csv"), row.names = FALSE)
 
-# bgdata.shp <- readOGR(dsn = outpath, layer = "MPO_BG_TitleVI", 
-#                   stringsAsFactors = FALSE)
-# names(bgdata.shp)
-
+############################## Read block group shapefile ##############################
 bg.shp <- readOGR(dsn = outpath, layer = "MPO_BG", stringsAsFactors = FALSE)
 
 # create a table to match blockgroup with the MPO boundary 
 # by copying data from previous blockgroupdata.xlsx
-testpath <- "C:/Users/clid1852/OneDrive - lanecouncilofgovernments/DataPortal/census"
-bginmpo <- read_excel(paste0(testpath, "/blockgroup_in_mpo.xlsx"))
+path <- "C:/Users/clid1852/OneDrive - lanecouncilofgovernments/DataPortal/census"
+bginmpo <- read_excel(paste0(path, "/blockgroup_in_mpo.xlsx"))
 bginmpo$PctGQinside <- ifelse(is.na(bginmpo$PctGQinside), 0, bginmpo$PctGQinside)
 head(bginmpo)
 
+############################## Get 5-year data ##############################
 # get data from all the tables
 sex.by.age <- readtable()
 race <- readtable(tablenm = 'B03002')
@@ -129,11 +200,11 @@ occupancy <- readtable(tablenm = 'B25002')
 poptenure <- readtable(tablenm = 'B25008')
 hhtenure <- readtable(tablenm = 'B25010')
 vehicles <- readtable(tablenm = 'B25044')
-disability <- readtable(tablenm = 'B18101', stren = 20,
-                        filenm.end = '_data_with_overlays_2020-05-09T003818.csv') 
+disability <- readtable(tablenm = 'B18101', stren = 20) 
 head(names(disability))
 #head(disability)
 
+############################## Calculate variables ##############################
 # get disability data for block group using census tract data
 disability.dt <- disability[, c('GEO_ID', 'B18101_001E', 'B18101_002E', 'B18101_003E',
                                   'B18101_007E', 'B18101_010E',
@@ -191,7 +262,8 @@ zerocars.bg$pc_rtr_0car <- zerocars.bg$B25044_010E/zerocars.bg$zero_car
 zerocars.bg$pc_own_0car <- zerocars.bg$B25044_003E/zerocars.bg$zero_car
 zerocars.bg$pc_rtr <- zerocars.bg$B25044_009E/zerocars.bg$B25044_001E
 zerocars.bg$pc_zero_car <- zerocars.bg$zero_car/zerocars.bg$B25044_001E
-  
+
+############################## Combine all variables ##############################
 # collect block group data
 bgdata <- pop.bg[, c('CT_ID', 'GEO_ID', 'B01001_001E', 'ps_65plus', 'pc_65plus', 'pc_ni_5plus_dis', 'PopNInst5', 'PopNI5Disa')]
 colnames(bgdata)[3:6] <- c('TotalPOP', 'PopEld', 'PctElderly', 'PctDisab')
@@ -234,16 +306,9 @@ bgdata <- bgdata %>% rename(PctHH0car=pc_zero_car, HH0car=zero_car, PctRentHH=pc
 
 # double check the data
 colnames(bgdata)[colnames(bgdata)=='GEO_ID'] <- 'BlkGrp10'
-# bgdata[bgdata$BlkGrp10 == '410390003001',-2]
-# bgdata.shp@data[bgdata.shp@data$BlkGrp10 == '410390003001',names(bgdata[,-2])]
-# what other variables are missing
-# names(bgdata.shp@data)[!(names(bgdata.shp@data) %in% names(bgdata))]
-# make corrections with percentages in MPO on these variables
+
 vars <- names(bgdata)[!(grepl('Pct', names(bgdata)) | (names(bgdata) %in% c("GEO_ID", "CT_ID", "HHsize", 'Occupancy')))]
 bgdata <- merge(bgdata, bginmpo, by = 'BlkGrp10')
-# bgdata[bgdata$InsideArea == 2 & bgdata$GQPop != 0, c('BlkGrp10', 'PctGQinside', 'GQPop')]
-# df <- merge(bgdata.shp@data, bginmpo, by = 'BlkGrp10')
-# df[df$InsideArea == 2, c('BlkGrp10','PctGQinside', 'GQPop')]
 
 # correct data with percentage in MPO
 for(var in vars[-1]){
@@ -253,8 +318,7 @@ for(var in vars[-1]){
     bgdata[,var] <- bgdata[,var] * bgdata$PctInside
   }
 }
-# bgdata[bgdata$BlkGrp10 == '410390003001',vars[-1]]
-# df[df$BlkGrp10 == '410390003001',vars[-1]]
+
 # get MPO data only
 bgdata <- bgdata[bgdata$InsideArea != 0,]
 selected <- names(bgdata)[names(bgdata) %in% grep('Pct', names(bgdata), value = TRUE) &
@@ -269,7 +333,8 @@ mpoavg <- c(sum(bgdata$PopEld)/sum(bgdata$TotalPOP),
             sum(bgdata$HH0car)/sum(bgdata$HH),
             sum(bgdata$RenterHHs)/sum(bgdata$HH))
 names(mpoavg) <- selected
-variables <- c("Elderly", "Disabled", "Poor", "Minority", "UnEmp", "LEP", "HHzerocar", "Renter")
+variables <- c("Elderly", "Disabled", "Poor", "Minority", 
+               "UnEmp", "LEP", "HHzerocar", "Renter")
   
 for(var in selected){
   bgdata[,variables[which(selected == var)]] <- ifelse(bgdata[,var] > mpoavg[var], 1, 0)
@@ -277,12 +342,12 @@ for(var in selected){
 bgdata$ComofConce <- rowSums(bgdata[, c("Minority", "Elderly", "Poor", "Disabled")])
 bgdata <- bgdata[, -which(names(bgdata) %in% c('CT_ID', 'InsideArea', 'PctInside', 'PctGQinside'))]
 
-# double check data
-# bgdata[1,]
-# bgdata.shp@data[1,names(bgdata)]
-
 head(bgdata)
 write.csv(bgdata, paste0(outpath, "/MPO_summary.csv"), row.names = FALSE)
+
+# Update these numbers on the dashboard
+mpoavg[1:4]
+############################## Get shapefile data ##############################
 names(bg.shp)[1] <- names(bgdata)[1]
 bg.shp <- merge(bg.shp, bgdata, by="BlkGrp10")
 bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
@@ -290,13 +355,15 @@ bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
 writeOGR(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
          overwrite_layer=TRUE)
 
+############################## Others #################################
 # further notes for mapping: determine the classification of the percentage of 
 # concerns based on the quantile of population
+outpath <- "T:/Tableau/tableauTitleVI/Datasources"
 
 bgdata <- read.csv(paste0(outpath, "/MPO_summary.csv"),  stringsAsFactors = FALSE)
-tot.vars <- c("TotalPOP", "PopWrkF16", "PopGE5", "HH", "PopNInst5", "TotalPOP")
-pop.vars <- c("PopMinor", "PopWFUnEmp", "Pop5yrLEP", "HH0car", "PopNI5Disa", "PopEld")
-pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctElderly")
+tot.vars <- c("TotalPOP", "PopWrkF16", "PopGE5", "HH", "PopNInst5", "TotalPOP", "HH")
+pop.vars <- c("PopMinor", "PopWFUnEmp", "Pop5yrLEP", "HH0car", "PopNI5Disa", "PopEld", "HHPoor")
+pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctElderly", "PctPoor")
 
 # test some functions
 # library(Hmisc)
@@ -307,6 +374,9 @@ pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctEld
 #        pct.vars[5]])
 
 notes <- c("1st", "2nd", "3rd", "4th", "5th", "6th")
+
+MapDir <- "T:/MPO/Title VI & EJ/2020_TitleVI_update/Maps/2020/20152019"
+sink(paste0(MapDir, "/symbology_manual_cuts.txt"))
 for(var in pct.vars){
   tot.var <- tot.vars[which(pct.vars==var)]
   df <- bgdata[,c(tot.var, var)]
@@ -314,18 +384,25 @@ for(var in pct.vars){
   df$cumsum <-  cumsum(df[, tot.var])
   avg <- sum(df[, tot.var])/6
   cuts <- avg * c(1:6)
+  v <- vector()
   for(cut in cuts){
     df$diff <- df$cumsum - cut
     cat(paste0('The ', notes[which(cuts==cut)], ' cut for ', var, ' is ', 
                df[abs(df$diff) == min(abs(df$diff)),var], '\n'))
     if(which(cuts==cut)==1){
-      cat(paste0('The total population for this cut is ', df$cumsum[which(abs(df$diff) == min(abs(df$diff)))],'\n'))
+      pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+      cat(paste0('The total population for this cut is ', pop,'\n'))
       last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+      v <- c(v, pop)
     }else{
-      cat(paste0('The total population for this cut is ', df$cumsum[which(abs(df$diff) == min(abs(df$diff)))] - last.cum,'\n'))
+      pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))] - last.cum
+      cat(paste0('The total population for this cut is ', pop,'\n'))
       last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+      v <- c(v, pop)
     }
   }
+  cat(paste("The average population size is", mean(v), "\n"))
   cat("\n")
 }
+sink()
 
