@@ -245,7 +245,7 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 
 [Web Map](https://lcog.maps.arcgis.com/home/item.html?id=000d1aaae6144808bf76a113577a939e)
 
-## Steps for the Lane-Douglas community concerns dahsboard
+## Steps for the Lane-Douglas community concerns' dashboard
 
 1. Identify variables required and check data sources and output formats
 
