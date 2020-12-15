@@ -62,7 +62,7 @@ Two main functions are applied to read and reorganize the tables to the input fi
 
 The metadata of each table can be found from downloading the table, or searching online.  
 
-1) B01001 - Sex by age
+**1) B01001 - Sex by age**
 
 ps_65plus (population size on 65 year old and above): sum of the fields 020E to 025E, 044E to 049E
 
@@ -72,7 +72,7 @@ ps_5plus (population size on 5 year old and above): 001E minus 003E and 027E (to
 
 pc_5plus: ps_5plus divided by 001E
 
-2) B03002 - Hispanic or latino origin by race
+**2) B03002 - Hispanic or latino origin by race**
 
 hislati_nowhal (population size on hispanic or latino and/or not white alone): 001E minus 003E
 
@@ -80,7 +80,7 @@ pc_hislati_nowhal (population percent on hispanic or latino and/or not white alo
 
 pc_hislati (population percent on hispanic or latino): 001E minus 002E and the result is divided by 001E
 
-3) B16004 - Age by language spoken at home by ability to speak English for the population 5 years and over
+**3) B16004 - Age by language spoken at home by ability to speak English for the population 5 years and over**
 
 en_nvwell (people who do not speak very well English): sum of the fields 006E to 008E, 011E to 013E, 016E to 018E, 021E to 023E, 028E to 030E, 033E to 035E, 038E to 040E, 043E to 045E, 050E to 052E, 055E to 057E, 060E to 062E, 065E to 067E
 
@@ -110,23 +110,23 @@ pc_asp_en_nvwell (percent of Asian and Pacific Island languages speakers who do 
 
 pc_oth_en_nvwell (percent of other languages speakers who do not speak very well English): oth_en_nvwell divided by ps_oth if not zero
 
-4) B17017 - Poverty status in the past 12 months by household type by age of householder
+**4) B17017 - Poverty status in the past 12 months by household type by age of householder**
 
-5) B23025 - Employment status for the population 16 years and over
+**5) B23025 - Employment status for the population 16 years and over**
 
 pc_unemp (percent of unemployed people): 005E divided by 002E
 
 pc_16older_wf (percent of 16 and older in workforce): 002E divided by 001E
 
-6) B25002 - Occupancy status
+**6) B25002 - Occupancy status**
 
 occu_rate (occupancy rate): 002E divided by 001E
 
-7) B25008 - Total population in occupied housing units by tenure
+**7) B25008 - Total population in occupied housing units by tenure**
 
-8) B25010 - Average household size of occupied housing units by tenure
+**8) B25010 - Average household size of occupied housing units by tenure**
 
-9) B25044 - Tenure by vehicles available
+**9) B25044 - Tenure by vehicles available**
 
 zero_car (total zero-car households): 003E plus 010E
 
@@ -138,7 +138,7 @@ pc_rtr (percent of renters in all households): 009E divided by 001E
 
 pc_zero-car (percent of zero-car households): zero_car divided by 001E
 
-10) B18101 - Sex by age by disability status (tract only)
+**10) B18101 - Sex by age by disability status (tract only)**
 ps_ni_5plus (total 5-year-and-older non-institutionalized population): (002E - 003E) + (021E - 022E)
 
 ps_ni_5plus_dis (total 5-year-and-older non-institutionalized population with disability): sum of the fields 007E, 010E, 013E, 016E, 019E, 026E, 029E, 032E, 035E, 038E
