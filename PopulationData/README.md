@@ -1,8 +1,8 @@
 # Explanations
 
-Two dashboards were originally in this data category and the [Population Data](https://www.lcog.org/957/Population-Data) has been updated in 2019 by Bill Clingman. The script *Census_TitleVI.r* organizes data for the [Socio-Economic Data dashboard](https://lcog.org/958/Socio-Economic-Data) (Title VI). The sript *TitleVI_for_Kyle.r* creates a 'Communities of Concern' dashboard for 9 census tracts in Lane County outside MPO and 2 census tracts in Douglas County.  
+Two dashboards were originally in this data category and the [Population Data](https://www.lcog.org/957/Population-Data) has been first updated in 2019 by Bill Clingman. The script *Census_TitleVI.r* organizes data for the [Socio-Economic Data dashboard](https://lcog.org/958/Socio-Economic-Data) (Title VI). The sript *TitleVI_Lane_Douglas.r* creates a 'Communities of Concern' dashboard for 9 census tracts in Lane County outside MPO and 2 census tracts in Douglas County.  
 
-Another dashboard on vechile mile traveled (VMT) and population was added to this data category in December 2020. 
+The [Population Data](https://www.lcog.org/957/Population-Data) dashboard has been further updated on December 15, 2020, by Dongmei Chen. Another dashboard on vehicle miles traveled (VMT) and population was added to this data category at the same time, using the same population data. The data sources are explained [below](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#data-sources-for-vmt-and-population). The script *VMT_Pop.r* cleans data for the time-series VMT and population plots.
 
 ## Data Sources for the Title VI dashboards
 
@@ -245,7 +245,7 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 
 [Web Map](https://lcog.maps.arcgis.com/home/item.html?id=000d1aaae6144808bf76a113577a939e)
 
-## Steps for the Lane-Douglas community concerns' dashboard
+## Steps for the Lane-Douglas communities of concern dashboard
 
 1. Identify variables required and check data sources and output formats
 
@@ -271,7 +271,7 @@ Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cg
 
 3. Process data
 
-The detailed data processing steps follow the script *TitleVI_for_Kyle.r*, adjusted from the script *Census_TitleVI.r*. Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only). 
+The detailed data processing steps follow the script *TitleVI_Lane_Douglas.r*, adjusted from the script *Census_TitleVI.r*. Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only). 
 
 4. Visualize data
 
@@ -279,5 +279,4 @@ Read the shapefile in Tableau. Create the map and plots following the 'Communiti
 
 # Data sources for VMT and population
 
-The VMT data can be downloaded from the [ODOT Data and Maps](https://www.oregon.gov/odot/Data/Pages/Traffic-Counting.aspx#VMT). The downloaded VMT data is saved at T:\Data\VMT\VMT_State_and_County. The population data can be retrieved from both the [PSU population estimates](https://www.pdx.edu/population-research/population-estimate-reports) and [US Census](https://data.census.gov/cedsci/table?t=Populations%20and%20People&g=0500000US41039&tid=ACSST1Y2019.S0101&hidePreview=false). The dashboard only uses the single-year census data. The downloaded population data is saved at T:\Data\PSU and T:\Data\CENSUS\Pop\LaneCounty, respectively. The population datain the dashboard is the average of the two data sources. 
-
+The VMT data can be downloaded from the [ODOT Data and Maps](https://www.oregon.gov/odot/Data/Pages/Traffic-Counting.aspx#VMT). The downloaded VMT data is saved at T:\Data\VMT\VMT_State_and_County. The current population data can be retrieved from both the [PSU population estimates](https://www.pdx.edu/population-research/population-estimate-reports) at the state and county level and [US Census](https://www.census.gov/programs-surveys/decennial-census/decade.2010.html) at the nation level. The [historical state and lane county population](https://lcog.org/DocumentCenter/View/1370/Historical-Population-of-Lane-County-and-Cities) is saved at L:\Research&Analysis\Data\Population\Historical Population\Historical Population.xls. The table *HistoricalPopulation.xlsx* from T:\Tableau\tableauPop\Datasources is updated and used in the viz workbook *VMT_Pop.twb*. The text file *ReadMe_VMT_Pop.txt* explains the update process. 
