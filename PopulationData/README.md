@@ -63,41 +63,63 @@ Two main functions are applied to read and reorganize the tables to the input fi
 The metadata of each table can be found from downloading the table, or searching online.  
 
 1) B01001 - Sex by age
+
 ps_65plus (population size on 65 year old and above): sum of the fields 020E to 025E, 044E to 049E
+
 pc_65plus (population percentage on 65 year old and above): ppcount_65plus divided by 001E
+
 ps_5plus (population size on 5 year old and above): 001E minus 003E and 027E (total population minus the count of male and female that are younger than 5-year old)
+
 pc_5plus: ps_5plus divided by 001E
 
 2) B03002 - Hispanic or latino origin by race
+
 hislati_nowhal (population size on hispanic or latino and/or not white alone): 001E minus 003E
+
 pc_hislati_nowhal (population percent on hispanic or latino and/or not white alone): hislati_nowhal divided by 001E
+
 pc_hislati (population percent on hispanic or latino): 001E minus 002E and the result is divided by 001E
 
 3) B16004 - Age by language spoken at home by ability to speak English for the population 5 years and over
+
 en_nvwell (people who do not speak very well English): sum of the fields 006E to 008E, 011E to 013E, 016E to 018E, 021E to 023E, 028E to 030E, 033E to 035E, 038E to 040E, 043E to 045E, 050E to 052E, 055E to 057E, 060E to 062E, 065E to 067E
+
 pc_en_nvwell (percent of people who do not speak very well English): en_nvwell divided by 001E
+
 sp_en_nvwell (Spanish speakers who do not speak very well English): sum of the fields 006E to 008E, 028E to 030E, 050E to 052E
+
 ine_en_nvwell (Indo-European languages speakers who do not speak very well English): sum of the fields 011E to 013E, 033E to 035E, 055E to 057E
+
 asp_en_nvwell (Asian and Pacific Island languages speakers who do not speak very well English): sum of the fields 016E to 018E, 038E to 040E, 060E to 062E
+
 oth_en_nvwell (other languages speakers who do not speak very well English): sum of the fields 021E to 023E, 043E to 045E, 065E to 067E
 
 ps_sp (population size of Spanish speakers): sum of the fields 004E, 026E, 048E
+
 ps_ine (population size of Indo-European languages speakers): sum of the fields 009E, 031E, 053E
+
 ps_asp (population size of Asian and Pacific Island languages speakers): sum of the fields 014E, 036E, 058E
+
 ps_oth (population size of other languages speakers): sum of the fields 019E, 041E, 063E
 
 pc_sp_en_nvwell (percent of Spanish speakers who do not speak very well English): sp_en_nvwell divided by ps_sp if not zero
+
 pc_ine_en_nvwell (percent of Indo-European languages speakers who do not speak very well English): ine_en_nvwell divided by ps_ine if not zero
+
 pc_asp_en_nvwell (percent of Asian and Pacific Island languages speakers who do not speak very well English): asp_en_nvwell divided by ps_asp if not zero
+
 pc_oth_en_nvwell (percent of other languages speakers who do not speak very well English): oth_en_nvwell divided by ps_oth if not zero
 
 4) B17017 - Poverty status in the past 12 months by household type by age of householder
 
 5) B23025 - Employment status for the population 16 years and over
+
 pc_unemp (percent of unemployed people): 005E divided by 002E
+
 pc_16older_wf (percent of 16 and older in workforce): 002E divided by 001E
 
 6) B25002 - Occupancy status
+
 occu_rate (occupancy rate): 002E divided by 001E
 
 7) B25008 - Total population in occupied housing units by tenure
@@ -105,16 +127,24 @@ occu_rate (occupancy rate): 002E divided by 001E
 8) B25010 - Average household size of occupied housing units by tenure
 
 9) B25044 - Tenure by vehicles available
+
 zero_car (total zero-car households): 003E plus 010E
+
 pc_rtr_0car (percent of zero-car household which are renters): 010E divided by zero_car
+
 pc_own_0car (percent of zero-car household which are owners): 003E divided by zero_car
+
 pc_rtr (percent of renters in all households): 009E divided by 001E
+
 pc_zero-car (percent of zero-car households): zero_car divided by 001E
 
 10) B18101 - Sex by age by disability status (tract only)
 ps_ni_5plus (total 5-year-and-older non-institutionalized population): (002E - 003E) + (021E - 022E)
+
 ps_ni_5plus_dis (total 5-year-and-older non-institutionalized population with disability): sum of the fields 007E, 010E, 013E, 016E, 019E, 026E, 029E, 032E, 035E, 038E
+
 pc_ni_5plus_dis (percent of 5-year-and-older non-institutionalized population with disability): ps_ni_5plus_dis divided by ps_ni_5plus
+
 pc_ni_5plus (percent of 5-year-and-older non-institutionalized population): ps_ni_5plus divided by 001E
 
 ### Variable explanations in the block group data
@@ -122,45 +152,85 @@ pc_ni_5plus (percent of 5-year-and-older non-institutionalized population): ps_n
 The explanation after the comma is either source data or the calculated variable explained above. 
 
 [1] "or_blockgr" - block group ID
+
 [2] "BlkGrp10" - block group ID 
+
 [3] "TotalPOP" - total population, B01001_001E
-[4] "HHPop" - household population, B25008_001E      
-[5] "GQPop" - group quarters population, the difference between total population and household population, TotalPOP - HHPop    
-[6] "TotalDU" - total dwelling units, B25002_001E  
-[7] "HH" - total household size in the poverty status table, B17017_001E         
+
+[4] "HHPop" - household population, B25008_001E   
+
+[5] "GQPop" - group quarters population, the difference between total population and household population, TotalPOP - HHPop  
+
+[6] "TotalDU" - total dwelling units, B25002_001E
+
+[7] "HH" - total household size in the poverty status table, B17017_001E  
+
 [8] "PopWrkF16" - total population of 16-year-and-older in workforce, B23025_002E 
-[9] "PopGE5" - total population of 5-year-and-older, B16004_001E    
+
+[9] "PopGE5" - total population of 5-year-and-older, B16004_001E  
+
 [10] "PopNInst5" - non-institutionalized population of 5-year-and-older, using the rate from census tract calculation pc_ni_5plus 
+
 [11] "HHsize" -  household size from B25010_001E   
+
 [12] "Occupancy" - B25002_002E (occupied) divided by B25002_001E (total)
-[13] "PctMinor" - percent of minority (B03002_001E - B03002_003E)/B03002_001E  
+
+[13] "PctMinor" - percent of minority (B03002_001E - B03002_003E)/B03002_001E 
+
 [14] "PctElderly" - percent of elderly, pc_65plus
-[15] "PctLEP" - percent of limited English proficiency, pc_en_nvwell     
+
+[15] "PctLEP" - percent of limited English proficiency, pc_en_nvwell 
+
 [16] "PctPoor" - percent of poor, B17017_002E / B17017_001E  
+
 [17] "PctHH0car" - percent of zero-car households, pc_zero_car  
+
 [18] "PctUnEmp" - percent of unemployment, B23025_005E / B23025_002E 
+
 [19] "PctDisab" - percent of disable, pc_ni_5plus_dis from census tract data
-[20] "PopMinor" - minority population, B03002_001E - B03002_003E 
-[21] "PopEld" - elderly population, ps_65plus    
+
+[20] "PopMinor" - minority population, B03002_001E - B03002_003E
+
+[21] "PopEld" - elderly population, ps_65plus 
+
 [22] "Pop5yrLEP" - population of limited English proficiency, en_nvwell  
-[23] "HHPoor" -  population of poor, B17017_002E    
-[24] "HH0car" -  zero-car households, zero_car     
+
+[23] "HHPoor" -  population of poor, B17017_002E 
+
+[24] "HH0car" -  zero-car households, zero_car 
+
 [25] "PopWFUnEmp" - unemployed population of 16-year-and-older workforce, B23025_005E
+
 [26] "PopNI5Disa" - disable population, using the rate from census tract calculation pc_ni_5plus_dis 
-[27] "Minority" - whether percent of minority is higher than the MPO-wide average   
-[28] "Elderly" - whether percent of minority is higher than the MPO-wide average    
-[29] "LEP" - whether percent of limited English proficiency is higher than the MPO-wide average        
-[30] "Poor" - whether percent of poor is higher than the MPO-wide average      
-[31] "HHzerocar" - whether percent of zero-car households is higher than the MPO-wide average   
+
+[27] "Minority" - whether percent of minority is higher than the MPO-wide average 
+
+[28] "Elderly" - whether percent of minority is higher than the MPO-wide average  
+
+[29] "LEP" - whether percent of limited English proficiency is higher than the MPO-wide average 
+
+[30] "Poor" - whether percent of poor is higher than the MPO-wide average   
+
+[31] "HHzerocar" - whether percent of zero-car households is higher than the MPO-wide average  
+
 [32] "Disabled" - whether percent of disable is higher than the MPO-wide average   
+
 [33] "ComofConce" - sum of Minority, Elderly, Poor and Disabled
+
 [34] "Shape_Leng" - shape length (from shapefile)
+
 [35] "Shape_Area"- shape area (from shapefile)
+
 [36] "PctRentHH" - percent of renter household, pc_rtr 
+
 [37] "RenterHHs" - renter household, B25044_009E
-[38] "Renter" - whether percent of renter household is higher than the MPO-wide average      
+
+[38] "Renter" - whether percent of renter household is higher than the MPO-wide average   
+
 [39] "OwnHHNoCar" - zero-car households which are owners, B25044_003E
+
 [40] "RntHHNoCar" - zero-car households which are renters, B25044_010E
+
 [41] "UnEmp" - whether percent of unemployment is higher than the MPO-wide average
 
 ## Download links for the CLMPO Title VI data
