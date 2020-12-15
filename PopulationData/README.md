@@ -58,7 +58,7 @@ Two main functions are applied to read and reorganize the tables to the input fi
 
 ## Explanations of the Title VI variables
 
-### Variable calculation using the tables in the script *Census_TitleVI.r*
+### Variable calculatio in the script *Census_TitleVI.r* using the tables
 
 The metadata of each table can be found from downloading the table, or searching online.  
 
