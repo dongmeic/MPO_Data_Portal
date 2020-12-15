@@ -238,8 +238,11 @@ The explanation after the comma is either source data or the calculated variable
 ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally.
 
 [Service Definition](https://lcog.maps.arcgis.com/home/item.html?id=4e6c93c4183c46fd90bd1b95edee800d) 
+
 [Feature Layer](https://lcog.maps.arcgis.com/home/item.html?id=bff06c500d9c4749b047fbd7d0ab7a21)
+
 [Shapefile](https://lcog.maps.arcgis.com/home/item.html?id=f17c5c349aa9407ab1d48338850ced05)
+
 [Web Map](https://lcog.maps.arcgis.com/home/item.html?id=000d1aaae6144808bf76a113577a939e)
 
 ## Steps for the Lane-Douglas community concerns dahsboard
