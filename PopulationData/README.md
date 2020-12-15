@@ -149,7 +149,7 @@ pc_ni_5plus (percent of 5-year-and-older non-institutionalized population): ps_n
 
 ### Variable explanations in the block group data
 
-The explanation after the comma is either source data or the calculated variable explained [above](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#variable-calculation-in-the-script-census_titlevir-using-the-tables). Search the variable name on the page to look for the definition of the variable. The source column name explanation can be found from downloading the table, or searching online.  
+The explanation after the comma is either the source column or the calculated variable explained [above](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#variable-calculation-in-the-script-census_titlevir-using-the-tables). Find (crtl/cmd + F) the variable name on the page to look for the definition of the variable. The source column name explanation can be found from downloading the table, or searching online.  
 
 [1] "or_blockgr" - block group ID
 
