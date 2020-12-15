@@ -1,5 +1,7 @@
-# This script was created by Dongmei Chen (dchen@lcog.org) to calculate data for the
-# TitleVI dashboard (https://thempo.org/958/Socio-Economic-Data) on May 5th, 2020
+# This script was created by Dongmei Chen (dchen@lcog.org) 
+# to calculate data for the TitleVI dashboard 
+# (https://thempo.org/958/Socio-Economic-Data) 
+# on May 5th, 2020
 
 # load libraries
 library(readxl)
