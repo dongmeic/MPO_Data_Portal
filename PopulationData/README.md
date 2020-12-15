@@ -58,7 +58,7 @@ Two main functions are applied to read and reorganize the tables to the input fi
 
 ## Explanations of the Title VI variables
 
-1. Variable calculation using the tables in the script *Census_TitleVI.r*
+### Variable calculation using the tables in the script *Census_TitleVI.r*
 
 The metadata of each table can be found from downloading the table, or searching online.  
 
@@ -117,9 +117,9 @@ ps_ni_5plus_dis (total 5-year-and-older non-institutionalized population with di
 pc_ni_5plus_dis (percent of 5-year-and-older non-institutionalized population with disability): ps_ni_5plus_dis divided by ps_ni_5plus
 pc_ni_5plus (percent of 5-year-and-older non-institutionalized population): ps_ni_5plus divided by 001E
 
-2. Variable explanations in the block group data
+### Variable explanations in the block group data
 
-The explanation after the comma is either source data or the calculated variable above. 
+The explanation after the comma is either source data or the calculated variable explained above. 
 
 [1] "or_blockgr" - block group ID
 [2] "BlkGrp10" - block group ID 
@@ -162,6 +162,15 @@ The explanation after the comma is either source data or the calculated variable
 [39] "OwnHHNoCar" - zero-car households which are owners, B25044_003E
 [40] "RntHHNoCar" - zero-car households which are renters, B25044_010E
 [41] "UnEmp" - whether percent of unemployment is higher than the MPO-wide average
+
+## Download links for the CLMPO Title VI data
+
+ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally.
+
+[Service Definition](https://lcog.maps.arcgis.com/home/item.html?id=4e6c93c4183c46fd90bd1b95edee800d) 
+[Feature Layer](https://lcog.maps.arcgis.com/home/item.html?id=bff06c500d9c4749b047fbd7d0ab7a21)
+[Shapefile](https://lcog.maps.arcgis.com/home/item.html?id=f17c5c349aa9407ab1d48338850ced05)
+[Web Map](https://lcog.maps.arcgis.com/home/item.html?id=000d1aaae6144808bf76a113577a939e)
 
 ## Steps for the Lane-Douglas community concerns dahsboard
 
