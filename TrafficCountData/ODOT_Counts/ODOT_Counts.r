@@ -8,11 +8,11 @@ inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
 # update data
 # range of the station table started from the 'Date' column and ended with the '24' column 
-range <- "A16:Z47"
+range <- "A16:Z46"
 # the year folder name
 year <- 2020
 # the month folder name
-month <- "Jul"
+month <- "Sep"
 # last update month was May, 2020
 Update.ODOD.Counts.By.Month(inpath, range, year, month)
 Update.ODOD.Counts.By.Month(inpath, range, year, month, LR=TRUE)
