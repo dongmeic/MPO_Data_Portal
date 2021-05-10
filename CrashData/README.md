@@ -7,29 +7,29 @@ Internal parent path - T:\Tableau\tableauCrash\Workbooks, except for the safety 
 
 1. Crash data mapping
 
-      1.1 [Motor Vehicle Crashes](https://www.lcog.org/914/Motor-Vehicle-Crashes) - CrashMaps_Motorized_DC.twb, saved as 'Motor Vehicle Crashes'
+      1.1 [Motor Vehicle Crashes](https://www.lcog.org/914/Motor-Vehicle-Crashes) - CrashMaps_Motorized_DC.twb
 
-      1.2 [Bicycle-Involved Crashes](https://www.lcog.org/916/Bicycle-Involved-Crashes) - CrashMaps_Bicycle_DC.twb, saved as 'Bicycle-Involved Crashes'
+      1.2 [Bicycle-Involved Crashes](https://www.lcog.org/916/Bicycle-Involved-Crashes) - CrashMaps_Bicycle_DC.twb
 
-      1.3 [Pedestrian-Involved Crashes](https://www.lcog.org/917/Pedestrian-Involved-Crashes) - CrashMaps_Pedestrian_DC.twb, saved as 'Pedestrian-Involved Crashes'
+      1.3 [Pedestrian-Involved Crashes](https://www.lcog.org/917/Pedestrian-Involved-Crashes) - CrashMaps_Pedestrian_DC.twb
 
-      1.4 [Advanced User Data](https://www.lcog.org/913/Advanced-User-Data) - CrashMaps_AdvancedUser_DC.twb, saved as 'Advanced User Data'
+      1.4 [Advanced User Data](https://www.lcog.org/913/Advanced-User-Data) - CrashMaps_AdvancedUser_DC.twb
 
-      1.5 [Crash Conditions](https://www.lcog.org/938/Crash-Conditions) - CrashesByFireDistrict_DC.twb, saved as 'Crash Conditions'
+      1.5 [Crash Conditions](https://www.lcog.org/938/Crash-Conditions) - CrashesByFireDistrict_DC.twb
 
-2. [Population Crash Rates](https://www.lcog.org/891/Population-Crash-Rates) - CrashRatesByPopAgeGroup_DC.twb, saved as 'Population Crash Rates'
+2. [Population Crash Rates](https://www.lcog.org/891/Population-Crash-Rates) - CrashRatesByPopAgeGroup_DC.twb
 
 This dashboard requires updates in *LaneAgeGroupPop.xlsx*, sourced from the [Population Research Center at Portland State University](https://www.pdx.edu/population-research/population-estimate-reports). The source table is Table 9 in the Annual Population Report Tables ([2018](https://drive.google.com/file/d/1M3ZpX3HwBPESVX0u-Q4hpI0F2yOPzmrc/view), [2019](https://drive.google.com/file/d/1Ul_4qRNTXAsZCEZbAnr4bzxO3Im6ohFd/view)). The age groups 15-17 and 18-19 are combined as 15-19. 
 
-3. [VMT Crash Rates](https://www.lcog.org/892/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb, saved as 'VMT Crash Rates'
+3. [VMT Crash Rates](https://www.lcog.org/892/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb
 
 This dashboard requires updates in *VMT_by_FuncClass.xlsx*, sourced from ODOT VMT report. The detailed steps are addressed in T:\Data\VMT\VMT HPMS\update_notes.txt. The results are calculated in spreadsheet using daily vehicle miles, the number of days in a year, and unit conversion.
 
-4. [**Transportation Safety Emphasis Areas**](https://www.lcog.org/912/Transportation-Safety-Emphasis-Areas) - EmphasisAreas_UGB.twb, saved as 'Transportation Safety Emphasis Areas'
+4. [**Transportation Safety Emphasis Areas**](https://www.lcog.org/912/Transportation-Safety-Emphasis-Areas) - EmphasisAreas_UGB.twb
 
 This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau_UGB.csv*, following the the script *SafetyEmphasisAreas.r*.
 
-5. [**NHTSA Core Safety Measures**](https://www.lcog.org/899/NHTSA-Core-Safety-Measures) - CoreSafetyMeasures_Parameter_DC.twb, saved as 'NHTSA Core Safety Measures'
+5. [**NHTSA Core Safety Measures**](https://www.lcog.org/899/NHTSA-Core-Safety-Measures) - CoreSafetyMeasures_Parameter_DC.twb
 
 This dashboard requires updates in *US_FARS_data.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2019/vm2.cfm) and National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx). 
 
