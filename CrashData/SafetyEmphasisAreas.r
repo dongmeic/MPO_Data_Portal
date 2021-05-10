@@ -29,14 +29,15 @@ if(CheckOldData){
   head(severity)
 }
 
-# This will take a while to complete
+# Read data sources, this will take a while to complete
 data <- readOGR(dsn = fgdb, layer = "Crash", stringsAsFactors = FALSE)
 vhcl <- st_read(dsn = fgdb, layer = "Crash_Vehicle", stringsAsFactors = FALSE)
 # Read the participant table for the young drivers and unlicensed drivers measures
 partic <- st_read(dsn = fgdb, layer = "Crash_Participant", stringsAsFactors = FALSE)
 partic <- partic[!is.na(partic$vhcl_id),]
   
-# Organize young drivers for each crash ID
+# Organize young drivers for each crash ID, select young drivers first and mark 
+# the crash data with young drivers
 partic$age_val <- as.numeric(partic$age_val)
 partic.drvr <- partic[partic$partic_typ_long_desc == "Driver", ]
 partic.yngdr <- partic.drvr[partic.drvr$age_val >= 15 & partic.drvr$age_val <= 21,]

@@ -1,5 +1,5 @@
 # Objective: Clean the state and lane county VMT and population data
-# to create the viz ()
+# to create the viz (VMT and Population: https://www.lcog.org/957/Population-Data)
 # By Dongmei Chen (dchen@lcog.org)
 # On December 15, 2020
 
