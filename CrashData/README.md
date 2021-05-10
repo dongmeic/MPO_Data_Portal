@@ -23,13 +23,13 @@ This dashboard requires updates in *LaneAgeGroupPop.xlsx*, sourced from the [Pop
 
 3. [VMT Crash Rates](https://www.lcog.org/892/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb, save as 'VMT Crash Rates'
 
-This dashboard requires updates in *VMT_by_FuncClass.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2019/vm2.cfm).
+This dashboard requires updates in *VMT_by_FuncClass.xlsx*, sourced from ODOT VMT report. The detailed steps are addressed in T:\Data\VMT\VMT HPMS\update_notes.txt. The results are calculated in spreadsheet using daily vehicle mildes, the number of days in a year, and unit conversion.
 
 4. [**Transportation Safety Emphasis Areas**](https://www.lcog.org/912/Transportation-Safety-Emphasis-Areas)
 
 5. [**NHTSA Core Safety Measures**](https://www.lcog.org/899/NHTSA-Core-Safety-Measures)
 
-This dashboard requires updates in *US_FARS_data.xlsx*, sourced from National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx). 
+This dashboard requires updates in *US_FARS_data.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2019/vm2.cfm) and National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx). 
 
 Most of the dashboards above are connected with the LCOG data server and the computation is done in Tableau which is a continued effort from the former GIS staff Bill Clingman, except the last two dashboards. Due to the Lane Geographic Data Consortium migration in 2020, crash data structure has changed by removing the differentiation of vehicle and non-vehicle participant.The dashboard *Transportation Safety Emphasis Areas* requires input files from lane county crash geodatabase prepared by Jacob Blair, and the calculation approach has been updated slightly due to the data structure change. The dashbords 1.1, 1.4, 1.5, 2, and 3 include low-level severity crash data and the update of crash data mapping only requires to refresh all extracts and change the year information, unless there are new changes in the data structure.
 
