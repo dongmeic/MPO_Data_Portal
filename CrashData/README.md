@@ -27,7 +27,7 @@ This dashboard requires updates in *VMT_by_FuncClass.xlsx*, sourced from ODOT VM
 
 4. [**Transportation Safety Emphasis Areas**](https://www.lcog.org/912/Transportation-Safety-Emphasis-Areas) - EmphasisAreas_UGB.twb
 
-This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau_UGB.csv*, following the the script *SafetyEmphasisAreas.r*.
+This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau_UGB.csv*, by running the the script *SafetyEmphasisAreas.r*.
 
 5. [**NHTSA Core Safety Measures**](https://www.lcog.org/899/NHTSA-Core-Safety-Measures) - CoreSafetyMeasures_Parameter_DC.twb
 
