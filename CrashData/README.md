@@ -17,7 +17,9 @@ Internal parent path - T:\Tableau\tableauCrash\Workbooks
 
       1.5 [Crash Conditions](https://www.lcog.org/938/Crash-Conditions) - CrashesByFireDistrict_DC.twb, save as 'Crash Conditions'
 
-2. [Population Crash Rates](https://www.lcog.org/891/Population-Crash-Rates)
+2. [Population Crash Rates](https://www.lcog.org/891/Population-Crash-Rates) - CrashRatesByPopAgeGroup_DC.twb, save as 'Population Crash Rates'
+
+This dashboard requires updates in *LaneAgeGroupPop.xlsx*, sourced from the Population Research Center at Portland State University.
 
 3. [VMT Crash Rates](https://www.lcog.org/892/VMT-Crash-Rates)
 
