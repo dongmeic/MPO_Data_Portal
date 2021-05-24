@@ -245,6 +245,11 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 
 [Web Map](https://lcog.maps.arcgis.com/home/item.html?id=000d1aaae6144808bf76a113577a939e)
 
+## Download links for the CLMPO Title VI PDF maps
+[2014 - 2018](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EnM3omAabelNpQDt35dX4ckBM1NmZuAhahaobDWw3e56Bg?e=OVqQE2)
+
+[2015 - 2019](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/Er0KHmKTvEFEjhmNqK51C48BORpezlfErRSnMB0VR81lzw?e=qaxBsW) 
+
 ## Steps for the Lane-Douglas communities of concern dashboard
 
 1. Identify variables required and check data sources and output formats
