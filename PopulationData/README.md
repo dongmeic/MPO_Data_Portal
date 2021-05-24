@@ -6,7 +6,7 @@ The [Population Data](https://www.lcog.org/957/Population-Data) dashboard has be
 
 ## Data Sources for the Title VI dashboards
 
-Data from ten tables (1 - 10) within block group, one table (11) within census tract (for 1 year and 5 year respectively), and nine tables (12 - 19) were collected for the Title VI dashboard:
+Data from ten tables (1 - 10) within block group, one table (11) within census tract (for 1 year and 5 year respectively), and nine tables (12 - 19) were collected for the Title VI dashboard (the links are updated with the most-recent data, as current as 2019):
 
 1. [B01003 Total Population](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B01003&hidePreview=false&cid=B01003_001E&vintage=2019)
 
@@ -235,7 +235,7 @@ The explanation after the comma is either the source column or the calculated va
 
 ## Download links for the CLMPO Title VI data
 
-ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally.
+ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally. The links are updated automatically with the most-recent data, as current as 2019. 
 
 [Service Definition](https://lcog.maps.arcgis.com/home/item.html?id=4e6c93c4183c46fd90bd1b95edee800d) 
 
