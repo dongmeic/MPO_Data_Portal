@@ -3,21 +3,15 @@
 # On April 9th, 2020
 
 # load functions
-source("T:/Data/COUNTS/ODOT_Counts and Forecasts/Scripts/ODOT_Counts_Functions.r")
+source("T:/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
-############################## Run before Oct 2020 ################################
+############################## Run after Oct 2020 ################################
 # update data after October 2020
-
-
-############################## Data cleaning 2nd ################################
-
-
-
-
-
-
-
+year <- 2021
+month_range <- "Jan-Apr" #"Oct-Dec" #"Jan-Apr"
+Update.ODOT.Counts(month_range=month_range, 
+                   year=year)
 
 ############################## Run before Oct 2020 ################################
 # update data before October 2020
@@ -28,8 +22,8 @@ year <- 2020
 # the month folder name
 month <- "Sep"
 # last update month was May, 2020
-Update.ODOD.Counts.By.Month(inpath, range, year, month)
-Update.ODOD.Counts.By.Month(inpath, range, year, month, LR=TRUE)
+Update.ODOT.Counts.By.Month(inpath, range, year, month)
+Update.ODOT.Counts.By.Month(inpath, range, year, month, LR=TRUE)
 
 ############################## Data cleaning ################################
 # test functions

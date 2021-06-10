@@ -11,16 +11,126 @@ library(reshape2)
 library(stringr)
 library(lubridate)
 
+Update.ODOT.Counts <- function(month_range="Oct-Dec", 
+                               year=2020){
+  old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableaU.csv", stringsAsFactors = FALSE)
+  counts.df <- read_by_stations(month_range=month_range, year=year)
+  new.counts <- rbind(old.counts, counts.df)
+  write.csv(new.counts, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableau.csv", row.names = FALSE)
+}
+
+read_by_stations <- function(month_range="Oct-Dec", 
+                             year=2020){
+  files <- list.files(paste0(inpath, year, "/", month_range), 
+                      pattern = "^VOLUME",
+                      full.names = FALSE)
+  Bfiles <- grep(files, pattern = "EB|WB|SB|NB", value = TRUE)
+  
+  for(filenm in Bfiles){
+    if(filenm == Bfiles[1]){
+      df = read_by_month_range(month_range=month_range,
+                               filenm=filenm)
+    }else{
+      ndf = read_by_month_range(month_range=month_range,
+                                filenm=filenm)
+      df = rbind(df, ndf)
+    }
+  }
+  return(df)
+}
+
+read_by_month_range <- function(month_range="Oct-Dec",
+                                filenm="VOLUME_20004_EB_20201001.xlsx"){
+  
+  year <- as.numeric(substr(unlist(strsplit(filenm, "_"))[4], 1, 4))
+  file <- paste0(inpath, year, "/", month_range, "/", filenm)
+  sheet_names <- excel_sheets(path=file)
+  for(sheetnm in sheet_names){
+    if(sheetnm==sheet_names[1]){
+      df = read_by_month(month_range=month_range,
+                         filenm=filenm,
+                         sheetnm=sheetnm)
+    }else{
+      ndf = read_by_month(month_range=month_range,
+                          filenm=filenm,
+                          sheetnm=sheetnm)
+      df = rbind(df, ndf)
+    }
+  }
+  return(df)
+}
+
+read_by_month <- function(month_range="Oct-Dec",
+                          filenm="VOLUME_20004_EB_20201001.xlsx",
+                          sheetnm="10_2020"){
+
+  file <- paste0(inpath, year, "/", month_range, "/", filenm)
+  month <- as.numeric(unlist(strsplit(sheetnm, "_"))[1])
+  year <- as.numeric(unlist(strsplit(sheetnm, "_"))[2])
+  range=paste0("A10:Y", (10+days.in.month(month=month, year=year)))
+  df <- as.data.frame(read_excel(file, 
+                                 sheet=sheetnm, 
+                                 range = range))
+  df[1] <- unlist(lapply(df[1], function(x) paste0(month, "/", x, "/", year)))
+  colnames(df)[1:25] <- c("Date", seq(0, 23, by=1))
+  
+  df <- df %>% 
+    mutate(Date = as.Date(Date, format = "%m/%d/%Y")) %>% 
+    mutate(Day = substr(weekdays(Date), 1, 3)) %>%
+    melt(id.vars = c("Date", "Day")) %>% 
+    rename(Hour = variable, Count = value) %>%
+    mutate(Direction = rep(unlist(strsplit(filenm, "_"))[3],length(.$Date)), 
+           StationID = rep(unlist(strsplit(filenm, "_"))[2],length(.$Date))) %>%
+    select(StationID, Direction, Date, Day, Hour, Count) %>%
+    mutate(Hour = unlist(lapply(as.numeric(Hour), convert.hour))) %>%
+    mutate(Date = format(Date, "%m/%d%/%Y"))
+  
+  return(df)
+}
+
+days.in.month <- function(month, year){
+  if(month %in% c(4, 6, 9, 11)){
+    days = 30
+  }else if(month == 2){
+    if(is.leap.year(year)){
+      days = 29
+    }else{
+      days = 28
+    }
+  }else{
+    days = 31
+  }
+  return(days)
+}
+
+#If a year is divisible by 4, 100 and 400, it's a leap year.
+#If a year is divisible by 4 and 100 but not divisible by 400, it's not a leap year.
+#If a year is divisible by 4 but not divisible by 100, it's a leap year.
+
+is.leap.year <- function(year){
+  if((year %% 4) == 0 & (year %% 100) == 0){
+    if((year %% 400) == 0){
+      TRUE
+    }else{
+      FALSE
+    }
+  }else if((year %% 4) == 0 & (year %% 100) != 0){
+    TRUE
+  }else{
+    FALSE
+  }
+}
+
 convert.hour <- function(hour){
   if(hour %in% c(1:11)){
     hour = paste0(hour, ":00 AM")
   }else if(hour %in% c(13:23)){
     hour = paste0(hour - 12, ":00 PM")
-  }else if(hour %in% c(12, 24)){
+  }else if(hour %in% c(12, 24, 0)){
     if(hour == 12){
       hour = paste0(hour, ":00 PM")
     }else{
-      hour = paste0(hour - 12, ":00 AM")
+      hour = paste0("12:00 AM")
     }
   }
   return(hour)
@@ -58,7 +168,7 @@ read.odot.sheet <- function(path, stationID, sheetnm, range, length="35-61", LR=
       mutate(Direction = rep(sheetnm,length(.$Date)), StationID = rep(stationID,length(.$Date))) %>%
       select(StationID, Direction, Date, Day, Hour, Count) %>%
       mutate(Hour = unlist(sapply(as.numeric(Hour), convert.hour))) %>%
-      mutate(Date = format(Date, "%m/%d%/%Y"))
+      mutate(Date = format(Date, "%m/%d/%Y"))
   }
   return(df)
 }
@@ -214,7 +324,7 @@ get.length.reports <- function(path){
 
 
 # add new data to the old table
-Update.ODOD.Counts.By.Month <- function(path, range, year, month, LR=FALSE, HD=FALSE){
+Update.ODOT.Counts.By.Month <- function(path, range, year, month, LR=FALSE, HD=FALSE){
   path <- getpath(path, year, month)
   if(LR){
     old.LR <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableaU_LongVehicles.csv", stringsAsFactors = FALSE)
