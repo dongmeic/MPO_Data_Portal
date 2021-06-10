@@ -6,7 +6,21 @@
 source("T:/Data/COUNTS/ODOT_Counts and Forecasts/Scripts/ODOT_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
-# update data
+############################## Run before Oct 2020 ################################
+# update data after October 2020
+
+
+############################## Data cleaning 2nd ################################
+
+
+
+
+
+
+
+
+############################## Run before Oct 2020 ################################
+# update data before October 2020
 # range of the station table started from the 'Date' column and ended with the '24' column 
 range <- "A16:Z46"
 # the year folder name

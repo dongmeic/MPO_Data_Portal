@@ -32,6 +32,8 @@ getpath <- function(path, year, month){
 
 # read ODOT counts spreadsheets
 # requires inputs path and range
+# LR - length report
+# HD - historical data
 read.odot.sheet <- function(path, stationID, sheetnm, range, length="35-61", LR=FALSE, HD=FALSE){
   if(LR){
     # require information on year, month, length
