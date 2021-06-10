@@ -24,5 +24,4 @@ The output should include "StationID", "Direction", "Date", "Day", "Hour", and "
 
 "20004","WB","10/01/2011","Sat","1:00 AM","10"
 
-The same format shows in the long vehicles data, which include length "35-61" and "61-150". 
-
+The same format shows in the long vehicles data, which include length "35-61" and "61-150". Since the length report in October 2020 is missing due to a data migration issue occurred when ODOT shifted to a new database Oregon Traffic Monitoring System, the dashboards are not synchronized with the same time information. 
