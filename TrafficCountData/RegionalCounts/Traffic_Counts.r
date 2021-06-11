@@ -13,19 +13,45 @@ library(reshape2)
 # load functions
 source("T:/GitHub/MPO_Data_Portal/TrafficCountData/RegionalCounts/Traffic_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/Motorized Counts/Regional Traffic Counts Program/Central Lane Motorized Count Program/"
+site.path <- paste0(inpath, "traffic_count_locations")
+outpath <- "T:/Tableau/tableauRegionalCounts/Datasources"
 
 
 ############################## Fall 2020 ################################
+file <- paste0(inpath, "data/LCOG_2020Data Summary.xlsx")
+sheet_names <- excel_sheets(path=file)
+sheet_names <- grep(sheet_names, pattern = "Summary|Seasonal Factors", invert=TRUE, value = TRUE)
+n <- length(sheet_names)
+k=9 # start of numbering
+siten <- k:(k+n-1)
+rowlist <- list(c(3, 48, 50, 95),
+             c(3, 50, 52, 99),
+             c(3, 50, 52, 99),
+             c(3, 51, 53, 101),
+             c(3, 52, 54, 103),
+             c(3, 52, 54, 103),
+             c(3, 50, 52, 99),
+             c(3, 50, 52, 99),
+             c(3, 50, 52, 99),
+             c(3, 50, 52, 98),
+             c(3, 49, 52, 98),
+             c(3, 50, 52, 99),
+             c(3, 49, 51, 97),
+             c(3, 49, 51, 97),
+             c(3, 51, 53, 101),
+             c(3, 50, 52, 99))
+
+df <- read_table()
 
 
+loc <- readOGR(dsn = site.path, layer = "draft_locations", stringsAsFactors = FALSE)
+head(loc) 
 
 
 ############################## Fall 2019 ################################
 # initial data cleaning on the October 2019 data
 # set data path
 data.path <- paste0(inpath, "data/October2019/")
-site.path <- paste0(inpath, "traffic_count_locations")
-outpath <- "T:/Output/MPO/TrafficCounts/"
 
 filenames <- c("42nd-Commercial", "Centennial-18th", "Mohawk-G St", "PioneerPrk-S", "PioneerPrk-N", 
                "QSt-105", "Centennial-Anderson", "Franklin-I5")

@@ -16,7 +16,7 @@ The dashboard shows the map of traffic counts and hourly traffic counts by vehic
 
 2. Run the script *Traffic_Counts.r* and update Tableau viz following the steps described in *RegionalCountsUpdate.txt* located at \\clsrv111.int.lcog.org\transpor\Tableau\tableauRegionalCounts\Workbooks. 
 
-3. If the data format has changed, data clearning needs to be started over. Check the data source to understand the required table format and update the R scripts to get the target tables and *RegionalCountsUpdate.txt* for future reference.
+3. Data cleaning is required for each data update. Check the data source to understand the required table format and update the R scripts to get the target tables and *RegionalCountsUpdate.txt* for future reference.
 
 Notes on data cleaning:
 
