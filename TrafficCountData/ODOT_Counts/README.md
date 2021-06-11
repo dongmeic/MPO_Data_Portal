@@ -14,7 +14,7 @@ The [dashboard](https://thempo.org/902/Motorized-Traffic-Counts) shows the spati
 
 1. When data is downloaded, review the completness and format, and follow up with ODOT if there are issues. The existing format can be found in \\clsrv111.int.lcog.org\transpor\Data\COUNTS\ODOT_Counts and Forecasts\ATR Downloads by Month\[YEAR]. ODOT has changed the data format in March and October 2020. 
 
-2. Run the script *ODOT_Counts.r* and update Tableau viz following the steps described in *ODOTCountsUpdateSince2020.txt* located at \\clsrv111.int.lcog.org\transpor\Tableau\tableauODOTCounts\Datasources\. 
+2. Run the script *ODOT_Counts.r* and update Tableau viz following the steps described in *ODOTCountsUpdateSince2020.txt* located at \\clsrv111.int.lcog.org\transpor\Tableau\tableauODOTCounts\Datasources. 
 
 3. If the data format has changed, data clearning needs to be started over. Check the data source to understand the required table format and update the R scripts to get the target tables and *ODOTCountsUpdateSince2020.txt* for future reference.
 
