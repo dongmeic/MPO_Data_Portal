@@ -10,11 +10,11 @@ library(writexl)
 library(rgdal)
 library(reshape2)
 
-# load functions
+# load functions and get some global settings
 source("T:/GitHub/MPO_Data_Portal/TrafficCountData/RegionalCounts/Traffic_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/Motorized Counts/Regional Traffic Counts Program/Central Lane Motorized Count Program/"
 site.path <- paste0(inpath, "traffic_count_locations")
-outpath <- "T:/Tableau/tableauRegionalCounts/Datasources"
+outpath <- "T:/Tableau/tableauRegionalCounts/Datasources/"
 
 
 ############################## Fall 2020 ################################
@@ -42,11 +42,31 @@ rowlist <- list(c(3, 48, 50, 95),
              c(3, 50, 52, 99))
 
 df <- read_table()
+head(df)
+sitedf <- data.frame(Site=siten, Name=sheet_names)
 
 
-loc <- readOGR(dsn = site.path, layer = "draft_locations", stringsAsFactors = FALSE)
-head(loc) 
+loc_df <- get_loc_df()
+head(loc_df)
+outdata <- merge(df, loc_df, by='Site')
+outdata$YEAR <- rep(2020, dim(outdata)[1])
 
+olddata <- read.csv(paste0(outpath, "Traffic_Counts_Oct2019_Vehicles.csv"),
+                    stringsAsFactors = FALSE)
+olddata <- olddata[colnames(outdata)]
+newdata <- rbind(olddata, outdata)
+
+# Modify the street names
+newdata$Location_d <- ifelse(newdata$Location_d=="Coburg@FerryStBrdg", "Coburg Rd at Ferry Street Bridge",
+                             ifelse(newdata$Location_d=="Coburg@oakway", "Coburg Rd at Oakway Rd",
+                             ifelse(newdata$Location_d=="Coburg Rd@JeppensAcre", "Coburg Rd at Jeppesen Acres Rd",
+                             ifelse(newdata$Location_d=="Marcola19th", "Marcola Rd at 19th",
+                             ifelse(newdata$Location_d=="Marcola42nd", "Marcola Rd at 42nd",newdata$Location_d)))))
+
+head(newdata)
+tail(newdata)
+
+write.csv(newdata, file = paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
 
 ############################## Fall 2019 ################################
 # initial data cleaning on the October 2019 data

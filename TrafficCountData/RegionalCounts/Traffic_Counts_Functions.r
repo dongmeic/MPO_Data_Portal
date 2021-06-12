@@ -2,6 +2,21 @@
 # By Dongmei Chen (dchen@lcog.org)
 # On February 18th, 2020
 
+
+# organize location data with site IDs
+# make sure site.path is in the global setting
+get_loc_df <- function(layer = "locations2020"){
+  loc <- readOGR(dsn = site.path, layer = layer, 
+                 stringsAsFactors = FALSE)
+  # get longitude and latitude information
+  loc.lonlat <- spTransform(loc, CRS("+init=epsg:4326"))
+  lonlat.df <- as.data.frame(loc.lonlat@coords)
+  names(lonlat.df) <- c("Longitude", "Latitude")
+  loc.df <- loc@data
+  loc.df <- cbind(lonlat.df, loc.df)
+  return(loc.df)
+}
+
 # make sure siten, sheet_names, rowlist are available globally
 read_table <- function(){
   
@@ -45,9 +60,10 @@ read_site <- function(sheetnm="Coburg@FerryStBrdg", cols=c("A", "D", "E", "Q"),
                 b2=b2)
   
   df <- cbind(tc, vc) %>% 
-    melt(id.vars=c("Date","Day","Time","Total")) %>% 
-    rename(VehicleType = variable, VehicleQty = value) 
-  
+    melt(id.vars=c("Site","Direction","Date","Day","Time","Total")) %>% 
+    rename(VehicleType = variable, VehicleQty = value) %>%
+    mutate(VehicleType = gsub(" ", "", VehicleType))
+    
   return(df)
 }
 
@@ -60,6 +76,8 @@ read_vc <- function(sheetnm="Coburg@FerryStBrdg",
   df1 <- read_vc_b(sheetnm = sheetnm, tcrange = tcrange1, b=b1)
   df2 <- read_vc_b(sheetnm = sheetnm, tcrange = tcrange2, tcrange2 = tcrange1, b=b2)
   df <- rbind(df1, df2)
+  
+  return(df)
 }
 
 read_vc_b <- function(sheetnm="Coburg@FerryStBrdg",
@@ -88,6 +106,7 @@ read_tc <- function(sheetnm="Coburg@FerryStBrdg",
 
 
 # tc - traffic counts; b - bound/direction
+# make sure siten and sheet_names are available globally
 read_tc_b <- function(sheetnm="Coburg@FerryStBrdg",
                       tcrange="A3:D48",
                       b="N"){
@@ -98,8 +117,9 @@ read_tc_b <- function(sheetnm="Coburg@FerryStBrdg",
   df <- df %>% 
     mutate(Site=rep(siten[which(sheet_names==sheetnm)], length(.$Date)),
            Direction=rep(b, length(.$Date)), Day=weekdays(Date),
-           Time = as.character(gsub(".* ","",Time))) %>%
-    select(Site,Direction,Date,Day,Time,Total)
+           Time = as.character(strftime(df$Time, format='%I:%M %p', tz='utc'))) %>%
+    select(Site,Direction,Date,Day,Time,Total) %>%
+    mutate(Date=as.character(Date))
   return(df)
 }
 
