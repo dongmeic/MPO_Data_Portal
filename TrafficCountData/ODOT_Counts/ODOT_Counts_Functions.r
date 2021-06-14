@@ -11,6 +11,47 @@ library(reshape2)
 library(stringr)
 library(lubridate)
 
+Update.ODOT.LengthData <- function(month="Nov", 
+                               year=2020){
+  old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv", stringsAsFactors = FALSE)
+  counts.df <- Get.LengthReport(year=year, month=month)
+  new.counts <- rbind(old.counts, counts.df)
+  write.csv(new.counts, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv", row.names = FALSE)
+}
+
+Get.LengthReport <- function(year=2020, month='Nov'){
+  filenm <- paste0(month, year, ".xlsx")
+  file <- paste0(inpath, year, "/LengthReport/", filenm)
+  df <- as.data.frame(read_excel(file))
+  # select columns:COUNTY12, COUNTY2, COUNTY9, TwentyFourHour_Date, 
+  # Test1, 35 - 60, 61 - 149
+  df <- df[, c("COUNTY12", "COUNTY2", "COUNTY9", "TwentyFourHour_Date", "Test1",
+               "35 - 60", "61 - 149")]
+  colnames(df)[1:5] <- c("StationID", "County", "Direction", "Date", "Hour")
+  head(df)
+  df[,"Count"] <- df[,"35 - 60"] + df[,"61 - 149"]
+  
+  df <- df %>% 
+    filter(County == "Lane" & Direction %in% c("EB", "NB", "SB", "WB")) %>%
+    mutate(Day=substr(weekdays(Date), 1, 3)) %>%
+    select(StationID, Direction, Date, Day, Hour, Count) %>%
+    mutate(StationID=unlist(sapply(StationID, Get.StationID)),
+           Date=format(Date, "%m/%d/%Y"),
+           Hour=unlist(sapply(Hour, Covert.Hour.Format)))
+  return(df)
+}
+
+Get.StationID <- function(x){
+  unlist(strsplit(x, "_"))[1]
+}
+
+Covert.Hour.Format <- function(x){
+  x <- unlist(strsplit(x, " - "))[1]
+  x <- unlist(strsplit(x, "(?=[A-Za-z])(?<=[0-9])|(?=[0-9])(?<=[A-Za-z])", 
+                       perl=TRUE))
+  return(paste(paste0(x[1], ":00"), toupper(x[2])))
+}
+
 Update.ODOT.Counts <- function(month_range="Oct-Dec", 
                                year=2020){
   old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableaU.csv", stringsAsFactors = FALSE)

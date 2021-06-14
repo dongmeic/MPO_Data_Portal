@@ -7,11 +7,19 @@ source("T:/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Funct
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
 ############################## Run after Oct 2020 ################################
-# update data after October 2020
+# update ODOT counts data after October 2020
 year <- 2021
 month_range <- "Jan-Apr" #"Oct-Dec" #"Jan-Apr"
 Update.ODOT.Counts(month_range=month_range, 
                    year=year)
+
+# update length report data after October 2020 by month
+year <- 2020
+month <- 'Dec'
+# it takes a while to write out the data
+ptm <- proc.time()
+Update.ODOT.LengthData(month=month, year=year)
+proc.time() - ptm
 
 ############################## Run before Oct 2020 ################################
 # update data before October 2020
