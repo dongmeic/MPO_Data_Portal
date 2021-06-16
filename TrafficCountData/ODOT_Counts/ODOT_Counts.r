@@ -14,11 +14,9 @@ Update.ODOT.Counts(month_range=month_range,
                    year=year)
 
 # update length report data after October 2020 by month
-year <- 2020
-month <- 'Dec'
 # it takes a while to write out the data
 ptm <- proc.time()
-Update.ODOT.LengthData(month=month, year=year)
+Update.ODOT.LengthData(year=2021, multi_month=TRUE, months = c("Jan", "Feb", "Mar", "Apr"))
 proc.time() - ptm
 
 ############################## Run before Oct 2020 ################################

@@ -11,11 +11,26 @@ library(reshape2)
 library(stringr)
 library(lubridate)
 
-Update.ODOT.LengthData <- function(month="Nov", 
-                               year=2020){
+Update.ODOT.LengthData <- function(month=NULL, 
+                               year=NULL, multi_month=FALSE, 
+                               months=NULL){
   old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv", stringsAsFactors = FALSE)
-  counts.df <- Get.LengthReport(year=year, month=month)
-  new.counts <- rbind(old.counts, counts.df)
+  if(multi_month){
+    for(month in months){
+      if(month == months[1]){
+        ndf <- Get.LengthReport(year=year, month=month)
+        print(paste("Got data from", month, year))
+      }else{
+        df <- Get.LengthReport(year=year, month=month)
+        ndf <- rbind(ndf, df)
+        print(paste("Got data from", month, year))
+      }
+    }
+    new.counts <- rbind(old.counts, ndf)
+  }else{
+    counts.df <- Get.LengthReport(year=year, month=month)
+    new.counts <- rbind(old.counts, counts.df)
+  }
   write.csv(new.counts, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv", row.names = FALSE)
 }
 
