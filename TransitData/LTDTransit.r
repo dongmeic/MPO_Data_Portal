@@ -18,7 +18,16 @@ outfolder <- "T:/Tableau/tableauTransit/Datasources"
 ############################## Data update in 2021 ################################
 # review data
 data <- read.csv(paste0(outfolder, "/AllPassengerCounts.csv"))
+# correct seasons due to extra data in some seasons
+data$Season <- sapply(data$MonthYear, function(x) correct.season(x))
+# remove duplicate data
+df = distinct(data)
 unique(df$MonthYear)
+unique(df$Season)
+
+ptm <- proc.time()
+write.csv(df, paste0(outfolder, "/AllPassengerCounts.csv"), row.names = FALSE)
+proc.time() - ptm
 
 ############################## Data cleaning in 2020 ################################
 # get all historical data

@@ -2,6 +2,21 @@
 # By Dongmei Chen (dchen@lcog.org)
 # On June 15th, 2021
 
+correct.season <- function(myr){
+  m = unlist(strsplit(myr, ' '))[1]
+  yr = unlist(strsplit(myr, ' '))[2]
+  if(m %in% c('September', 'October', 'November')){
+    season = paste('Fall', yr)
+  }else if(m %in% c('December', 'January', 'February')){
+    season = paste('Winter', yr)
+  }else if(m %in% c('March', 'April', 'May')){
+    season = paste('Spring', yr)
+  }else{
+    season = paste('Summer', yr)
+  }
+  return(season)
+}
+
 get.stop.coordinates <- function(m="October", yr=2011){
   stops <- readOGR(dsn = stop.path, layer = paste(m, yr), verbose = FALSE, 
                    stringsAsFactors = FALSE)
