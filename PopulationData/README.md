@@ -195,7 +195,7 @@ The explanation after the comma is either the source column or the calculated va
 
 [22] "Pop5yrLEP" - population of limited English proficiency, en_nvwell  
 
-[23] "HHPoor" -  population of poor, B17017_002E 
+[23] "HHPoor" -  households below poverty level, B17017_002E 
 
 [24] "HH0car" -  zero-car households, zero_car 
 
@@ -249,6 +249,10 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 [2014 - 2018](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EnM3omAabelNpQDt35dX4ckBM1NmZuAhahaobDWw3e56Bg?e=OVqQE2)
 
 [2015 - 2019](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/Er0KHmKTvEFEjhmNqK51C48BORpezlfErRSnMB0VR81lzw?e=qaxBsW) 
+
+## A data requrest from Springfield on July 2021
+
+City of Springfield requested the block group data for the Springfield area that shows zero car households and poverty in a map that can be zoomed into. The dashboard [Zero-car households and households below poverty level by city](https://public.tableau.com/views/Zero-carhouseholdsandhouseholdsbelowpovertylevelbycity/TitleVI?:language=en-US&:display_count=n&:origin=viz_share_link) is created for the data request. To download the selected data, click Download on the bottom right, choose a file format (recommend Data or Crosstab), confirm the download and make notes on the data. The column "ShowVar" indicates the variable selected and the column values are the values for the selected variable. Other variables are explained [above](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#variable-explanations-in-the-block-group-data), and you can search the variable name on the page. You can also download the complete MPO Title VI spatial data [here](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#download-links-for-the-clmpo-title-vi-data).
 
 ## Steps for the Lane-Douglas communities of concern dashboard
 
