@@ -1,6 +1,6 @@
 # This script was created by Dongmei Chen (dchen@lcog.org) to reorganize and calculate data
 #  for the LTD transit dashboard 
-# (https://thempo.org/903/Transit-Ridership-Data) on May 29th, 2020
+# (https://www.lcog.org/thempo/page/Transit-Ridership-Data) on May 29th, 2020
 
 library(rgdal)
 library(readxl)
