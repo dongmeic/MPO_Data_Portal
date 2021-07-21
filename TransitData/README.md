@@ -1,6 +1,6 @@
 # Explanations
 
-Two dashboards [Transit Ridership Data](https://lcog.org/903/Transit-Ridership-Data) and [Bikes on Buses Data Explanation](https://lcog.org/906/Bikes-on-Buses) are included in this data category. They are updated twice a year in Spring and Fall. 
+Two dashboards [Transit Ridership Data](https://www.lcog.org/thempo/page/Transit-Ridership-Data) and [Bikes on Buses Data Explanation](https://www.lcog.org/thempo/page/Bikes-on-Buses) are included in this data category. They are updated twice a year in Spring and Fall. 
 
 ## Data Sources
 

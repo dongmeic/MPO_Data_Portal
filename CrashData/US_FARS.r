@@ -1,5 +1,5 @@
 # This script was created to update US FARS (Fatality Analysis Reporting System) data 
-# data downloaded from https://www.fhwa.dot.gov/policyinformation/statistics/2018/vm2.cfm (VMT) and 
+# data downloaded from https://www.fhwa.dot.gov/policyinformation/statistics/2019/vm2.cfm (VMT) and 
 # https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx (fatalities) for the 
 # tableau dashboard "US_FARS_VMT Fatality Rate OneMap_DC"
 # By Dongmei Chen (dchen@lcog.org)
@@ -9,8 +9,8 @@ library(readxl)
 library(dplyr)
 library(writexl)
 
-inpath <- "//clsrv111.int.lcog.org/transpor/Data/FARS/"
-outpath <- "//clsrv111.int.lcog.org/transpor/Tableau/tableauCrash/Datasources/"
+inpath <- "T:/Data/FARS/" 
+outpath <- "T:/Tableau/tableauCrash/Datasources/"
 
 # output format
 US_FARS_data <- read_xlsx(paste0(outpath, "US_FARS_data.xlsx")) %>%
@@ -35,8 +35,8 @@ vmt <- vmt[vmt$STATE %in% unique(US_FARS_data$State), ]
 fars <- fars[fars$State %in% unique(US_FARS_data$State), ]
 
 
-ndf <- data.frame(State=unique(US_FARS_data$State), Year=rep(2018, 50), VMT=round(vmt$TOTAL, 0),
-                  Fatalities=fars$`2018`, FatalityRate=round((fars$`2018`/round(vmt$TOTAL, 0))*100, 2))
+ndf <- data.frame(State=unique(US_FARS_data$State), Year=rep(2019, 50), VMT=round(vmt$TOTAL, 0),
+                  Fatalities=fars$`2019`, FatalityRate=round((fars$`2019`/round(vmt$TOTAL, 0))*100, 2))
 
 US_FARS_data <- rbind(US_FARS_data, ndf)
 US_FARS_data <- US_FARS_data[order(US_FARS_data$State),] 
