@@ -55,23 +55,32 @@ get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
   Counts$stop <- ifelse(nchar(Counts$stop) == 5, Counts$stop,
                         paste0(zeros[(5 - nchar(Counts$stop))], Counts$stop))
   MonthYear.stops <- unique(file_path_sans_ext(list.files(stop.path)))
-  if(month %in% c('Jan', 'Feb', 'Mar')){
+  if(year > 2019){
+    stops.df <- get.stop.coordinates(m="October", yr=2019)
+    stops.df$MonthYear <- "October 2019"
+  }else if(month %in% c('Jan', 'Feb', 'Mar')){
     if(paste("October", year-1) %in% MonthYear.stops){
       stops.df <- get.stop.coordinates(m="October", yr=year-1)
+      stops.df$MonthYear <- paste("October", year-1)
     }else{
       stops.df <- get.stop.coordinates(m="April", yr=year-1)
+      stops.df$MonthYear <- paste("April", year-1)
     }
   }else if(month %in% c('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep')){
     if(paste("April", year) %in% MonthYear.stops){
       stops.df <- get.stop.coordinates(m="April", yr=year)
+      stops.df$MonthYear <- paste("April", year)
     }else{
       stops.df <- get.stop.coordinates(m="October", yr=year-1)
+      stops.df$MonthYear <- paste("October", year-1)
     }
   }else{
     if(paste("October", year) %in% MonthYear.stops){
       stops.df <- get.stop.coordinates(m="October", yr=year)
+      stops.df$MonthYear <- paste("October", year)
     }else{
       stops.df <- get.stop.coordinates(m="April", yr=year)
+      stops.df$MonthYear <- paste("April", year)
     }
   }
   
@@ -88,6 +97,7 @@ ms = str_pad(1:12, 2, pad = "0")
 months = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
 
+# this will take a while
 for(yr in years){
   for(m in ms){
     if(yr==2021 & m=='06'){
@@ -101,3 +111,4 @@ for(yr in years){
     print(paste(yr, m))
   }
 }
+write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)
