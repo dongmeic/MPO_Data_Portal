@@ -3,7 +3,7 @@ By Dongmei Chen (dchen@lcog.org)
 
 June 2020
 
-This is a repository to track the data wrangling process for the [Central Lane Metropolitan Planning Organization Data Portal](https://www.thempo.org/887/Data). The process is coded in R. The repo folders are organized by data categories: crash, transit, traffic count, population, and commuter. Each folder includes a README.md to explain the data sources and data processing in the R scripts.
+This is a repository to track the data wrangling process for the [Central Lane Metropolitan Planning Organization Data Portal](https://www.lcog.org/thempo/page/data). The process is coded in R. The repo folders are organized by data categories: crash, transit, traffic count, population, and commuter. Each folder includes a README.md to explain the data sources and data processing in the R scripts.
 
 ## Commuter Data
 
