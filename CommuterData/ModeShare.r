@@ -10,6 +10,8 @@ library(stringr)
 
 inpath <- "T:/Data/TranspData for Web/JTW_AllYears/JTW ACS 5-Yr All Years/"
 outfolder <- "//clsrv111.int.lcog.org/transpor/Tableau/tableauJourneyToWork/Datasources/"
+
+################################## One-time data cleaning ##################################
 mode.share.file <- "ModeShare_ALL_Years.xlsx"
 mode.by.vehicles.file <- "ModeByVehiclesAvailable_AllYears.xlsx"
 mode.by.poverty.file <- "ModeByPovertyStatus_AllYears.xlsx"
@@ -46,10 +48,12 @@ readtable <- function(foldername="JTW_TravelMode_B08301",
   return(dat)
 }
 
+################################## Read new yearly data and append to the input tables ##################################
 # Mode share
 # B08301 - Means of transportation to work
-year = 2018
-B08301 <- readtable() 
+year = 2019
+B08301 <- readtable(filenm.start= "ACSDT5Y2019.", 
+                    filenm.end = "_data_with_overlays_2021-07-20T181749.csv") 
 B08301T <- B08301 %>% # get target columns (T represents target)
   select(B08301_001E, B08301_001M,
          B08301_003E, B08301_003M, B08301_004E, B08301_004M,
@@ -92,8 +96,8 @@ write.csv(mode.share, paste0(outfolder, "ModeShare_ALL_Years.csv"), row.names = 
 
 
 # Mode share by vehicle available
-B08141 <- readtable(foldername = "JTW_ModeByVehiclesAvailable_B08141", tablenm = "B08141",
-                    filenm.end = "_data_with_overlays_2020-05-13T211815.csv")
+B08141 <- readtable(foldername = "JTW_ModeByVehiclesAvailable_B08141", filenm.start= "ACSDT5Y2019.", 
+                    tablenm = "B08141",filenm.end = "_data_with_overlays_2021-07-20T182534.csv")
 
 get.data.by.mode <- function(cols=c("B08141_007", "B08141_008", "B08141_009", "B08141_010"), 
                              mode="Car, truck, or van - drove alone",
@@ -151,15 +155,17 @@ for(l in 1:length(col.list)){
   }
 }
 
+mode.by.vehicles.file <- "ModeByVehiclesAvailable_AllYears.csv"
 mode.by.vehicles <- read.csv(paste0(outfolder, mode.by.vehicles.file))
+colnames(B08141.df) <- colnames(mode.by.vehicles)
 head(mode.by.vehicles)
 mode.by.vehicles <- rbind(mode.by.vehicles, B08141.df)
 write.csv(mode.by.vehicles, paste0(outfolder, "ModeByVehiclesAvailable_AllYears.csv"), row.names = FALSE)
 
 
 # Mode share by poverty status
-B08122 <- readtable(foldername = "JTW_ModeByPovertyStatus_B08122", tablenm = "B08122",
-                    filenm.end = "_data_with_overlays_2020-05-14T172556.csv")
+B08122 <- readtable(foldername = "JTW_ModeByPovertyStatus_B08122", filenm.start= "ACSDT5Y2019.", 
+                    tablenm = "B08122", filenm.end = "_data_with_overlays_2021-07-20T182419.csv")
 
 modecolnm = "Travel.Mode"
 type = "Poverty.Status"
@@ -208,6 +214,7 @@ head(mode.by.poverty)
 mode.by.poverty <- rbind(mode.by.poverty, B08122.df)
 write.csv(mode.by.poverty, paste0(outfolder, "ModeByPovertyStatus_AllYears.csv"), row.names = FALSE)
 
+################################## One-time data cleaning ##################################
 # Length of commute
 time.leaving.file <- "TimeLeavingForWork_AllYears.xlsx"
 time.leaving <- read_excel(paste0(outfolder, time.leaving.file), sheet = "ForViz")
@@ -217,11 +224,11 @@ travel.time.file <- "TravelTimeToWork_AllYears.xlsx"
 travel.time <- read_excel(paste0(outfolder, travel.time.file), sheet = "ForViz")
 write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), row.names = FALSE)
 
-
+################################## Read new yearly data and append to the input tables ##################################
 foldername = "JTW_TimeLeaving_B08302"
-filenm.start = "ACSDT5Y2018."
+filenm.start = "ACSDT5Y2019."
 tablenm = "B08302"
-filenm.end = "_2020-05-15T131849.csv"
+filenm.end = "_2021-07-20T182050.csv"
 
 add.colon <- function(v){
   for(i in 1:length(v)){
@@ -252,13 +259,14 @@ timesteps <- c("Midnight to 5 AM","5 to 5:30 AM","5:30 to 6 AM",
                 "9 to 10 AM", "10 to 11 AM", "11 AM to Noon",          
                 "Noon to 4 PM", "4 PM to Midnight")
 
-year = 2018
+year = 2019
 
 get.time.data <- function(foldername = "JTW_TimeLeaving_B08302", 
                           filenm.start = "ACSDT5Y2018.",
                           tablenm = "B08302", 
                           filenm.end = "_2020-05-15T131849.csv",
                           colnm = 'Time.Leaving.for.Work..Census.',
+                          toRemove = "Estimate!!Total!!",
                           time = TRUE){
   data.file <- paste0(filenm.start, tablenm, "_data_with_overlays", filenm.end)
   dat <- read.csv(paste0(inpath, foldername, "/", data.file), stringsAsFactors = FALSE)
@@ -283,13 +291,13 @@ get.time.data <- function(foldername = "JTW_TimeLeaving_B08302",
   dat.moe <- dat.t[row.names(dat.t) %in% grep("M", row.names(dat.t), value = TRUE),]
   df.stk$MOE_Est <- stack(dat.moe)$values
   if(time){
-    df.stk[,colnm] <- rep(add.colon(str_remove(metadat$id, "Estimate!!Total!!")), 5)
+    df.stk[,colnm] <- rep(add.colon(str_remove(metadat$id, toRemove)), 5)
     df.stk$`Time.Leaving.for.Work` <- rep(timesteps, 5)
     df.stk$Year <- rep(year, dim(df.stk)[1])
     df.stk <- df.stk[, c("Year", "Geography", colnm,
                          "Time.Leaving.for.Work", "Estimate", "MOE_Est")]
   }else{
-    df.stk[,colnm] <- rep(str_remove(metadat$id, "Estimate!!Total!!"), 5)
+    df.stk[,colnm] <- rep(str_remove(metadat$id, toRemove), 5)
     df.stk$Year <- rep(year, dim(df.stk)[1])
     df.stk <- df.stk[, c("Year", "Geography", colnm,
                          "Estimate", "MOE_Est")]
@@ -306,11 +314,14 @@ get.time.data <- function(foldername = "JTW_TimeLeaving_B08302",
 }
 
 
-B08302.df <- get.time.data()
+B08302.df <- get.time.data(filenm.start = "ACSDT5Y2019.", filenm.end = "_2021-07-20T182050.csv")
 
-B08303.df <- get.time.data(foldername = "JTW_TravelTime_B08303", tablenm = "B08303",
-                    filenm.end = "_2020-05-15T131935.csv",
-                    colnm = "Length.of.Commute", time = FALSE)
+B08303.df <- get.time.data(foldername = "JTW_TravelTime_B08303", 
+                           filenm.start = "ACSDT5Y2019.",
+                           tablenm = "B08303",
+                           filenm.end = "_2021-07-20T182256.csv",
+                           colnm = "Length.of.Commute", 
+                           toRemove = "Estimate!!Total:!!", time = FALSE)
 
 time.leaving.file <- "TimeLeavingForWork_AllYears.csv"
 time.leaving <- read.csv(paste0(outfolder, time.leaving.file))
@@ -322,4 +333,4 @@ travel.time.file <- "TravelTimeToWork_AllYears.csv"
 travel.time <- read.csv(paste0(outfolder, travel.time.file))
 head(travel.time)
 travel.time <- rbind(travel.time, B08303.df)
-write.csv(travel.time, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"), row.names = FALSE)
+write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), row.names = FALSE)

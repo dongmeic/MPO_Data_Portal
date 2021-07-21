@@ -24,5 +24,5 @@ The [**PopulationData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master
 
 ## Commuter Data
 
-The [**CommuterData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CommuterData) folder includes the script *ModeShare.r* to organize data tables for the viz [Commute Mode Shares](https://www.thempo.org/905/Commute-Mode-Share) and [Length of Commute](https://www.thempo.org/907/Length-of-Commute). 
+The [**CommuterData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CommuterData) folder includes the script *ModeShare.r* to organize data tables for the viz [Commute Mode Shares](https://www.lcog.org/thempo/page/commuter-mode-shares) and [Length of Commute](https://www.lcog.org/thempo/page/length-commute). The viz [Local & Regional Commute Patterns](https://www.lcog.org/thempo/page/local-regional-commute-patterns) requires two csv files [`or_od_main_JT01_{YEAR}.csv`](https://lehd.ces.census.gov/data/#lodes) and [`or_xwalk.csv`](https://lehd.ces.census.gov/data/lodes/LODES7/or/). Update the data sources in Tableau on the join.
 
