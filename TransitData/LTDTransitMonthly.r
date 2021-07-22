@@ -111,4 +111,18 @@ for(yr in years){
     print(paste(yr, m))
   }
 }
+
+ptm <- proc.time()
 write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)
+proc.time() - ptm
+
+# aggregate monthly data
+aggdata <-aggregate(x=ndf[c('ons', 'offs', 'load')], 
+                    by=ndf[c("route", "month", "year")],
+                    FUN=sum, na.rm=TRUE)
+
+aggdata$MonthYear = ifelse(aggdata$month %in% c('January', 'February', 'March'), paste('October', aggdata$year - 1),
+                           ifelse(aggdata$month %in% c('April', 'May', 'June', 'July', 'August', 'September'), paste('April', aggdata$year),
+                                  paste('October', aggdata$year)))
+aggdata$MonthYear = ifelse(aggdata$MonthYear == 'April 2021', 'October 2020', aggdata$MonthYear)
+write.csv(aggdata, "T:/Tableau/tableauTransit/Datasources/AggPassengerCounts.csv", row.names = FALSE)
