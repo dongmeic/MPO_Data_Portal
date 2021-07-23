@@ -1,8 +1,8 @@
 # Explanations
 
-Two dashboards were originally in this data category and the [Population Data](https://www.lcog.org/thempo/page/Population-Data) has been first updated in 2019 by Bill Clingman. The script *Census_TitleVI.r* organizes data for the [Socio-Economic Data dashboard](https://www.lcog.org/thempo/page/Socio-Economic-Data) (Title VI). The sript *TitleVI_Lane_Douglas.r* creates a 'Communities of Concern' dashboard for 9 census tracts in Lane County outside MPO and 2 census tracts in Douglas County.  
+Two dashboards were originally in this data category and the [Population Data](https://www.lcog.org/thempo/page/population-data) has been first updated in 2019 by Bill Clingman. The script *Census_TitleVI.r* organizes data for the [Socio-Economic Data dashboard](https://www.lcog.org/thempo/page/socio-economic-data) (Title VI). The sript *TitleVI_Lane_Douglas.r* creates a 'Communities of Concern' dashboard for 9 census tracts in Lane County outside MPO and 2 census tracts in Douglas County.  
 
-The [Population Data](https://www.lcog.org/thempo/page/Population-Data) dashboard has been further updated on December 15, 2020, by Dongmei Chen. Another dashboard on vehicle miles traveled (VMT) and population was added to this data category at the same time, using the same population data. The data sources are explained [below](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#data-sources-for-vmt-and-population). The script *VMT_Pop.r* cleans data for the time-series VMT and population plots.
+The [Population Data](https://www.lcog.org/thempo/page/population-data) dashboard has been further updated on December 15, 2020, by Dongmei Chen. Another dashboard on vehicle miles traveled (VMT) and population was added to this data category at the same time, using the same population data. The data sources are explained [below](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#data-sources-for-vmt-and-population). The script *VMT_Pop.r* cleans data for the time-series VMT and population plots.
 
 ## Data Sources for the Title VI dashboards
 

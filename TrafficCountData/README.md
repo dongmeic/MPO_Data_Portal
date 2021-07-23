@@ -1,6 +1,6 @@
 # Explanations
 
-Three databoards are in this data category and the scripts *ODOT_Counts.r* and *ODOT_Counts_Functions.r* in the **ODOT_Counts** folder are used to update the [Motorized Traffic Counts](https://www.lcog.org/thempo/page/Motorized-Traffic-Counts) dashboard, which is updated monthly or periodly according to data availability. The [Bicycle Counts](https://www.lcog.org/thempo/page/Bicycle-Counts) and [Pedestrian Counts](https://www.lcog.org/thempo/page/Pedestrian-Counts) dashboards are managed by Kyle Overstake. The **AADBT** folder includes scripts to model the Annual Average Daily Bicycle Traffic. The **RegionalCounts** folder includes scripts to clean up regional traffic counts data.
+Three databoards are in this data category and the scripts *ODOT_Counts.r* and *ODOT_Counts_Functions.r* in the **ODOT_Counts** folder are used to update the [Motorized Traffic Counts](https://www.lcog.org/thempo/page/motorized-traffic-counts) dashboard, which is updated monthly or periodly according to data availability. The [Bicycle Counts](https://www.lcog.org/thempo/page/bicycle-counts) and [Pedestrian Counts](https://www.lcog.org/thempo/page/pedestrian-counts) dashboards are managed by Kyle Overstake. The **AADBT** folder includes scripts to model the Annual Average Daily Bicycle Traffic. The **RegionalCounts** folder includes scripts to clean up regional traffic counts data.
 
 ## Data Sources
 

@@ -7,21 +7,21 @@ Internal parent path - T:\Tableau\tableauCrash\Workbooks, except for the safety 
 
 1. Crash data mapping
 
-      1.1 [Motor Vehicle Crashes](https://www.lcog.org/thempo/page/Motor-Vehicle-Crashes) - CrashMaps_Motorized_DC.twb
+      1.1 [**Motor Vehicle Crashes**](https://www.lcog.org/thempo/page/Motor-Vehicle-Crashes) - CrashMaps_Motorized_DC.twb
 
-      1.2 [Bicycle-Involved Crashes](https://www.lcog.org/thempo/page/Bicycle-Involved-Crashes) - CrashMaps_Bicycle_DC.twb
+      1.2 [**Bicycle-Involved Crashes**](https://www.lcog.org/thempo/page/Bicycle-Involved-Crashes) - CrashMaps_Bicycle_DC.twb
 
-      1.3 [Pedestrian-Involved Crashes](https://www.lcog.org/thempo/page/Pedestrian-Involved-Crashes) - CrashMaps_Pedestrian_DC.twb
+      1.3 [**Pedestrian-Involved Crashes**](https://www.lcog.org/thempo/page/Pedestrian-Involved-Crashes) - CrashMaps_Pedestrian_DC.twb
 
-      1.4 [Advanced User Data](https://www.lcog.org/thempo/page/Advanced-User-Data) - CrashMaps_AdvancedUser_DC.twb
+      1.4 [**Advanced User Data**](https://www.lcog.org/thempo/page/Advanced-User-Data) - CrashMaps_AdvancedUser_DC.twb
 
-      1.5 [Crash Conditions](https://www.lcog.org/thempo/page/Crash-Conditions) - CrashesByFireDistrict_DC.twb
+      1.5 [**Crash Conditions**](https://www.lcog.org/thempo/page/Crash-Conditions) - CrashesByFireDistrict_DC.twb
 
-2. [Population Crash Rates](https://www.lcog.org/thempo/page/Population-Crash-Rates) - CrashRatesByPopAgeGroup_DC.twb
+2. [**Population Crash Rates**](https://www.lcog.org/thempo/page/Population-Crash-Rates) - CrashRatesByPopAgeGroup_DC.twb
 
 This dashboard requires updates in *LaneAgeGroupPop.xlsx*, sourced from the [Population Research Center at Portland State University](https://www.pdx.edu/population-research/population-estimate-reports). The source table is Table 9 in the Annual Population Report Tables ([2018](https://drive.google.com/file/d/1M3ZpX3HwBPESVX0u-Q4hpI0F2yOPzmrc/view), [2019](https://drive.google.com/file/d/1Ul_4qRNTXAsZCEZbAnr4bzxO3Im6ohFd/view)). The age groups 15-17 and 18-19 are combined as 15-19. 
 
-3. [VMT Crash Rates](https://www.lcog.org/thempo/page/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb
+3. [**VMT Crash Rates**](https://www.lcog.org/thempo/page/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb
 
 This dashboard requires updates in *VMT_by_FuncClass.xlsx*, sourced from ODOT VMT report. The detailed steps are addressed in T:\Data\VMT\VMT HPMS\update_notes.txt. The results are calculated in spreadsheet using daily vehicle miles, the number of days in a year, and unit conversion.
 

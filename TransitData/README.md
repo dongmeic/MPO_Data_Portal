@@ -1,6 +1,6 @@
 # Explanations
 
-Two dashboards [Transit Ridership Data](https://www.lcog.org/thempo/page/Transit-Ridership-Data) and [Bikes on Buses](https://www.lcog.org/thempo/page/bikes-buses) are included in this data category. They are updated twice a year in Spring and Fall, until there is a recent update request on the monthly ridership data since 2017 from LTD. The script [LTDTransitMonthly.r](https://github.com/dongmeic/MPO_Data_Portal/blob/master/TransitData/LTDTransitMonthly.r) is used to update the monthly ridership data.
+Two dashboards [Transit Ridership Data](https://www.lcog.org/thempo/page/transit-ridership-data) and [Bikes on Buses](https://www.lcog.org/thempo/page/bikes-buses) are included in this data category. They are updated twice a year in Spring and Fall, until there is a recent update request on the monthly ridership data since 2017 from LTD. The script [LTDTransitMonthly.r](https://github.com/dongmeic/MPO_Data_Portal/blob/master/TransitData/LTDTransitMonthly.r) is used to update the monthly ridership data.
 
 ## Data Sources
 
