@@ -12,9 +12,9 @@ A list of functions are applied to organize counts data and merge them with the 
 
 The format for data cleaning on passenger counts:
 
- stop srv                date block            trip_end                time route dir             stop_name  bus
-
- 00001 wkd 2012-10-05 00:00:00     2 1899-12-31 10:56:00 1899-12-31 10:46:00    11   O E/S of 58th N of Main 1114
+ | stop | srv | date | block | trip_end | time | route | dir | stop_name | bus |
+ |------+-----+------+-------+----------+------+-------+-----+-----------+-----|
+ | 00001 | wkd | 2012-10-05 00:00:00 | 2 | 1899-12-31 10:56:00 | 1899-12-31 10:46:00 | 11 | O | E/S of 58th N of Main | 1114 |     
 
 odometer ons offs load longitude latitude    Season    MonthYear
 
@@ -31,5 +31,5 @@ stop_name  bus odometer         desc qty longitude latitude
 E/S of 58th N of Main 1121   122.04 bike on rack   1 -122.9267 44.04634
 
  Season     MonthYear DailyRtQty DailyQty
- 
+
 Spring 2013 February 2013         76      624
