@@ -83,14 +83,15 @@ get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
       stops.df$MonthYear <- paste("April", year)
     }
   }
-  
+  if(nchar(stops.df$stop[1]) == 1){
+    stops.df$stop <- ifelse(nchar(stops.df$stop) == 5, stops.df$stop,
+                          paste0(zeros[(5 - nchar(stops.df$stop))], stops.df$stop))
+  }
   Counts <- merge(Counts, stops.df, by = 'stop')
   Counts$month <- month(Counts$date, label=TRUE, abbr=FALSE)
   Counts$year <- year(Counts$date) 
   return(Counts)
 }
-
-counts <- get.PassengerCounts()
 
 years = 2017:2021
 ms = str_pad(1:12, 2, pad = "0")
@@ -98,6 +99,7 @@ months = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
 
 # this will take a while
+ptm <- proc.time()
 for(yr in years){
   for(m in ms){
     if(yr==2021 & m=='06'){
@@ -111,6 +113,7 @@ for(yr in years){
     print(paste(yr, m))
   }
 }
+proc.time() - ptm
 
 ptm <- proc.time()
 write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)
@@ -118,11 +121,12 @@ proc.time() - ptm
 
 # aggregate monthly data
 aggdata <-aggregate(x=ndf[c('ons', 'offs', 'load')], 
-                    by=ndf[c("route", "month", "year")],
+                    by=ndf[c("route", 'longitude', 'latitude', "month", "year")],
                     FUN=sum, na.rm=TRUE)
 
 aggdata$MonthYear = ifelse(aggdata$month %in% c('January', 'February', 'March'), paste('October', aggdata$year - 1),
                            ifelse(aggdata$month %in% c('April', 'May', 'June', 'July', 'August', 'September'), paste('April', aggdata$year),
                                   paste('October', aggdata$year)))
 aggdata$MonthYear = ifelse(aggdata$MonthYear == 'April 2021', 'October 2020', aggdata$MonthYear)
+
 write.csv(aggdata, "T:/Tableau/tableauTransit/Datasources/AggPassengerCounts.csv", row.names = FALSE)
