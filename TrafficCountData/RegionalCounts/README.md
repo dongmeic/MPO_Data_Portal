@@ -1,10 +1,10 @@
 # Explanations
 
-The regional traffic counts include data continuously collected in the Fall (October) and Spring (April). The April 2020 data is missing due to the pandemic. 
+The regional traffic counts include data continuously collected in the Fall (October - December) and Spring (April - June) started from Fall 2019. The Spring 2020 data is missing due to the pandemic. The collection month is not consistent among years. 
 
 ## Source data
 
-Data are provided by Shashi Bajracharya (Sr. Engineering Associate, shashi.bajracharya@lanecountyor.gov).
+Data are provided by Shashi Bajracharya (Sr. Engineering Associate, shashi.bajracharya@lanecountyor.gov). The downloaded data is saved in T:\Data\COUNTS\Motorized Counts\Regional Traffic Counts Program\Central Lane Motorized Count Program\data. The data format is not consistent and so data cleaning is a must. The data table to update is T:\Tableau\tableauRegionalCounts\Datasources\Traffic_Counts_Oct2019_Vehicles.csv.
 
 ## Dashboard update
 
@@ -28,3 +28,5 @@ Since Fall 2020, the data format has been adjusted to:
 
 "Site","Direction","Date","Day","Time","Total","VehicleType","VehicleQty","Longitude","Latitude","owner","YEAR","SEASON","Location_d"
 1,"N","2019-10-22","Tuesday","10:00 AM",434,"MotorBikes",2,-122.963280802637,44.0442970391097,"SPR",2019,"FALL","42nd South of Main"
+
+4. The regional traffic counts dashboards are combined with the ODOT counts [here](https://www.lcog.org/thempo/page/motorized-traffic-counts).
