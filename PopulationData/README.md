@@ -51,7 +51,7 @@ The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Un
 20. [B18101 Sex By Age By Disability Status 1Y](https://data.census.gov/cedsci/table?t=Disability&g=400C100US28117&tid=ACSDT1Y2019.B18101&hidePreview=false)
 
 
-Data sources for the 'Communities of Concern' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled'). 
+Data sets are downloaded and saved in T:\Data\CENSUS\ACS20152019 and output is expported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp. Data sources for the 'Communities of Concern' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled'). 
 
 ## Functions 
 Two main functions are applied to read and reorganize the tables to the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric for the 5-year data and *read1yrtable* does the same for the 1-year data.
