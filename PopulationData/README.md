@@ -12,9 +12,9 @@ Data from ten tables (1 - 10) within block group, one table (11) within census t
 
 2. [B01001 Sex By Age 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B01001&hidePreview=false&cid=B01003_001E&vintage=2019)
 
-3. [B03002 Hispanic Or Latino Origin By Race 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B03002&hidePreview=false&cid=B01003_001E&vintage=2019) 
+3. [B03002 Hispanic Or Latino Origin By Race 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B03002&hidePreview=false&cid=B01003_001E&vintage=2019)
 
-4. [B16004 Age By Language Spoken At Home By Ability To Speak English For The Population 5 Years And Over](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B16004&hidePreview=false&cid=B01003_001E&vintage=2019) 
+4. [B16004 Age By Language Spoken At Home By Ability To Speak English For The Population 5 Years And Over](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B16004&hidePreview=false&cid=B01003_001E&vintage=2019)
 
 5. [B17017 Poverty Status In The Past 12 Months By Household Type By Age Of Householder 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B17017&hidePreview=false&cid=B01003_001E&vintage=2019)
 
@@ -51,9 +51,9 @@ The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Un
 20. [B18101 Sex By Age By Disability Status 1Y](https://data.census.gov/cedsci/table?t=Disability&g=400C100US28117&tid=ACSDT1Y2019.B18101&hidePreview=false)
 
 
-Data sets are downloaded and saved in T:\Data\CENSUS\ACS20152019 and output is expported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp. Data sources for the 'Communities of Concern' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled'). 
+Data sets are downloaded and saved in T:\Data\CENSUS\ACS20152019 and the output is exported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp and the maps can be found in T:\MPO\Title VI & EJ\2020_TitleVI_update\Maps. Data sources for the 'Communities of Concern' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled'). 
 
-## Functions 
+## Functions
 Two main functions are applied to read and reorganize the tables to the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric for the 5-year data and *read1yrtable* does the same for the 1-year data.
 
 ## Explanations of the Title VI variables
@@ -153,7 +153,7 @@ The explanation after the comma is either the source column or the calculated va
 
 [1] "or_blockgr" - block group ID
 
-[2] "BlkGrp10" - block group ID 
+[2] "BlkGrp10" - block group ID
 
 [3] "TotalPOP" - total population, B01001_001E
 
@@ -165,49 +165,49 @@ The explanation after the comma is either the source column or the calculated va
 
 [7] "HH" - total household size in the poverty status table, B17017_001E  
 
-[8] "PopWrkF16" - total population of 16-year-and-older in workforce, B23025_002E 
+[8] "PopWrkF16" - total population of 16-year-and-older in workforce, B23025_002E
 
 [9] "PopGE5" - total population of 5-year-and-older, B16004_001E  
 
-[10] "PopNInst5" - non-institutionalized population of 5-year-and-older, using the rate from census tract calculation pc_ni_5plus 
+[10] "PopNInst5" - non-institutionalized population of 5-year-and-older, using the rate from census tract calculation pc_ni_5plus
 
 [11] "HHsize" -  household size from B25010_001E   
 
 [12] "Occupancy" - B25002_002E (occupied) divided by B25002_001E (total)
 
-[13] "PctMinor" - percent of minority (B03002_001E - B03002_003E)/B03002_001E 
+[13] "PctMinor" - percent of minority (B03002_001E - B03002_003E)/B03002_001E
 
 [14] "PctElderly" - percent of elderly, pc_65plus
 
-[15] "PctLEP" - percent of limited English proficiency, pc_en_nvwell 
+[15] "PctLEP" - percent of limited English proficiency, pc_en_nvwell
 
 [16] "PctPoor" - percent of poor, B17017_002E / B17017_001E  
 
 [17] "PctHH0car" - percent of zero-car households, pc_zero_car  
 
-[18] "PctUnEmp" - percent of unemployment, B23025_005E / B23025_002E 
+[18] "PctUnEmp" - percent of unemployment, B23025_005E / B23025_002E
 
 [19] "PctDisab" - percent of disable, pc_ni_5plus_dis from census tract data
 
 [20] "PopMinor" - minority population, B03002_001E - B03002_003E
 
-[21] "PopEld" - elderly population, ps_65plus 
+[21] "PopEld" - elderly population, ps_65plus
 
 [22] "Pop5yrLEP" - population of limited English proficiency, en_nvwell  
 
-[23] "HHPoor" -  households below poverty level, B17017_002E 
+[23] "HHPoor" -  households below poverty level, B17017_002E
 
-[24] "HH0car" -  zero-car households, zero_car 
+[24] "HH0car" -  zero-car households, zero_car
 
 [25] "PopWFUnEmp" - unemployed population of 16-year-and-older workforce, B23025_005E
 
-[26] "PopNI5Disa" - disable population, using the rate from census tract calculation pc_ni_5plus_dis 
+[26] "PopNI5Disa" - disable population, using the rate from census tract calculation pc_ni_5plus_dis
 
-[27] "Minority" - whether percent of minority is higher than the MPO-wide average 
+[27] "Minority" - whether percent of minority is higher than the MPO-wide average
 
 [28] "Elderly" - whether percent of minority is higher than the MPO-wide average  
 
-[29] "LEP" - whether percent of limited English proficiency is higher than the MPO-wide average 
+[29] "LEP" - whether percent of limited English proficiency is higher than the MPO-wide average
 
 [30] "Poor" - whether percent of poor is higher than the MPO-wide average   
 
@@ -221,7 +221,7 @@ The explanation after the comma is either the source column or the calculated va
 
 [35] "Shape_Area"- shape area (from shapefile)
 
-[36] "PctRentHH" - percent of renter household, pc_rtr 
+[36] "PctRentHH" - percent of renter household, pc_rtr
 
 [37] "RenterHHs" - renter household, B25044_009E
 
@@ -235,9 +235,9 @@ The explanation after the comma is either the source column or the calculated va
 
 ## Download links for the CLMPO Title VI data
 
-ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally. The links are updated automatically with the most-recent data, as current as 2019. 
+ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally. The links are updated automatically with the most-recent data, as current as 2019.
 
-[Service Definition](https://lcog.maps.arcgis.com/home/item.html?id=4e6c93c4183c46fd90bd1b95edee800d) 
+[Service Definition](https://lcog.maps.arcgis.com/home/item.html?id=4e6c93c4183c46fd90bd1b95edee800d)
 
 [Feature Layer](https://lcog.maps.arcgis.com/home/item.html?id=bff06c500d9c4749b047fbd7d0ab7a21)
 
@@ -248,7 +248,7 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 ## Download links for the CLMPO Title VI PDF maps
 [2014 - 2018](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EnM3omAabelNpQDt35dX4ckBM1NmZuAhahaobDWw3e56Bg?e=OVqQE2)
 
-[2015 - 2019](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/Er0KHmKTvEFEjhmNqK51C48BORpezlfErRSnMB0VR81lzw?e=qaxBsW) 
+[2015 - 2019](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/Er0KHmKTvEFEjhmNqK51C48BORpezlfErRSnMB0VR81lzw?e=qaxBsW)
 
 ## A data requrest related to Title VI from Springfield on July 2021
 
@@ -258,13 +258,13 @@ City of Springfield requested the block group data for the Springfield area that
 
 1. Identify variables required and check data sources and output formats
 
-Variables required by checking Tableau dashboard: 'TotalPOP', 'PopEld', 'PctElderly', PctDisab', 'PopNInst5', 'PopNI5Disa', 'PctPoor', 'HH', 'HHPoor', 'PctPoor', 'PopMinor' and 'PctMinor'; the average percentage for the four factors at a certain geography; condition variables - whether the percentage factor is higher than the average (1-yes, 0-no); and finally, 'ComofConce' - the sum of the condition variables. 
+Variables required by checking Tableau dashboard: 'TotalPOP', 'PopEld', 'PctElderly', PctDisab', 'PopNInst5', 'PopNI5Disa', 'PctPoor', 'HH', 'HHPoor', 'PctPoor', 'PopMinor' and 'PctMinor'; the average percentage for the four factors at a certain geography; condition variables - whether the percentage factor is higher than the average (1-yes, 0-no); and finally, 'ComofConce' - the sum of the condition variables.
 
 * Check the *Census_TitleVI.r* for the detailed calculation of the listed variables above. Need to check whether there is NA in the percentage variables.   
 
 2. Download and organize data
 
-Go to [US Census Advanced](https://data.census.gov/cedsci/advanced), Geogrpahy --> Block Group --> Oregon --> Lane County --> Check the needed census tracts and review the filter before hitting SEARCH. The VIEW ALL TABLES. Select [B01001](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2019.B01001&layer=VT_2019_150_00_PY_D1&vintage=2019&hidePreview=false&cid=B00001_001E), [B03002](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2019.B03002&layer=VT_2019_150_00_PY_D1&vintage=2019&hidePreview=false&cid=B00001_001E), and [B17017](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2019.B17017&layer=VT_2019_150_00_PY_D1&vintage=2019&hidePreview=false&cid=B00001_001E). Need to scroll down and load more for the later tables. Hit Download and check the three tables. Scroll up to hit Download Selected (3) on the top left. Then hit DOWNLOAD on the bottom right. The default year is the most recent one. Finally, hit Download Now after file loading. 
+Go to [US Census Advanced](https://data.census.gov/cedsci/advanced), Geogrpahy --> Block Group --> Oregon --> Lane County --> Check the needed census tracts and review the filter before hitting SEARCH. The VIEW ALL TABLES. Select [B01001](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2019.B01001&layer=VT_2019_150_00_PY_D1&vintage=2019&hidePreview=false&cid=B00001_001E), [B03002](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2019.B03002&layer=VT_2019_150_00_PY_D1&vintage=2019&hidePreview=false&cid=B00001_001E), and [B17017](https://data.census.gov/cedsci/table?g=1400000US41039001101.150000,41039001102.150000,41039001201.150000,41039001301.150000,41039001302.150000,41039001400.150000,41039001700.150000,41039000800.150000,41039001202.150000&tid=ACSDT5Y2019.B17017&layer=VT_2019_150_00_PY_D1&vintage=2019&hidePreview=false&cid=B00001_001E). Need to scroll down and load more for the later tables. Hit Download and check the three tables. Scroll up to hit Download Selected (3) on the top left. Then hit DOWNLOAD on the bottom right. The default year is the most recent one. Finally, hit Download Now after file loading.
 
 Repeat the same process for the table [B18101](https://data.census.gov/cedsci/table?g=1400000US41039001101,41039001102,41039001201,41039001202,41039001301,41039001302,41039001400,41039001700,41039000800&layer=VT_2019_140_00_PY_D1&tid=ACSDT5Y2019.B18101&vintage=2019&hidePreview=false&cid=S0101_C01_001E), but select Tract instead of Block Group. You can also edit the webpage link on the table name to get the table. Uncheck the 1-Year option and hit DOWNLOAD.
 
@@ -274,13 +274,13 @@ Repeat the above two steps for Douglas County. Use the same links and edit the f
 [B17017](https://data.census.gov/cedsci/table?q=B17017&g=1400000US41019030000.150000,41019040000.150000&tid=ACSDT5Y2019.B17017&hidePreview=false)
 [B18101](https://data.census.gov/cedsci/table?q=B18101&g=1400000US41019030000,41019040000&tid=ACSDT5Y2019.B18101&hidePreview=false)
 
-Extract and save files at T Drive (\\clsrv111.int.lcog.org\transpor\Data\CENSUS\ACS20152019\TitleVI\Others\). 
+Extract and save files at T Drive (\\clsrv111.int.lcog.org\transpor\Data\CENSUS\ACS20152019\TitleVI\Others\).
 
 Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=Block+Groups). Save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties (only to check whether the census tracts are connected)
 
 3. Process data
 
-The detailed data processing steps follow the script *TitleVI_Lane_Douglas.r*, adjusted from the script *Census_TitleVI.r*. Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only). 
+The detailed data processing steps follow the script *TitleVI_Lane_Douglas.r*, adjusted from the script *Census_TitleVI.r*. Summary data based on both counties combined is joined with the state block group boundary (keep matched ID only).
 
 4. Visualize data
 
@@ -288,4 +288,4 @@ Read the shapefile in Tableau. Create the map and plots following the 'Communiti
 
 # Data sources for VMT and population
 
-The VMT data can be downloaded from the [ODOT Data and Maps](https://www.oregon.gov/odot/Data/Pages/Traffic-Counting.aspx#VMT). The downloaded VMT data is saved at T:\Data\VMT\VMT_State_and_County. The current population data can be retrieved from both the [PSU population estimates](https://www.pdx.edu/population-research/population-estimate-reports) and [US Census](https://www.census.gov/programs-surveys/decennial-census/decade.2010.html). The [historical state and lane county population](https://lcog.org/DocumentCenter/View/1370/Historical-Population-of-Lane-County-and-Cities) is saved at L:\Research&Analysis\Data\Population\Historical Population\Historical Population.xls. The table *HistoricalPopulation.xlsx* from T:\Tableau\tableauPop\Datasources is updated and used in the viz workbook *VMT_Pop.twb*. The text file *ReadMe_VMT_Pop.txt* in the same folder explains the data and viz update process. The dashboard is combined with the population data dashboard [here](https://www.lcog.org/thempo/page/Population-Data) and the source dashboard is T:\Tableau\tableauPop\Workbooks\CombinedPopData.twb. 
+The VMT data can be downloaded from the [ODOT Data and Maps](https://www.oregon.gov/odot/Data/Pages/Traffic-Counting.aspx#VMT). The downloaded VMT data is saved at T:\Data\VMT\VMT_State_and_County. The current population data can be retrieved from both the [PSU population estimates](https://www.pdx.edu/population-research/population-estimate-reports) and [US Census](https://www.census.gov/programs-surveys/decennial-census/decade.2010.html). The [historical state and lane county population](https://lcog.org/DocumentCenter/View/1370/Historical-Population-of-Lane-County-and-Cities) is saved at L:\Research&Analysis\Data\Population\Historical Population\Historical Population.xls. The table *HistoricalPopulation.xlsx* from T:\Tableau\tableauPop\Datasources is updated and used in the viz workbook *VMT_Pop.twb*. The text file *ReadMe_VMT_Pop.txt* in the same folder explains the data and viz update process. The dashboard is combined with the population data dashboard [here](https://www.lcog.org/thempo/page/Population-Data) and the source dashboard is T:\Tableau\tableauPop\Workbooks\CombinedPopData.twb.
