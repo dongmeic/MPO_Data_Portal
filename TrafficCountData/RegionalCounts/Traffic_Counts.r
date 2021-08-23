@@ -30,7 +30,7 @@ sum.table <- read_xlsx(paste0(inpath, "data/June2021/LCOG_2021Data SummaryB.xlsx
 unique(sum.table$Roadway)
 rlidnms <- vector()
 missed <- vector()
-for(loc in unique(sum.table$Roadway)[2:16]){
+for(loc in unique(sum.table$Roadway)[2:15]){
   if(loc %in% unique(tubelocs$rlidname)){
     print(loc)
     rlidnms <- append(rlidnms, loc)
@@ -39,6 +39,14 @@ for(loc in unique(sum.table$Roadway)[2:16]){
   }
 }  
 # select the traffic locations from the tube locations
+# review the locations using the table information and tube locations
+# change "Danebo" to "N Danebo Ave", "S Bertensen" to "S Bertelsen Rd", "N 42nd Avenue" to "S 42nd St",
+# "S 42nd St" to "42nd St", "Virvinia Ave" to "Virginia Ave", "W11th" to "W 11th Ave"
+# select these locations from the tube locations: Laurelhurst Dr, 32nd St, and rlidnms
+sel_tubelocs <- tubelocs[tubelocs$rlidname %in% c("Laurelhurst Dr", "32nd St", rlidnms),]
+
+# organize the traffic counts data
+
 
 ############################## Fall 2020 ################################
 file <- paste0(inpath, "data/LCOG_2020Data Summary.xlsx")

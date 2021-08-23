@@ -4,7 +4,8 @@ The regional traffic counts include data continuously collected in the Fall (Oct
 
 ## Source data
 
-Data are provided by Shashi Bajracharya (Sr. Engineering Associate, shashi.bajracharya@lanecountyor.gov). The downloaded data is saved in *T:\Data\COUNTS\Motorized Counts\Regional Traffic Counts Program\Central Lane Motorized Count Program\data*. The data format is not consistent and so data cleaning is a must. The data table to update is T:\Tableau\tableauRegionalCounts\Datasources\Traffic_Counts_Vehicles.csv.
+Data are provided by Shashi Bajracharya (Sr. Engineering Associate, shashi.bajracharya@lanecountyor.gov). The downloaded data is saved in *T:\Data\COUNTS\Motorized Counts\Regional Traffic Counts Program\Central Lane Motorized Count Program\data*. The data format is not consistent and so data cleaning is required. The data table to update is T:\Tableau\tableauRegionalCounts\Datasources\Traffic_Counts_Vehicles.csv. The location data for reference is
+*T:\Data\COUNTS\Motorized Counts\Regional Traffic Counts Program\Central Lane Motorized Count Program\traffic_count_locations\traffic_count_locations.gdb\tube_locations_SpatialJoin*. Need to confirm with the data providers if there are mismatches.
 
 ## Dashboard update
 
