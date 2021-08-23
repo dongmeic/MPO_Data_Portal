@@ -46,7 +46,53 @@ for(loc in unique(sum.table$Roadway)[2:15]){
 sel_tubelocs <- tubelocs[tubelocs$rlidname %in% c("Laurelhurst Dr", "32nd St", rlidnms),]
 
 # organize the traffic counts data
+data.path <- paste0(inpath, "data/June2021/SiteData")
+datafiles <- list.files(path = data.path, pattern = "LCOG_2021")
 
+# read the table
+
+
+
+get_loc_info <- function(filename="LCOG_2021BaileyHill.xlsx"){
+  loc <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B7:B7"))
+  locnm <- substr(loc,2,nchar(loc)-9)
+
+  loc2 <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B8:B8"))
+  cross_st <- substr(loc2,2,nchar(loc2)-1)
+  
+  if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd")){
+    locnm <- paste(locnm, "at", cross_st)
+  }
+  
+  return(locnm)
+}
+
+readTable <- function(s=26, filename="LCOG_2021BaileyHill.xlsx"){
+  df1 <- readOneBound(s=s, boundCell="B11:B11", range="A12:P60",
+                      filename=filename)
+  df2 <- readOneBound(s=s, boundCell="T11:T11", range="S12:AH60",
+                      filename=filename)
+  df <- rbind(df1, df2) 
+  df$Location <- rep(get_loc_info(filename), dim(df)[1])
+  
+  return(df)
+}
+
+readOneBound <- function(s=26, boundCell="B11:B11", range="A12:P60",
+                         filename="LCOG_2021BaileyHill.xlsx"){
+  
+  b <- substring(names(read_excel(paste0(data.path, "/", filename), sheet=1, range = boundCell)), 1, 1)
+  df <- read_xlsx(paste0(data.path, "/", filename), sheet=1, range = range) %>%  # TC: traffic counts
+    mutate(Date = as.Date(Date, "%m/%d/%Y", tz = "America/Los_Angeles"), 
+           Time = format(Time, "%I:%M %p")) %>%
+    filter(!is.na(Total)) %>% 
+    mutate(Day = weekdays(Date), Direction=rep(b, length(.$Date)), Site=rep(s, length(.$Date))) %>%
+    melt(id.vars=c("Site","Direction","Date","Day","Time","Total")) %>% 
+    rename(VehicleType = variable, VehicleQty = value) %>%
+    mutate(VehicleType = gsub(" ", "", VehicleType))
+  
+  return(df)
+}
 
 ############################## Fall 2020 ################################
 file <- paste0(inpath, "data/LCOG_2020Data Summary.xlsx")

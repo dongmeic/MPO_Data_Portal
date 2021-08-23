@@ -3,6 +3,11 @@
 # On February 18th, 2020
 
 
+######################################## functions for the Summer 2021 data ################################
+
+
+
+######################################## functions for the Fall 2020 data ################################
 # organize location data with site IDs
 # make sure site.path is in the global setting
 get_loc_df <- function(layer = "locations2020"){
@@ -122,7 +127,8 @@ read_tc_b <- function(sheetnm="Coburg@FerryStBrdg",
     mutate(Date=as.character(Date))
   return(df)
 }
-
+ 
+######################################## functions for the Fall 2019 data ################################
 # combine regional traffic counts spreadsheets
 # requires a dataframe for the settings
 combine.traffic.counts <- function(file.df, type=FALSE){
