@@ -16,6 +16,29 @@ inpath <- "T:/Data/COUNTS/Motorized Counts/Regional Traffic Counts Program/Centr
 site.path <- paste0(inpath, "traffic_count_locations")
 outpath <- "T:/Tableau/tableauRegionalCounts/Datasources/"
 
+############################## Summer 2021 ################################
+# read the last-updated data
+data <- read.csv(paste0(outpath, "Traffic_Counts_Vehicles.csv"))
+colnames(data)[which(colnames(data) %in% c("owner", "YEAR", "SEASON","Location_d"))] <- c("Owner", "Year", "Season","Location")
+data$Owner <- ifelse(data$Owner=='Eug', 'EUG', ifelse(data$Owner=='Spr', 'SPR', data$Owner))
+
+# review the locations
+tubelocs <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), layer="tube_locations_SpatialJoin")
+
+# # read the summary table to get the locations
+sum.table <- read_xlsx(paste0(inpath, "data/June2021/LCOG_2021Data SummaryB.xlsx"), sheet=1)
+unique(sum.table$Roadway)
+rlidnms <- vector()
+missed <- vector()
+for(loc in unique(sum.table$Roadway)[2:16]){
+  if(loc %in% unique(tubelocs$rlidname)){
+    print(loc)
+    rlidnms <- append(rlidnms, loc)
+  }else{
+    missed <- append(missed, loc)
+  }
+}  
+# select the traffic locations from the tube locations
 
 ############################## Fall 2020 ################################
 file <- paste0(inpath, "data/LCOG_2020Data Summary.xlsx")

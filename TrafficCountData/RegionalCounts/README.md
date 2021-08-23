@@ -1,20 +1,20 @@
 # Explanations
 
-The regional traffic counts include data continuously collected in the Fall (October - December) and Spring (April - June) started from Fall 2019. The Spring 2020 data is missing due to the pandemic. The collection month is not consistent among years. 
+The regional traffic counts include data continuously collected in the Fall (October - December) and Spring (April - June) started from Fall 2019. The Spring 2020 data is missing due to the pandemic. The collection month is not consistent among years.
 
 ## Source data
 
-Data are provided by Shashi Bajracharya (Sr. Engineering Associate, shashi.bajracharya@lanecountyor.gov). The downloaded data is saved in T:\Data\COUNTS\Motorized Counts\Regional Traffic Counts Program\Central Lane Motorized Count Program\data. The data format is not consistent and so data cleaning is a must. The data table to update is T:\Tableau\tableauRegionalCounts\Datasources\Traffic_Counts_Oct2019_Vehicles.csv.
+Data are provided by Shashi Bajracharya (Sr. Engineering Associate, shashi.bajracharya@lanecountyor.gov). The downloaded data is saved in *T:\Data\COUNTS\Motorized Counts\Regional Traffic Counts Program\Central Lane Motorized Count Program\data*. The data format is not consistent and so data cleaning is a must. The data table to update is T:\Tableau\tableauRegionalCounts\Datasources\Traffic_Counts_Vehicles.csv.
 
 ## Dashboard update
 
-The dashboard shows the map of traffic counts and hourly traffic counts by vehicle type, and time table by site. 
+The dashboard shows the map of traffic counts and hourly traffic counts by vehicle type, and time table by site.
 
 ### Steps to update the dashboard
 
-1. When data is downloaded, review the completness and format, and follow up with the data provider if there are issues. 
+1. When data is downloaded, review the completeness and format, and follow up with the data provider if there are issues.
 
-2. Run the script *Traffic_Counts.r* and update Tableau viz following the steps described in *RegionalCountsUpdate.txt* located at \\clsrv111.int.lcog.org\transpor\Tableau\tableauRegionalCounts\Workbooks. 
+2. Run the script *Traffic_Counts.r* and update Tableau viz following the steps described in *RegionalCountsUpdate.txt* located at \\clsrv111.int.lcog.org\transpor\Tableau\tableauRegionalCounts\Workbooks.
 
 3. Data cleaning is required for each data update. Check the data source to understand the required table format and update the R scripts to get the target tables and *RegionalCountsUpdate.txt* for future reference.
 
