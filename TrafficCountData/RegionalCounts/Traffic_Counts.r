@@ -9,6 +9,7 @@ library(readxl)
 library(writexl)
 library(rgdal)
 library(reshape2)
+library(stringr)
 
 # load functions and get some global settings
 source("T:/GitHub/MPO_Data_Portal/TrafficCountData/RegionalCounts/Traffic_Counts_Functions.r")
@@ -52,8 +53,19 @@ datafiles <- list.files(path = data.path, pattern = "LCOG_2021")
 # read the table
 
 
+readTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
+  
+  df1 <- readOneBound(boundCell="B11:B11", range="A12:P60",
+                      filename=filename)
+  df2 <- readOneBound(boundCell="T11:T11", range="S12:AH60",
+                      filename=filename)
+  df <- rbind(df1, df2) 
+  df$Location <- rep(get_loc_info(filename), dim(df)[1])
+  
+  return(df)
+}
 
-get_loc_info <- function(filename="LCOG_2021BaileyHill.xlsx"){
+get_loc_info <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
   loc <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B7:B7"))
   locnm <- substr(loc,2,nchar(loc)-9)
 
@@ -67,20 +79,10 @@ get_loc_info <- function(filename="LCOG_2021BaileyHill.xlsx"){
   return(locnm)
 }
 
-readTable <- function(s=26, filename="LCOG_2021BaileyHill.xlsx"){
-  df1 <- readOneBound(s=s, boundCell="B11:B11", range="A12:P60",
-                      filename=filename)
-  df2 <- readOneBound(s=s, boundCell="T11:T11", range="S12:AH60",
-                      filename=filename)
-  df <- rbind(df1, df2) 
-  df$Location <- rep(get_loc_info(filename), dim(df)[1])
+readOneBound <- function(boundCell="B11:B11", range="A12:P60",
+                         filename="1.0 LCOG_2021RoyalAve.xlsx"){
   
-  return(df)
-}
-
-readOneBound <- function(s=26, boundCell="B11:B11", range="A12:P60",
-                         filename="LCOG_2021BaileyHill.xlsx"){
-  
+  s <- as.numeric(str_extract(filename, ".")) + 24
   b <- substring(names(read_excel(paste0(data.path, "/", filename), sheet=1, range = boundCell)), 1, 1)
   df <- read_xlsx(paste0(data.path, "/", filename), sheet=1, range = range) %>%  # TC: traffic counts
     mutate(Date = as.Date(Date, "%m/%d/%Y", tz = "America/Los_Angeles"), 
