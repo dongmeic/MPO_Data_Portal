@@ -4,7 +4,96 @@
 
 
 ######################################## functions for the Summer 2021 data ################################
+# need to set data.path, col_order
 
+add_loc_info <- function(layer="locations2021", n=24,
+                         colOrder = col_order){
+  loc <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), 
+                 layer=layer, stringsAsFactors = FALSE)
+  loc$Site <- loc$Site+n
+  loc.lonlat <- spTransform(loc, CRS("+init=epsg:4326"))
+  lonlat.df <- as.data.frame(loc.lonlat@coords)
+  names(lonlat.df) <- c("Longitude", "Latitude")
+  loc.df <- as.data.frame(loc)[,c("Site", "owner")]
+  # colnames(loc.df)[2] <- "Owner"
+  loc.df <- cbind(lonlat.df, loc.df)
+  loc.df$YEAR <- "2021"
+  loc.df$SEASON <- "Summer"
+  df <- readAllTables()
+  ndf <- merge(df, loc.df, by="Site")
+  ndf <- ndf[,colOrder]
+  return(ndf)
+}
+
+readAllTables <- function(){
+  
+  datafiles <- list.files(path = data.path, pattern = "LCOG_2021")
+  for(file in datafiles){
+    if(file == datafiles[1]){
+      df <- readOneTable(filename = file)
+    }else{
+      ndf <- readOneTable(filename = file)
+      df <- rbind(df, ndf)
+    }
+    print(file)
+  }
+  
+  return(df)
+}
+
+readOneTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
+  
+  if(filename == "11.0 LCOG_2021ASt.xlsx"){
+    
+    df <- readOneBound(boundCell="B11:B11", range="A12:P60",
+                       filename=filename)
+  }else{
+    
+    df1 <- readOneBound(boundCell="B11:B11", range="A12:P60",
+                        filename=filename)
+    df2 <- readOneBound(boundCell="T11:T11", range="S12:AH60",
+                        filename=filename)
+    df <- rbind(df1, df2)
+    
+  }
+  
+  df$Location_d <- rep(get_loc_info(filename), dim(df)[1])
+  
+  return(df)
+  
+}
+
+get_loc_info <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
+  
+  loc <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B7:B7"))
+  locnm <- substr(loc,2,nchar(loc)-9)
+  
+  loc2 <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B8:B8"))
+  cross_st <- substr(loc2,2,nchar(loc2)-1)
+  
+  if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd", "Hayden Br Rd")){
+    locnm <- paste(locnm, "at", cross_st)
+  }
+  
+  return(locnm)
+}
+
+readOneBound <- function(boundCell="B11:B11", range="A12:P60",
+                         filename="1.0 LCOG_2021RoyalAve.xlsx"){
+  
+  s <- as.numeric(str_split(filename, ".0 ")[[1]][1]) + 24
+  b <- substring(names(read_excel(paste0(data.path, "/", filename), sheet=1, range = boundCell)), 1, 1)
+  df <- read_xlsx(paste0(data.path, "/", filename), sheet=1, range = range) %>%  # TC: traffic counts
+    mutate(Date = as.Date(Date, "%m/%d/%Y", tz = "America/Los_Angeles"), 
+           Time = format(Time, "%I:%M %p")) %>%
+    filter(!is.na(Total)) %>% 
+    mutate(Day = weekdays(Date), Direction=rep(b, length(.$Date)), Site=rep(s, length(.$Date))) %>%
+    melt(id.vars=c("Site","Direction","Date","Day","Time","Total")) %>% 
+    rename(VehicleType = variable, VehicleQty = value) %>%
+    mutate(VehicleType = gsub(" ", "", VehicleType))
+  
+  return(df)
+}
 
 
 ######################################## functions for the Fall 2020 data ################################

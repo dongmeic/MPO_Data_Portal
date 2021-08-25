@@ -20,81 +20,39 @@ outpath <- "T:/Tableau/tableauRegionalCounts/Datasources/"
 ############################## Summer 2021 ################################
 # read the last-updated data
 data <- read.csv(paste0(outpath, "Traffic_Counts_Vehicles.csv"))
-colnames(data)[which(colnames(data) %in% c("owner", "YEAR", "SEASON","Location_d"))] <- c("Owner", "Year", "Season","Location")
-data$Owner <- ifelse(data$Owner=='Eug', 'EUG', ifelse(data$Owner=='Spr', 'SPR', data$Owner))
+data$Date <- as.Date(data$Date, format = "%Y-%m-%d")
+#colnames(data)[which(colnames(data) %in% c("owner", "YEAR", "SEASON","Location_d"))] <- c("Owner", "Year", "Season","Location")
+#data$Owner <- ifelse(data$Owner=='Eug', 'EUG', ifelse(data$Owner=='Spr', 'SPR', data$Owner))
+col_order <- colnames(data)
 
-# review the locations
-tubelocs <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), layer="tube_locations_SpatialJoin")
+# # review the locations
+# tubelocs <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), layer="tube_locations_SpatialJoin")
+# 
+# # # read the summary table to get the locations
+# sum.table <- read_xlsx(paste0(inpath, "data/June2021/LCOG_2021Data SummaryB.xlsx"), sheet=1)
+# unique(sum.table$Roadway)
+# rlidnms <- vector()
+# missed <- vector()
+# for(loc in unique(sum.table$Roadway)[2:15]){
+#   if(loc %in% unique(tubelocs$rlidname)){
+#     print(loc)
+#     rlidnms <- append(rlidnms, loc)
+#   }else{
+#     missed <- append(missed, loc)
+#   }
+# }  
+# # select the traffic locations from the tube locations
+# # review the locations using the table information and tube locations
+# # change "Danebo" to "N Danebo Ave", "S Bertensen" to "S Bertelsen Rd", "N 42nd Avenue" to "S 42nd St",
+# # "S 42nd St" to "42nd St", "Virvinia Ave" to "Virginia Ave", "W11th" to "W 11th Ave"
+# # select these locations from the tube locations: Laurelhurst Dr, 32nd St, and rlidnms
+# sel_tubelocs <- tubelocs[tubelocs$rlidname %in% c("Laurelhurst Dr", "32nd St", rlidnms),]
 
-# # read the summary table to get the locations
-sum.table <- read_xlsx(paste0(inpath, "data/June2021/LCOG_2021Data SummaryB.xlsx"), sheet=1)
-unique(sum.table$Roadway)
-rlidnms <- vector()
-missed <- vector()
-for(loc in unique(sum.table$Roadway)[2:15]){
-  if(loc %in% unique(tubelocs$rlidname)){
-    print(loc)
-    rlidnms <- append(rlidnms, loc)
-  }else{
-    missed <- append(missed, loc)
-  }
-}  
-# select the traffic locations from the tube locations
-# review the locations using the table information and tube locations
-# change "Danebo" to "N Danebo Ave", "S Bertensen" to "S Bertelsen Rd", "N 42nd Avenue" to "S 42nd St",
-# "S 42nd St" to "42nd St", "Virvinia Ave" to "Virginia Ave", "W11th" to "W 11th Ave"
-# select these locations from the tube locations: Laurelhurst Dr, 32nd St, and rlidnms
-sel_tubelocs <- tubelocs[tubelocs$rlidname %in% c("Laurelhurst Dr", "32nd St", rlidnms),]
-
-# organize the traffic counts data
-data.path <- paste0(inpath, "data/June2021/SiteData")
-datafiles <- list.files(path = data.path, pattern = "LCOG_2021")
-
-# read the table
-
-
-readTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
-  
-  df1 <- readOneBound(boundCell="B11:B11", range="A12:P60",
-                      filename=filename)
-  df2 <- readOneBound(boundCell="T11:T11", range="S12:AH60",
-                      filename=filename)
-  df <- rbind(df1, df2) 
-  df$Location <- rep(get_loc_info(filename), dim(df)[1])
-  
-  return(df)
-}
-
-get_loc_info <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
-  loc <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B7:B7"))
-  locnm <- substr(loc,2,nchar(loc)-9)
-
-  loc2 <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B8:B8"))
-  cross_st <- substr(loc2,2,nchar(loc2)-1)
-  
-  if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd")){
-    locnm <- paste(locnm, "at", cross_st)
-  }
-  
-  return(locnm)
-}
-
-readOneBound <- function(boundCell="B11:B11", range="A12:P60",
-                         filename="1.0 LCOG_2021RoyalAve.xlsx"){
-  
-  s <- as.numeric(str_extract(filename, ".")) + 24
-  b <- substring(names(read_excel(paste0(data.path, "/", filename), sheet=1, range = boundCell)), 1, 1)
-  df <- read_xlsx(paste0(data.path, "/", filename), sheet=1, range = range) %>%  # TC: traffic counts
-    mutate(Date = as.Date(Date, "%m/%d/%Y", tz = "America/Los_Angeles"), 
-           Time = format(Time, "%I:%M %p")) %>%
-    filter(!is.na(Total)) %>% 
-    mutate(Day = weekdays(Date), Direction=rep(b, length(.$Date)), Site=rep(s, length(.$Date))) %>%
-    melt(id.vars=c("Site","Direction","Date","Day","Time","Total")) %>% 
-    rename(VehicleType = variable, VehicleQty = value) %>%
-    mutate(VehicleType = gsub(" ", "", VehicleType))
-  
-  return(df)
-}
+set <- "June2021"
+data.path <- paste0(inpath, "data/", set, "/SiteData")
+new_data <- add_loc_info()
+ndata <- rbind(data, new_data)
+write.csv(ndata, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
 
 ############################## Fall 2020 ################################
 file <- paste0(inpath, "data/LCOG_2020Data Summary.xlsx")
