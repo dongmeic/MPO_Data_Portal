@@ -1,6 +1,6 @@
 # Explanations
 
-Two dashboards were originally in this data category and the [Population Data](https://www.lcog.org/thempo/page/population-data) has been first updated in 2019 by Bill Clingman. The script *Census_TitleVI.r* organizes data for the [Socio-Economic Data dashboard](https://www.lcog.org/thempo/page/socio-economic-data) (Title VI). The sript *TitleVI_Lane_Douglas.r* creates a 'Communities of Concern' dashboard for 9 census tracts in Lane County outside MPO and 2 census tracts in Douglas County.  
+Two dashboards were originally in this data category and the [Population Data](https://www.lcog.org/thempo/page/population-data) has been first updated in 2019 by Bill Clingman. The script *Census_TitleVI.r* organizes data for the [Socio-Economic Data dashboard](https://www.lcog.org/thempo/page/socio-economic-data) (Title VI). The sript *TitleVI_Lane_Douglas.r* creates a 'Historically Excluded Populations' (formally 'Communities of Concern') dashboard for 9 census tracts in Lane County outside MPO and 2 census tracts in Douglas County.  
 
 The [Population Data](https://www.lcog.org/thempo/page/population-data) dashboard has been further updated on December 15, 2020, by Dongmei Chen. Another dashboard on vehicle miles traveled (VMT) and population was added to this data category at the same time, using the same population data. The data sources are explained [below](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#data-sources-for-vmt-and-population). The script *VMT_Pop.r* cleans data for the time-series VMT and population plots.
 
@@ -51,7 +51,7 @@ The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Un
 20. [B18101 Sex By Age By Disability Status 1Y](https://data.census.gov/cedsci/table?t=Disability&g=400C100US28117&tid=ACSDT1Y2019.B18101&hidePreview=false)
 
 
-Data sets are downloaded and saved in T:\Data\CENSUS\ACS20152019 and the output is exported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp and the maps can be found in T:\MPO\Title VI & EJ\2020_TitleVI_update\Maps. Data sources for the 'Communities of Concern' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled'). 
+Data sets are downloaded and saved in T:\Data\CENSUS\ACS20152019 and the output is exported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp and the maps can be found in T:\MPO\Title VI & EJ\2020_TitleVI_update\Maps. Data sources for the 'Historically Excluded Populations' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled').
 
 ## Functions
 Two main functions are applied to read and reorganize the tables to the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric for the 5-year data and *read1yrtable* does the same for the 1-year data.
