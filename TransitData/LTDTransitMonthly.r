@@ -2,120 +2,31 @@
 #  for the LTD transit dashboard based on LTDTransit.r
 # (https://www.lcog.org/thempo/page/Transit-Ridership-Data) on July 21st, 2021
 
-library(rgdal)
-library(readxl)
-library(dplyr)
-library(tools)
-library(lubridate)
-library(stringr)
+source('T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r')
 
-options(warn = -1)
+# after 2021 June
+df <- read.csv("T:/Tableau/tableauTransit/Datasources/datacopy/MonthlyPassengerCounts.csv")
+ndf <- get.MultiYearCounts(years = 2021:2021,
+                           startmonth = 6,
+                           endmonth = 10)
 
-# functions
-get.stop.coordinates <- function(m="October", yr=2011){
-  stops <- readOGR(dsn = stop.path, layer = paste(m, yr), verbose = FALSE, 
-                   stringsAsFactors = FALSE)
-  # convert to data frame
-  colnames <- c("STOP_NUMBE", "LONGITUDE1" , "LATITUDE1",
-                "LONGITUDE_", "LATITUDE_W",
-                "stop_numbe", "longitude", "latitude")
-  colnames <- colnames[colnames %in% names(stops)]
-  if(length(colnames) > 3){
-    colnames <- colnames[1:3]
-  }
-  stops.df <- stops@data[, colnames]
-  if("LONGITUDE_" %in% colnames){
-    stops.df[,2] <- as.numeric(stops.df[,2])/10000000
-    stops.df[,3] <- as.numeric(stops.df[,3])/10000000
-  }
-  names(stops.df) <- c("stop", "longitude", "latitude")
-  return(stops.df)
-}
+ndf <- rbind(df, ndf)
+write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)
 
-path <- "T:/Data/LTD Data/MonthlyBoardings/"
-stop.path <- "T:/Data/LTD Data/StopsSince2011"
+oldaggdata <- read.csv("T:/Tableau/tableauTransit/Datasources/datacopy/AggPassengerCounts.csv")
+aggdata <-aggregate(x=ndf[c('ons', 'offs', 'load')], 
+                    by=ndf[c("route", 'longitude', 'latitude', "month", "year")],
+                    FUN=sum, na.rm=TRUE)
 
-get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
-  Counts <- read_excel(paste0(path, year, ' Ridership/LTD Ridership_', year, '-', m, '-', month, '.xlsx'), 
-                       sheet = "passenger counts", 
-                       col_types = c("text", "date", "numeric", "date", 
-                                     "date", "text", "text", "text", 
-                                     "text", "numeric", "numeric", "numeric", 
-                                     "numeric", "numeric", "numeric",
-                                     "numeric"))
-  
-  stops.to.remove <- unique(grep('anx|arr|ann|escenter|garage', Counts$stop, value = TRUE))
-  # remove the stops with letters
-  Counts <- subset(Counts, !(stop %in% stops.to.remove)) %>% select(-c(latitude, longitude))
-  # convert EmX
-  Emx <- c("101", "102", "103", "104", "105")
-  Counts$route <- ifelse(Counts$route %in% Emx, "EmX", Counts$route)
-  # make the stop numbers to 5 digits
-  zeros <- c("0", "00", "000", "0000")
-  Counts$stop <- ifelse(nchar(Counts$stop) == 5, Counts$stop,
-                        paste0(zeros[(5 - nchar(Counts$stop))], Counts$stop))
-  MonthYear.stops <- unique(file_path_sans_ext(list.files(stop.path)))
-  if(year > 2019){
-    stops.df <- get.stop.coordinates(m="October", yr=2019)
-    stops.df$MonthYear <- "October 2019"
-  }else if(month %in% c('Jan', 'Feb', 'Mar')){
-    if(paste("October", year-1) %in% MonthYear.stops){
-      stops.df <- get.stop.coordinates(m="October", yr=year-1)
-      stops.df$MonthYear <- paste("October", year-1)
-    }else{
-      stops.df <- get.stop.coordinates(m="April", yr=year-1)
-      stops.df$MonthYear <- paste("April", year-1)
-    }
-  }else if(month %in% c('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep')){
-    if(paste("April", year) %in% MonthYear.stops){
-      stops.df <- get.stop.coordinates(m="April", yr=year)
-      stops.df$MonthYear <- paste("April", year)
-    }else{
-      stops.df <- get.stop.coordinates(m="October", yr=year-1)
-      stops.df$MonthYear <- paste("October", year-1)
-    }
-  }else{
-    if(paste("October", year) %in% MonthYear.stops){
-      stops.df <- get.stop.coordinates(m="October", yr=year)
-      stops.df$MonthYear <- paste("October", year)
-    }else{
-      stops.df <- get.stop.coordinates(m="April", yr=year)
-      stops.df$MonthYear <- paste("April", year)
-    }
-  }
-  if(nchar(stops.df$stop[1]) == 1){
-    stops.df$stop <- ifelse(nchar(stops.df$stop) == 5, stops.df$stop,
-                          paste0(zeros[(5 - nchar(stops.df$stop))], stops.df$stop))
-  }
-  Counts <- merge(Counts, stops.df, by = 'stop')
-  Counts$month <- month(Counts$date, label=TRUE, abbr=FALSE)
-  Counts$year <- year(Counts$date) 
-  return(Counts)
-}
+aggdata$MonthYear = ifelse(aggdata$month %in% c('January', 'February', 'March'), paste('October', aggdata$year - 1),
+                           ifelse(aggdata$month %in% c('April', 'May', 'June', 'July', 'August', 'September'), paste('April', aggdata$year),
+                                  paste('October', aggdata$year)))
+aggdata <- rbind(oldaggdata, aggdata)
+write.csv(aggdata, "T:/Tableau/tableauTransit/Datasources/AggPassengerCounts.csv", row.names = FALSE)
 
-years = 2017:2021
-ms = str_pad(1:12, 2, pad = "0")
-months = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
-
-# this will take a while
+# before 2021 June
 ptm <- proc.time()
-for(yr in years){
-  for(m in ms){
-    if(yr==2021 & m=='06'){
-      break
-    }else if(yr == 2017 & m == '01'){
-      ndf <- get.PassengerCounts()
-    }else{
-      counts <- get.PassengerCounts(year = yr, month = months[which(ms==m)], m = m)
-      ndf <- rbind(ndf, counts)
-    }
-    print(paste(yr, m))
-  }
-}
-proc.time() - ptm
-
-ptm <- proc.time()
+ndf <- get.MultiYearCounts(complete = FALSE)
 write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)
 proc.time() - ptm
 
@@ -127,6 +38,6 @@ aggdata <-aggregate(x=ndf[c('ons', 'offs', 'load')],
 aggdata$MonthYear = ifelse(aggdata$month %in% c('January', 'February', 'March'), paste('October', aggdata$year - 1),
                            ifelse(aggdata$month %in% c('April', 'May', 'June', 'July', 'August', 'September'), paste('April', aggdata$year),
                                   paste('October', aggdata$year)))
-aggdata$MonthYear = ifelse(aggdata$MonthYear == 'April 2021', 'October 2020', aggdata$MonthYear)
+aggdata$MonthYear = ifelse(aggdata$MonthYear %in% c('April 2021', 'October 2021'), 'October 2020', aggdata$MonthYear)
 
 write.csv(aggdata, "T:/Tableau/tableauTransit/Datasources/AggPassengerCounts.csv", row.names = FALSE)
