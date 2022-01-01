@@ -12,12 +12,11 @@ library(reshape2)
 library(stringr)
 
 # load functions and get some global settings
-source("T:/GitHub/MPO_Data_Portal/TrafficCountData/RegionalCounts/Traffic_Counts_Functions.r")
+source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/RegionalCounts/Traffic_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/Motorized Counts/Regional Traffic Counts Program/Central Lane Motorized Count Program/"
 site.path <- paste0(inpath, "traffic_count_locations")
 outpath <- "T:/Tableau/tableauRegionalCounts/Datasources/"
 
-############################## Summer 2021 ################################
 # read the last-updated data
 data <- read.csv(paste0(outpath, "Traffic_Counts_Vehicles.csv"))
 data$Date <- as.Date(data$Date, format = "%Y-%m-%d")
@@ -25,6 +24,17 @@ data$Date <- as.Date(data$Date, format = "%Y-%m-%d")
 #data$Owner <- ifelse(data$Owner=='Eug', 'EUG', ifelse(data$Owner=='Spr', 'SPR', data$Owner))
 col_order <- colnames(data)
 
+############################## Fall 2021 ################################
+set <- "November2021"
+data.path <- paste0(inpath, "data/", set, "/SiteData")
+
+datafiles <- list.files(path = data.path, pattern = ".xlsx")
+n <- length(datafiles)
+
+
+
+
+############################## Summer 2021 ################################
 # # review the locations
 # tubelocs <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), layer="tube_locations_SpatialJoin")
 # 
@@ -50,7 +60,25 @@ col_order <- colnames(data)
 
 set <- "June2021"
 data.path <- paste0(inpath, "data/", set, "/SiteData")
-new_data <- add_loc_info()
+
+datafiles <- list.files(path = data.path, pattern = ".xlsx")
+n <- length(datafiles)
+boundCell1_list <- rep("B11:B11", n)
+boundCell2_list <- rep("T11:T11", n)
+range1_list <- rep("A12:P60", n)
+range2_list <- rep("S12:AH60", n) 
+loc1range_list <- rep("B7:B7", n)
+loc2range_list <- rep("B8:B8", n)
+
+new_data <- add_loc_info(layer="locations2021", n=24,
+                         colOrder = col_order, pattern=".0",
+                         boundCell1_list=boundCell1_list, 
+                         boundCell2_list=boundCell2_list,
+                         range1_list=range1_list, 
+                         range2_list=range2_list,
+                         loc1range_list=loc1range_list, 
+                         loc2range_list=loc2range_list)
+
 ndata <- rbind(data, new_data)
 write.csv(ndata, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
 

@@ -4,10 +4,18 @@
 
 
 ######################################## functions for the Summer 2021 data ################################
+# the functions are updated for the November 2021 data
 # need to set data.path, col_order
 
 add_loc_info <- function(layer="locations2021", n=24,
-                         colOrder = col_order){
+                         colOrder = col_order, pattern=".0",
+                         boundCell1_list=boundCell1_list, 
+                         boundCell2_list=boundCell2_list,
+                         range1_list=range1_list, 
+                         range2_list=range2_list,
+                         loc1range_list=loc1range_list, 
+                         loc2range_list=loc2range_list){
+  
   loc <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), 
                  layer=layer, stringsAsFactors = FALSE)
   loc$Site <- loc$Site+n
@@ -19,20 +27,36 @@ add_loc_info <- function(layer="locations2021", n=24,
   loc.df <- cbind(lonlat.df, loc.df)
   loc.df$YEAR <- "2021"
   loc.df$SEASON <- "Summer"
-  df <- readAllTables()
+  df <- readAllTables(boundCell1_list, boundCell2_list,
+                      range1_list, range2_list,
+                      n=n, pattern=pattern,
+                      loc1range_list, loc2range_list)
   ndf <- merge(df, loc.df, by="Site")
   ndf <- ndf[,colOrder]
   return(ndf)
 }
 
-readAllTables <- function(){
+readAllTables <- function(n=24, pattern=".0",
+                          boundCell1_list=boundCell1_list, 
+                          boundCell2_list=boundCell2_list,
+                          range1_list=range1_list, 
+                          range2_list=range2_list,
+                          loc1range_list=loc1range_list, 
+                          loc2range_list=loc2range_list){
   
-  datafiles <- list.files(path = data.path, pattern = "LCOG_2021")
+  datafiles <- list.files(path = data.path, pattern = ".xlsx")
   for(file in datafiles){
+    k = which(datafiles==file)
     if(file == datafiles[1]){
-      df <- readOneTable(filename = file)
+      df <- readOneTable(filename=file, n=n, pattern=pattern,
+                         boundCell1=boundCell1_list[k], boundCell2=boundCell2_list[k],
+                         range1=range1_list[k], range2=range2_list[k],
+                         loc1range=loc1range_list[k], loc2range=loc2range_list[k])
     }else{
-      ndf <- readOneTable(filename = file)
+      ndf <- readOneTable(filename=file, n=n, pattern=pattern,
+                          boundCell1=boundCell1_list[k], boundCell2=boundCell2_list[k],
+                          range1=range1_list[k], range2=range2_list[k],
+                          loc1range=loc1range_list[k], loc2range=loc2range_list[k])
       df <- rbind(df, ndf)
     }
     print(file)
@@ -41,47 +65,61 @@ readAllTables <- function(){
   return(df)
 }
 
-readOneTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
+readOneTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx",
+                         boundCell1="B11:B11", boundCell2="T11:T11",
+                         range1="A12:P60", range2="S12:AH60",
+                         n=24,pattern=".0",
+                         loc1range="B7:B7", loc2range="B8:B8"){
   
   if(filename == "11.0 LCOG_2021ASt.xlsx"){
     
-    df <- readOneBound(boundCell="B11:B11", range="A12:P60",
+    df <- readOneBound(boundCell=boundCell1, range=range1, 
+                       n=n, pattern = pattern,
                        filename=filename)
   }else{
     
-    df1 <- readOneBound(boundCell="B11:B11", range="A12:P60",
+    df1 <- readOneBound(boundCell=boundCell1, range=range1,
+                        n=n, pattern = pattern,
                         filename=filename)
-    df2 <- readOneBound(boundCell="T11:T11", range="S12:AH60",
+    df2 <- readOneBound(boundCell=boundCell2, range=range2,
+                        n=n, pattern = pattern,
                         filename=filename)
     df <- rbind(df1, df2)
     
   }
   
-  df$Location_d <- rep(get_loc_info(filename), dim(df)[1])
+  df$Location_d <- rep(get_loc_info(loc1range=loc1range, loc2range=loc2range, 
+                                    filename=filename), dim(df)[1])
   
   return(df)
   
 }
 
-get_loc_info <- function(filename="1.0 LCOG_2021RoyalAve.xlsx"){
+get_loc_info <- function(loc1range="B7:B7", loc2range="B8:B8", 
+                         filename="1.0 LCOG_2021RoyalAve.xlsx"){
   
-  loc <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B7:B7"))
-  locnm <- substr(loc,2,nchar(loc)-9)
+  loc <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range=loc1range))
+  if(grepl('mph', loc)){
+    locnm <- substr(loc,2,nchar(loc)-9)
+  }else{
+    locnm <- substr(loc,2,nchar(loc)-1)
+  }
   
-  loc2 <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range = "B8:B8"))
+  loc2 <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range=loc2range))
   cross_st <- substr(loc2,2,nchar(loc2)-1)
   
-  if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd", "Hayden Br Rd")){
+  if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd", "Hayden Br Rd", "21st St", "Marcola Rd")){
     locnm <- paste(locnm, "at", cross_st)
   }
   
   return(locnm)
 }
 
-readOneBound <- function(boundCell="B11:B11", range="A12:P60",
-                         filename="1.0 LCOG_2021RoyalAve.xlsx"){
+# n is the last total number of sites
+readOneBound <- function(boundCell="B11:B11", range="A12:P60", n=24,
+                         pattern=".0", filename="1.0 LCOG_2021RoyalAve.xlsx"){
   
-  s <- as.numeric(str_split(filename, ".0 ")[[1]][1]) + 24
+  s <- as.numeric(str_split(filename, pattern)[[1]][1]) + n
   b <- substring(names(read_excel(paste0(data.path, "/", filename), sheet=1, range = boundCell)), 1, 1)
   df <- read_xlsx(paste0(data.path, "/", filename), sheet=1, range = range) %>%  # TC: traffic counts
     mutate(Date = as.Date(Date, "%m/%d/%Y", tz = "America/Los_Angeles"), 
