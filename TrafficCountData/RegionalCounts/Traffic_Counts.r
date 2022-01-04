@@ -29,9 +29,71 @@ set <- "November2021"
 data.path <- paste0(inpath, "data/", set, "/SiteData")
 
 datafiles <- list.files(path = data.path, pattern = ".xlsx")
-n <- length(datafiles)
 
+boundCell1_list <- c(rep("B6:B6", 1),rep("B9:B9", 1),rep("B10:B10", 1),
+                     rep("B9:B9", 1),rep("B10:B10", 1),rep("B12:B12", 2),
+                     rep("B11:B11", 3),rep("B12:B12", 1),rep("B11:B11", 5))
+boundCell2_list <- c(rep("T6:T6", 1),rep("T9:T9", 1),rep("T10:T10", 1),
+                     rep("T9:T9", 1),rep("T10:T10", 1),rep("T12:T12", 2),
+                     rep("T11:T11", 3),rep("T12:T12", 1),rep("T11:T11", 1),
+                     rep("S11:S11", 1),rep("T11:T11", 3))
+range1_list <- c(rep("A7:P56", 1),rep("A10:P59", 1),rep("A11:P60", 1),
+                 rep("A10:P81", 1),rep("A11:P58", 1),rep("A13:P84", 1),
+                 rep("A13:P64", 1),rep("A12:P64", 1),rep("A12:P59", 2),
+                 rep("A13:P60", 1),rep("A12:P59", 3),rep("A12:P60", 1),
+                 rep("A12:P59", 1))
+range2_list <- c(rep("S7:AH56", 1),rep("S10:AH59", 1),rep("S11:AH60", 1),
+                 rep("S10:AH81", 1),rep("S11:AH58", 1),rep("S13:AH84", 1),
+                 rep("S13:AH64", 1),rep("S12:AH64", 1),rep("S12:AH59", 2),
+                 rep("S13:AH60", 1),rep("S12:AH59", 1),rep("R12:AG59", 1),
+                 rep("S12:AH59", 1),rep("S12:AH60", 1),rep("S12:AH59", 1))
+loc1range_list <- c(rep("B3:B3", 1),rep("B5:B5", 4),rep("B7:B7", 11)) 
+loc2range_list <- c(rep("B4:B4", 1),rep("B6:B6", 4),rep("B8:B8", 11))
 
+datafiles <- list.files(path = data.path, pattern = ".xlsx")
+datafiles <- c(datafiles[1], datafiles[9:16], datafiles[2:8])
+
+new_data <- add_loc_info(layer="Nov2021", n=42,
+                         colOrder = col_order, pattern=" ",
+                         boundCell1_list=boundCell1_list, 
+                         boundCell2_list=boundCell2_list,
+                         range1_list=range1_list, 
+                         range2_list=range2_list,
+                         loc1range_list=loc1range_list, 
+                         loc2range_list=loc2range_list,
+                         datafiles=datafiles)
+
+ndata <- rbind(data, new_data)
+
+dataDF <- unique(ndata[,c('Site','Latitude', 'Longitude','Location_d')])
+find.closest.points <- function(locdf, tolerance=0.00001)
+{
+  lon <- locdf$Longitude
+  lat <- locdf$Latitude
+  site <- locdf$Site
+  n <- dim(locdf)[1]
+  v1 <- vector()
+  v2 <- vector()
+  
+  for(i in 1:n){
+    for(j in 1:n){
+      if(abs(lat[i]-lat[j])<=tolerance & abs(lon[i]-lon[j])<=tolerance){
+        if(site[i]!=site[j]){
+          v1 <- c(v1, site[i])
+          v2 <- c(v2, site[j])
+          if(!(site[i] %in% v2)){
+            print(c(site[i], site[j]))
+          }
+        }
+      }
+    }
+  }
+}
+
+find.closest.points(locdf=dataDF, tolerance=0.0001)
+dataDF[dataDF$Site %in% c(17, 55), c('Site', 'Longitude', 'Latitude', 'Location_d')]
+
+write.csv(ndata, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
 
 
 ############################## Summer 2021 ################################

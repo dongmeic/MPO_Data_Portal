@@ -5,7 +5,7 @@
 
 ######################################## functions for the Summer 2021 data ################################
 # the functions are updated for the November 2021 data
-# need to set data.path, col_order
+# need to set data.path, col_order, and the lists to set the parameters
 
 add_loc_info <- function(layer="locations2021", n=24,
                          colOrder = col_order, pattern=".0",
@@ -14,7 +14,8 @@ add_loc_info <- function(layer="locations2021", n=24,
                          range1_list=range1_list, 
                          range2_list=range2_list,
                          loc1range_list=loc1range_list, 
-                         loc2range_list=loc2range_list){
+                         loc2range_list=loc2range_list,
+                         datafiles=datafiles){
   
   loc <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), 
                  layer=layer, stringsAsFactors = FALSE)
@@ -30,7 +31,8 @@ add_loc_info <- function(layer="locations2021", n=24,
   df <- readAllTables(boundCell1_list, boundCell2_list,
                       range1_list, range2_list,
                       n=n, pattern=pattern,
-                      loc1range_list, loc2range_list)
+                      loc1range_list, loc2range_list,
+                      datafiles)
   ndf <- merge(df, loc.df, by="Site")
   ndf <- ndf[,colOrder]
   return(ndf)
@@ -42,9 +44,9 @@ readAllTables <- function(n=24, pattern=".0",
                           range1_list=range1_list, 
                           range2_list=range2_list,
                           loc1range_list=loc1range_list, 
-                          loc2range_list=loc2range_list){
+                          loc2range_list=loc2range_list,
+                          datafiles=datafiles){
   
-  datafiles <- list.files(path = data.path, pattern = ".xlsx")
   for(file in datafiles){
     k = which(datafiles==file)
     if(file == datafiles[1]){
