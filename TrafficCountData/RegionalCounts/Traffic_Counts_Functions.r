@@ -7,6 +7,49 @@
 # the functions are updated for the November 2021 data
 # need to set data.path, col_order, and the lists to set the parameters
 
+reorganize.locations <- function(data, locdf){
+  df <- find.closest.points(locdf, tolerance=0.0002)
+  cols <- names(locdf)
+  for(s in df$site2){
+    k <- which(df$site2==s)
+    data[data$Site==s,cols] <- locdf[locdf$Site==df$site1[k],cols]
+  }
+  return(data)
+}
+
+find.closest.points <- function(locdf, tolerance=0.00001, returnSites=TRUE)
+{
+  lon <- locdf$Longitude
+  lat <- locdf$Latitude
+  site <- locdf$Site
+  n <- dim(locdf)[1]
+  v1 <- vector()
+  v2 <- vector()
+  v3 <- vector()
+  v4 <- vector()
+  
+  for(i in 1:n){
+    for(j in 1:n){
+      if(abs(lat[i]-lat[j])<=tolerance & abs(lon[i]-lon[j])<=tolerance){
+        if(site[i]!=site[j]){
+          v1 <- c(v1, site[i])
+          v2 <- c(v2, site[j])
+          if(!(site[i] %in% v2)){
+            v3 <- c(v3, site[i])
+            v4 <- c(v4, site[j])
+          }
+        }
+      }
+    }
+  }
+  if(returnSites){
+    df <- data.frame(site1=v3, site2=v4)
+  }else{
+    df <- locdf[locdf$Site %in% c(v3, v4),]
+  }
+  return(df)
+}
+
 add_loc_info <- function(layer="locations2021", n=24,
                          colOrder = col_order, pattern=".0",
                          boundCell1_list=boundCell1_list, 

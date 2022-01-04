@@ -64,37 +64,10 @@ new_data <- add_loc_info(layer="Nov2021", n=42,
                          datafiles=datafiles)
 
 ndata <- rbind(data, new_data)
-
 dataDF <- unique(ndata[,c('Site','Latitude', 'Longitude','Location_d')])
-find.closest.points <- function(locdf, tolerance=0.00001)
-{
-  lon <- locdf$Longitude
-  lat <- locdf$Latitude
-  site <- locdf$Site
-  n <- dim(locdf)[1]
-  v1 <- vector()
-  v2 <- vector()
-  
-  for(i in 1:n){
-    for(j in 1:n){
-      if(abs(lat[i]-lat[j])<=tolerance & abs(lon[i]-lon[j])<=tolerance){
-        if(site[i]!=site[j]){
-          v1 <- c(v1, site[i])
-          v2 <- c(v2, site[j])
-          if(!(site[i] %in% v2)){
-            print(c(site[i], site[j]))
-          }
-        }
-      }
-    }
-  }
-}
+res <- reorganize.locations(data=ndata,locdf=dataDF)
 
-find.closest.points(locdf=dataDF, tolerance=0.0001)
-dataDF[dataDF$Site %in% c(17, 55), c('Site', 'Longitude', 'Latitude', 'Location_d')]
-
-write.csv(ndata, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
-
+write.csv(res, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
 
 ############################## Summer 2021 ################################
 # # review the locations
