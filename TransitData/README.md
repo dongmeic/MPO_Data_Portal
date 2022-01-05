@@ -21,3 +21,5 @@ The format for data cleaning on passenger counts:
  | stop | srv | date | block | trip_end | time | route | dir | stop_name | bus | odometer | desc | qty | longitude | latitude | Season | MonthYear | DailyRtQty | DailyQty |
 
 | 00001 | wkd | 2013-02-26 | 53 | 2021-06-16 16:15:00 | 2021-06-16 16:02:00 | 11 | O | E/S of 58th N of Main | 1121 | 122.04 | bike on rack | 1 | -122.9267 | 44.04634 | Spring 2013 | February 2013 | 76 | 624 |
+
+The routes shapefile should be updated with the same time period, for example, "October 2021", even if the routes haven't changed since 2019. 

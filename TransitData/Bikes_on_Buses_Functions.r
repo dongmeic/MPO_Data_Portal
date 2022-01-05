@@ -2,6 +2,70 @@
 # By Dongmei Chen (dchen@lcog.org)
 # On June 16th, 2021
 
+stop.path <- "T:/Data/LTD Data/StopsSince2011"
+
+get_bikecounts_yr <- function(year, myr="April 2020"){
+  df <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
+                       sheetName = paste0("bike count_Apr", 
+                                          substring(year, 3, 4)),
+                       m="April", yr=year,
+                       myr=myr)
+  ndf <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
+                        sheetName = paste0("bike count_Oct", 
+                                           substring(year, 3, 4)),
+                        m="October", yr=year,
+                        myr=myr)
+  data <- rbind(df, ndf)
+  data$date <- as.character(data$date)
+  data$trip_end <- as.character(data$trip_end)
+  data$time <- as.character(data$time)
+  return(data)
+}
+
+# require the input path (inpath)
+get_bikecounts <- function(fileName = "LTD Bike Count_2021",
+                           sheetName = "bike count_Apr21",
+                           m="April",
+                           yr=2021,
+                           myr="October 2019"){
+  df <- read_excel(paste0(inpath,"/", fileName, ".xlsx"), 
+                   sheet = sheetName, 
+                   col_types = c("text", "date", "numeric", "date", 
+                                 "date", "text", "text", "text", 
+                                 "text", "numeric", "numeric", "numeric", 
+                                 "numeric", "text", "numeric"))
+  stops.to.remove <- unique(grep('anx|arr|ann|escenter|garage', df$stop, value = TRUE))
+  # remove the stops with letters
+  df <- subset(df, !(stop %in% stops.to.remove)) %>% select(-c(latitude, longitude))
+  # convert EmX
+  Emx <- c("101", "102", "103", "104", "105")
+  df$route <- ifelse(df$route %in% Emx, "EmX", df$route)
+  # make the stop numbers to 5 digits
+  zeros <- c("0", "00", "000", "0000")
+  df$stop <- ifelse(nchar(df$stop) == 5, df$stop,
+                    paste0(zeros[(5 - nchar(df$stop))], df$stop))
+  stops.df <- get.stop.coordinates(strsplit(myr, " ")[[1]][1], 
+                                   as.numeric(strsplit(myr, " ")[[1]][2]))
+  df <- merge(df, stops.df, by = 'stop')
+  months <- c("April", "October")
+  seasons <- c("Spring", "Fall")
+  df$Season <- rep(paste(seasons[months==m], yr), dim(df)[1])
+  df$MonthYear <- paste(as.character(month(df$date, label=TRUE, abbr=FALSE)),
+                          year(df$date))
+  
+  dates <- sort(unique(df$date))
+  routes <- unique(df$route)
+  for(i in 1:length(dates)){
+    d <- dates[i]
+    #print(d)
+    for(j in 1:length(routes)){
+      r <- routes[j]
+      df$DailyRtQty[df$date==d & df$route==r] <- sum(df$qty[df$date==d & df$route==r], na.rm = TRUE)
+    }
+    df$DailyQty[df$date==d] <- sum(df$qty[df$date==d], na.rm = TRUE)
+  }
+  return(df)
+}
 
 correct.season <- function(myr){
   m = unlist(strsplit(myr, ' '))[1]
