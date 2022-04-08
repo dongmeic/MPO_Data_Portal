@@ -5,6 +5,8 @@ Crash data is used in five mapping and five crash rates dashboards listed as bel
 
 Internal parent path - T:\Tableau\tableauCrash\Workbooks, except for the safety emphasis areas dashboard - T:\Tableau\tableauSafetyEmphasisAreas\Workbooks
 
+Most of the dashboards below are connected with the LCOG data server and the computation is done in Tableau which is a continued effort from the former GIS staff Bill Clingman, except the last two dashboards. Due to the Lane Geographic Data Consortium migration in 2020, crash data structure has changed by removing the differentiation of vehicle and non-vehicle participant. The dashboard *Transportation Safety Emphasis Areas* requires input files from lane county crash geodatabase prepared by Jacob Blair, and the calculation approach has been updated slightly due to the data structure change. The dashboards 1.1, 1.4, 1.5, 2, and 3 include low-level severity crash data and the update of crash data mapping and NHTSA core safety measures only requires to refresh all extracts and change the year information, unless there are new changes in the data structure.
+
 1. Crash data mapping (no scripts needed; refresh all the extracts)
 
       1.1 [**Motor Vehicle Crashes**](https://www.lcog.org/thempo/page/Motor-Vehicle-Crashes) - CrashMaps_Motorized_DC.twb
@@ -31,12 +33,9 @@ This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau
 
 5. [**NHTSA Core Safety Measures**](https://www.lcog.org/thempo/page/NHTSA-Core-Safety-Measures) - CoreSafetyMeasures_Parameter_DC.twb
 
-This dashboard requires updates in *US_FARS_data.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm) and National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx).
-
-Most of the dashboards above are connected with the LCOG data server and the computation is done in Tableau which is a continued effort from the former GIS staff Bill Clingman, except the last two dashboards. Due to the Lane Geographic Data Consortium migration in 2020, crash data structure has changed by removing the differentiation of vehicle and non-vehicle participant.The dashboard *Transportation Safety Emphasis Areas* requires input files from lane county crash geodatabase prepared by Jacob Blair, and the calculation approach has been updated slightly due to the data structure change. The dashbords 1.1, 1.4, 1.5, 2, and 3 include low-level severity crash data and the update of crash data mapping and NHTSA core safety measures only requires to refresh all extracts and change the year information, unless there are new changes in the data structure.
-
 6. [**FARS Data**](https://www.lcog.org/thempo/page/fars-data) - US_FARS_VMT Fatality Rate OneMap_DC.twb
 
+This dashboard requires updates in *US_FARS_data.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm) and National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx).
 Download [VM2](https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm), copy the TOTAL column and save it as the CSV format. Download [NHTSA](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) and save it as the XLSX format. Run the [script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CrashData/US_FARS.r) to update the input files. Refresh the extract and update the dashboard.
 
 ## Data Sources

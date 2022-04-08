@@ -7,8 +7,8 @@ source('T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r'
 # after 2021 June
 df <- read.csv("T:/Tableau/tableauTransit/Datasources/datacopy/MonthlyPassengerCounts.csv")
 ndf <- get.MultiYearCounts(years = 2021:2021,
-                           startmonth = 6,
-                           endmonth = 10)
+                           startmonth = 11,
+                           endmonth = 12)
 
 ndf <- rbind(df, ndf)
 write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)

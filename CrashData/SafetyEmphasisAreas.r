@@ -29,11 +29,22 @@ if(CheckOldData){
   head(severity)
 }
 
-# Read data sources, this will take a while to complete
-data <- readOGR(dsn = fgdb, layer = "Crash", stringsAsFactors = FALSE)
-vhcl <- st_read(dsn = fgdb, layer = "Crash_Vehicle", stringsAsFactors = FALSE)
-# Read the participant table for the young drivers and unlicensed drivers measures
-partic <- st_read(dsn = fgdb, layer = "Crash_Participant", stringsAsFactors = FALSE)
+readData = "csv"
+if(readData == "gdb"){
+  # Read data sources, this will take a while to complete
+  data <- readOGR(dsn = fgdb, layer = "Crash", stringsAsFactors = FALSE)
+  vhcl <- st_read(dsn = fgdb, layer = "Crash_Vehicle", stringsAsFactors = FALSE)
+  # Read the participant table for the young drivers and unlicensed drivers measures
+  partic <- st_read(dsn = fgdb, layer = "Crash_Participant", stringsAsFactors = FALSE)
+}else{
+  data <- read.csv(paste0(outpath, "crash.csv"))
+  data[data=="-99999"| data==-99999] <- NA
+  vhcl <- read.csv(paste0(outpath, "crash_vehicle.csv"))
+  vhcl[vhcl=="-99999"| vhcl==-99999] <- NA
+  partic <- read.csv(paste0(outpath, "crash_participant.csv"))
+  partic[partic=="-99999"| partic==-99999] <- NA
+}
+
 partic <- partic[!is.na(partic$vhcl_id),]
   
 # Organize young drivers for each crash ID, select young drivers first and mark 
@@ -123,11 +134,14 @@ newnames <- c("Year", "Geography", measures)
 
 # Get the total counts and toal fatal counts
 total.df <- as.data.frame(data[, c(oldnames, "tot_fatal_cnt", "tot_inj_lvl_a_cnt", "tot_inj_cnt")]) %>% 
-  select(-c(coords.x1, coords.x2)) %>%
   mutate(Count = tot_fatal_cnt + tot_inj_lvl_a_cnt, Crash = tot_fatal_cnt + tot_inj_cnt) %>%
   select(-c(tot_fatal_cnt, tot_inj_lvl_a_cnt, tot_inj_cnt)) %>%
   rename_at(vars(oldnames), ~ newnames) %>%
   mutate(Year = as.numeric(Year))
+
+if(readData=="gdb"){
+  total.df <- total.df %>% select(-c(coords.x1, coords.x2))
+}
 
 # total.df$UGB <- ifelse(is.na(total.df$UGB), "Others", total.df$UGB)
 # total.df <- total.df[total.df$Year < 2014, ]
@@ -189,11 +203,15 @@ newnames <- c("Year", "Geography", "UGB", measures)
 
 # Get the total counts and toal fatal counts
 total.df <- as.data.frame(data[, c(oldnames, "tot_fatal_cnt", "tot_inj_lvl_a_cnt", "tot_inj_cnt")]) %>% 
-  select(-c(coords.x1, coords.x2)) %>%
+  #select(-c(coords.x1, coords.x2)) %>%
   mutate(Count = tot_fatal_cnt + tot_inj_lvl_a_cnt, Crash = tot_fatal_cnt + tot_inj_cnt) %>%
   select(-c(tot_fatal_cnt, tot_inj_lvl_a_cnt, tot_inj_cnt)) %>%
   rename_at(vars(oldnames), ~ newnames) %>%
   mutate(Year = as.numeric(Year))
+
+if(readData=="gdb"){
+  total.df <- total.df %>% select(-c(coords.x1, coords.x2))
+}
 
 total.df$UGB <- ifelse(is.na(total.df$UGB), "Others", total.df$UGB)
 # total.df <- total.df[total.df$Year < 2014, ]
