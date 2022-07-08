@@ -12,9 +12,9 @@ library(dplyr)
 ############################## Download data ##############################
 
 # update year information here
-yrrange <- "20152019"
-year <- 2019
-yr = 19
+yrrange <- "20162020"
+year <- 2020
+yr = 20
 
 # create a new folder if not exist
 mainDir <- "T:/Data/CENSUS"
@@ -74,9 +74,9 @@ readtable <- function(filenm.start= sprintf("ACSDT5Y%d.", year),
                                         "_data_with_overlays_"))
   
   dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
-  dat2 <- dat[-1,-2:-1]
+  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
   dat2 <- apply(dat2, 2, as.numeric)
-  dat <- cbind(as.data.frame(dat[-1,1]), as.data.frame(dat2))
+  dat <- cbind(as.data.frame(dat[-1,which(names(dat)=="GEO_ID")]), as.data.frame(dat2))
   colnames(dat)[1] <- "GEO_ID"
   dat$GEO_ID <- substr(dat$GEO_ID, 10, stren)
   return(dat)
@@ -88,7 +88,7 @@ read1yrtable <- function(yr = 18, tablenm = "B01001"){
                        pattern = paste0(yr,".",tablenm,
                                         "_data_with_overlays_"))
   dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
-  dat2 <- dat[-1,-2:-1]
+  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
   dat2 <- apply(dat2, 2, as.numeric)
   return(dat2)
 }
@@ -186,7 +186,7 @@ bg.shp <- readOGR(dsn = outpath, layer = "MPO_BG", stringsAsFactors = FALSE)
 
 # create a table to match blockgroup with the MPO boundary 
 # by copying data from previous blockgroupdata.xlsx
-path <- "C:/Users/clid1852/OneDrive - lanecouncilofgovernments/DataPortal/census"
+path <- "C:/Users/clid1852/OneDrive - lanecouncilofgovernments/DataPortal/census" # no need for updates
 bginmpo <- read_excel(paste0(path, "/blockgroup_in_mpo.xlsx"))
 bginmpo$PctGQinside <- ifelse(is.na(bginmpo$PctGQinside), 0, bginmpo$PctGQinside)
 head(bginmpo)
@@ -354,6 +354,7 @@ names(bg.shp)[1] <- names(bgdata)[1]
 bg.shp <- merge(bg.shp, bgdata, by="BlkGrp10")
 bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
 bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
+# warnings on "Shape_Area" can be ignored
 writeOGR(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
          overwrite_layer=TRUE)
 

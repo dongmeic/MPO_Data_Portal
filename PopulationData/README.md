@@ -4,57 +4,64 @@ Two dashboards were originally in this data category and the [Population Data](h
 
 The [Population Data](https://www.lcog.org/thempo/page/population-data) dashboard has been further updated on December 15, 2020, by Dongmei Chen. Another dashboard on vehicle miles traveled (VMT) and population was added to this data category at the same time, using the same population data. The data sources are explained [below](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#data-sources-for-vmt-and-population). The script *VMT_Pop.r* cleans data for the time-series VMT and population plots.
 
+## Steps for updates
+
+1. Download data from Census.gov;
+2. Run the script [Census_TitleVI.r](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI.r) saved on *T:\DCProjects\GitHub\MPO_Data_Portal\PopulationData* with updated year information;
+3. Update the dashboards from *T:\Tableau\tableauTitleVI\Workbooks\Central Lane MPO Title VI_DC.twb*: 1) refresh all extracts, 2) update all year info; 3) update the MPO average indicator lines and the numbers are from the running output in Line 351; 4) save to Tableau Public;
+4. Update the static maps.
+
 ## Data Sources for the Title VI dashboards
 
-Data from ten tables (1 - 10) within block group, one table (11) within census tract (for 1 year and 5 year respectively), and nine tables (12 - 19) were collected for the Title VI dashboard (the links are updated with the most-recent data, as current as 2019):
+Data from ten tables (1 - 10) within block group in [Lane County](https://data.census.gov/cedsci/all?g=0500000US41039%241500000), one table (11 - B18101) within census tract (for 1 year and 5 year respectively), and nine tables (12 - 19) were collected for the Title VI dashboard (the links are updated with the most-recent data, as current as 2019):
 
-1. [B01003 Total Population](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B01003&hidePreview=false&cid=B01003_001E&vintage=2019)
+1. [B01003 Total Population](https://data.census.gov/cedsci/table?q=B01003&g=0500000US41039%241500000&tid=ACSDT5Y2020.B01003)
 
-2. [B01001 Sex By Age 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B01001&hidePreview=false&cid=B01003_001E&vintage=2019)
+2. [B01001 Sex By Age 5Y](https://data.census.gov/cedsci/table?q=B01001&g=0500000US41039%241500000)
 
-3. [B03002 Hispanic Or Latino Origin By Race 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B03002&hidePreview=false&cid=B01003_001E&vintage=2019)
+3. [B03002 Hispanic Or Latino Origin By Race 5Y](https://data.census.gov/cedsci/table?q=B03002&g=0500000US41039%241500000)
 
-4. [B16004 Age By Language Spoken At Home By Ability To Speak English For The Population 5 Years And Over](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B16004&hidePreview=false&cid=B01003_001E&vintage=2019)
+4. [B16004 Age By Language Spoken At Home By Ability To Speak English For The Population 5 Years And Over](https://data.census.gov/cedsci/table?q=B16004%3A%20AGE%20BY%20LANGUAGE%20SPOKEN%20AT%20HOME%20BY%20ABILITY%20TO%20SPEAK%20ENGLISH%20FOR%20THE%20POPULATION%205%20YEARS%20AND%20OVER&g=0500000US41039%241500000&tid=ACSDT5Y2020.B16004)
 
-5. [B17017 Poverty Status In The Past 12 Months By Household Type By Age Of Householder 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B17017&hidePreview=false&cid=B01003_001E&vintage=2019)
+5. [B17017 Poverty Status In The Past 12 Months By Household Type By Age Of Householder 5Y](https://data.census.gov/cedsci/table?q=B17017&g=0500000US41039%241500000)
 
-6. [B23025 Employment Status For The Population 16 Years And Over 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B23025&hidePreview=false&cid=B01003_001E&vintage=2019)
+6. [B23025 Employment Status For The Population 16 Years And Over 5Y](https://data.census.gov/cedsci/table?q=B23025&g=0500000US41039%241500000)
 
-7. [B25002 Occupancy Status 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B25002&hidePreview=false&cid=B01003_001E&vintage=2019)
+7. [B25002 Occupancy Status 5Y](https://data.census.gov/cedsci/table?q=B25002&g=0500000US41039%241500000)
 
-8. [B25008 Total Population In Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B25008&hidePreview=false&cid=B01003_001E&vintage=2019)
+8. [B25008 Total Population In Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25008&g=0500000US41039%241500000)
 
-9. [B25010 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B25010&hidePreview=false&cid=B01003_001E&vintage=2019)
+9. [B25010 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25010&g=0500000US41039%241500000)
 
-10. [B25044 Tenure By Vehicles Available 5Y](https://data.census.gov/cedsci/table?g=0500000US41039.150000&tid=ACSDT5Y2019.B25044&hidePreview=false&cid=B01003_001E&vintage=2019)
+10. [B25044 Tenure By Vehicles Available 5Y](https://data.census.gov/cedsci/table?q=B25044&g=0500000US41039%241500000)
 
-11. [B18101 Sex By Age By Disability Status 5Y](https://data.census.gov/cedsci/table?t=Disability&g=0500000US41039.140000&tid=ACSDT5Y2019.B18101)
+11. [B18101 Sex By Age By Disability Status 5Y](https://data.census.gov/cedsci/table?q=B18101%3A%20SEX%20BY%20AGE%20BY%20DISABILITY%20STATUS&g=0500000US41039%241400000&tid=ACSDT5Y2020.B18101)
 
-The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Uncheck the 5-year option before downloading data.
+In 2020, [only 5-year data is available](https://www.census.gov/newsroom/press-releases/2021/changes-2020-acs-1-year.html) for the below data sets that were applied with 1-year data before 2020. The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Uncheck the 5-year option before downloading data. Below links provide data in 2019.
 
-12. [B01001 Sex By Age 1Y](https://data.census.gov/cedsci/table?g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B01001&hidePreview=false)
+12. [B01001 Sex By Age 1Y](https://data.census.gov/cedsci/table?g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B01001&hidePreview=false), [B01001 Sex By Age 5Y](https://data.census.gov/cedsci/table?q=B01001&g=400XX00US28117&tid=ACSDT5Y2020.B01001)
 
-13. [B03002 Hispanic Or Latino Origin By Race 1Y](https://data.census.gov/cedsci/table?q=B03002&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B03002&hidePreview=false)
+13. [B03002 Hispanic Or Latino Origin By Race 1Y](https://data.census.gov/cedsci/table?q=B03002&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B03002&hidePreview=false), [B03002 Hispanic Or Latino Origin By Race 5Y](https://data.census.gov/cedsci/table?q=B03002&g=400XX00US28117&tid=ACSDT5Y2020.B03002)
 
-14. [B17017 Poverty Status In The Past 12 Months By Household Type By Age Of Householder 1Y](https://data.census.gov/cedsci/table?q=B17017&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B17017&hidePreview=false)
+14. [B17017 Poverty Status In The Past 12 Months By Household Type By Age Of Householder 1Y](https://data.census.gov/cedsci/table?q=B17017&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B17017&hidePreview=false),[B17017 Poverty Status In The Past 12 Months By Household Type By Age Of Householder 5Y](https://data.census.gov/cedsci/table?q=B17017&g=400XX00US28117)
 
-15. [B23025 Employment Status For The Population 16 Years And Over 1Y](https://data.census.gov/cedsci/table?q=B23025&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B23025&hidePreview=false)
+15. [B23025 Employment Status For The Population 16 Years And Over 1Y](https://data.census.gov/cedsci/table?q=B23025&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B23025&hidePreview=false),[B23025 Employment Status For The Population 16 Years And Over 5Y](https://data.census.gov/cedsci/table?q=B23025&g=400XX00US28117)
 
-16. [B25002 Occupancy Status 1Y](https://data.census.gov/cedsci/table?q=B25002&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25002&hidePreview=false)
+16. [B25002 Occupancy Status 1Y](https://data.census.gov/cedsci/table?q=B25002&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25002&hidePreview=false),[B25002 Occupancy Status 5Y](https://data.census.gov/cedsci/table?q=B25002&g=400XX00US28117)
 
-17. [B25008 Total Population In Occupied Housing Units By Tenure 1Y](https://data.census.gov/cedsci/table?q=ACSDT1Y2019.B25008&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25008&hidePreview=false)
+17. [B25008 Total Population In Occupied Housing Units By Tenure 1Y](https://data.census.gov/cedsci/table?q=ACSDT1Y2019.B25008&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25008&hidePreview=false), [B25008 Total Population In Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25008&g=400XX00US28117)
 
-18. [B25010 Average Household Size Of Occupied Housing Units By Tenure 1Y](https://data.census.gov/cedsci/table?q=B25010&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25010&hidePreview=false)
+18. [B25010 Average Household Size Of Occupied Housing Units By Tenure 1Y](https://data.census.gov/cedsci/table?q=B25010&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25010&hidePreview=false), [B25010 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25010&g=400XX00US28117)
 
-19. [B25044 Tenure By Vehicles Available 1Y](https://data.census.gov/cedsci/table?q=ACSDT1Y2019.B25044&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25044&hidePreview=false)
+19. [B25044 Tenure By Vehicles Available 1Y](https://data.census.gov/cedsci/table?q=ACSDT1Y2019.B25044&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2019.B25044&hidePreview=false),[B25044 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25044&g=400XX00US28117)
 
-20. [B18101 Sex By Age By Disability Status 1Y](https://data.census.gov/cedsci/table?t=Disability&g=400C100US28117&tid=ACSDT1Y2019.B18101&hidePreview=false)
+20. [B18101 Sex By Age By Disability Status 1Y](https://data.census.gov/cedsci/table?t=Disability&g=400C100US28117&tid=ACSDT1Y2019.B18101&hidePreview=false), [B18101 Sex By Age By Disability Status 5Y](https://data.census.gov/cedsci/table?t=Disability&g=400XX00US28117&tid=ACSDT5Y2020.B18101)
 
 
-Data sets are downloaded and saved in T:\Data\CENSUS\ACS20152019 and the output is exported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp and the maps can be found in T:\MPO\Title VI & EJ\2020_TitleVI_update\Maps. Data sources for the 'Historically Excluded Populations' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled').
+Data sets are downloaded and saved in T:\Data\CENSUS\ACS20162020. The output is exported as T:\Tableau\tableauTitleVI\Datasources\MPO_BG_TitleVI.shp. The maps can be found in T:\MPO\Title VI & EJ\2022_TitleVI_update\Maps. Data sources for the 'Historically Excluded Populations' dashboard includes Tables 2 (B01001, 'elderly'), 3 (B03002, 'minority'), 5 (B17017, 'poverty'), and 11 (B18101, 'disabled').
 
 ## Functions
-Two main functions are applied to read and reorganize the tables to the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric for the 5-year data and *read1yrtable* does the same for the 1-year data.
+Two main functions are applied to read and reorganize the tables to the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric for the 5-year data and *read1yrtable* does the same for the 1-year data. The script *Census_TitleVI.r* extracts the downloaded files.
 
 ## Explanations of the Title VI variables
 

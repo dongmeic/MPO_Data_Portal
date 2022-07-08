@@ -24,7 +24,58 @@ data$Date <- as.Date(data$Date, format = "%Y-%m-%d")
 #data$Owner <- ifelse(data$Owner=='Eug', 'EUG', ifelse(data$Owner=='Spr', 'SPR', data$Owner))
 col_order <- colnames(data)
 
-############################## Fall 2021 ################################
+############################## Spring 2022 ################################
+# excluding Site 22
+set <- "May2022"
+data.path <- paste0(inpath, "data/", set, "/SiteData")
+datafiles <- list.files(path = data.path, pattern = ".xlsx")
+
+boundCell1_list <- c(rep("B11:B11", 23))
+boundCell2_list <- c(rep("S11:S11", 3), rep("T11:T11", 20))
+
+range1_list <- c(rep("A12:P60", 2),rep("A12:P59", 1),
+                 rep("A12:P60", 3),rep("A12:P59", 1),
+                 rep("A12:P60", 3),rep("A12:P58", 1),
+                 rep("A12:P59", 5),rep("A12:P61", 1),
+                 rep("A12:P62", 1),rep("A12:P60", 1),
+                 
+                 rep("A12:P59", 2))
+
+range2_list <- c(rep("R12:AG60", 2),rep("R12:AG59", 1), 
+                 rep("S12:AH60", 2),rep("R12:AG60", 1),
+                 rep("S12:AH59", 1),rep("S12:AH60", 3),
+                 rep("S12:AH58", 1),rep("S12:AH59", 1),
+                 rep("NA", 2), rep("S12:AH59", 4),
+                 rep("S12:AH61", 1),rep("S12:AH62", 1),
+                 rep("A12:P60", 1),
+                 
+                 rep("S12:AH59", 2))
+
+loc1range_list <- c(rep("B7:B7", 23)) 
+loc2range_list <- c(rep("B8:B8", 23))
+
+df <- read_AllTables(boundCell1_list, boundCell2_list,
+                    range1_list, range2_list,
+                    n=n, pattern=pattern,
+                    loc1range_list, loc2range_list,
+                    datafiles, 
+                    OneBoundSites=c(13, 14))
+
+
+new_data <- add_loc_info(layer="May2022", n=54,
+                         colOrder = col_order, pattern=" ",
+                         boundCell1_list=boundCell1_list, 
+                         boundCell2_list=boundCell2_list,
+                         range1_list=range1_list, 
+                         range2_list=range2_list,
+                         loc1range_list=loc1range_list, 
+                         loc2range_list=loc2range_list,
+                         datafiles=datafiles,
+                         year=2022,
+                         season="Spring")
+
+
+############################## Fall 2021 #################################
 set <- "November2021"
 data.path <- paste0(inpath, "data/", set, "/SiteData")
 

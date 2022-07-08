@@ -30,4 +30,7 @@ Since Fall 2020, the data format has been adjusted to:
 "Site","Direction","Date","Day","Time","Total","VehicleType","VehicleQty","Longitude","Latitude","owner","YEAR","SEASON","Location_d"
 1,"N","2019-10-22","Tuesday","10:00 AM",434,"MotorBikes",2,-122.963280802637,44.0442970391097,"SPR",2019,"FALL","42nd South of Main"
 
+The first eight columns are from the count data. The later six columns ("Longitude","Latitude","owner","YEAR","SEASON","Location_d") are from the location shapefile. 
+
+
 4. The regional traffic counts dashboards are combined with the ODOT counts [here](https://www.lcog.org/thempo/page/motorized-traffic-counts).

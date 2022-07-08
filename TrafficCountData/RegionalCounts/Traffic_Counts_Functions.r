@@ -3,6 +3,87 @@
 # On February 18th, 2020
 
 
+######################################## functions for the Spring 2022 data ################################
+read_OneTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx",
+                         boundCell1="B11:B11", boundCell2="T11:T11",
+                         range1="A12:P60", range2="S12:AH60",
+                         n=24,pattern=".0",
+                         loc1range="B7:B7", loc2range="B8:B8",
+                         OneBound=FALSE){
+  
+  if(OneBound){
+    
+    df <- readOneBound(boundCell=boundCell1, range=range1, 
+                       n=n, pattern = pattern,
+                       filename=filename)
+  }else{
+    
+    df1 <- readOneBound(boundCell=boundCell1, range=range1,
+                        n=n, pattern = pattern,
+                        filename=filename)
+    df2 <- readOneBound(boundCell=boundCell2, range=range2,
+                        n=n, pattern = pattern,
+                        filename=filename)
+    df <- rbind(df1, df2)
+    
+  }
+  
+  df$Location_d <- rep(get_loc_info(loc1range=loc1range, loc2range=loc2range, 
+                                    filename=filename), dim(df)[1])
+  
+  return(df)
+  
+}
+
+read_AllTables <- function(n=24, pattern=" ",
+                          boundCell1_list=boundCell1_list, 
+                          boundCell2_list=boundCell2_list,
+                          range1_list=range1_list, 
+                          range2_list=range2_list,
+                          loc1range_list=loc1range_list, 
+                          loc2range_list=loc2range_list,
+                          datafiles=datafiles, 
+                          OneBoundSites=c(13, 14)){
+  
+  for(file in datafiles){
+    k = which(datafiles==file)
+    if(file == datafiles[1] & !(1 %in% OneBoundSites)){
+      
+      df <- read_OneTable(filename=file, n=n, pattern=pattern,
+                         boundCell1=boundCell1_list[1], boundCell2=boundCell2_list[1],
+                         range1=range1_list[1], range2=range2_list[1],
+                         loc1range=loc1range_list[1], loc2range=loc2range_list[1])
+      
+    }else if(file == datafiles[1] & (1 %in% OneBoundSites)){
+      
+      df <- read_OneTable(filename=file, n=n, pattern=pattern,
+                          boundCell1=boundCell1_list[1],
+                          range1=range1_list[1], 
+                          loc1range=loc1range_list[1], 
+                          OneBound=TRUE)
+      
+    }else{
+      if(k %in% OneBoundSites){
+        ndf <- read_OneTable(filename=file, n=n, pattern=pattern,
+                            boundCell1=boundCell1_list[k], 
+                            range1=range1_list[k], 
+                            loc1range=loc1range_list[k],
+                            OneBound=TRUE)
+      }else{
+        ndf <- read_OneTable(filename=file, n=n, pattern=pattern,
+                            boundCell1=boundCell1_list[k], boundCell2=boundCell2_list[k],
+                            range1=range1_list[k], range2=range2_list[k],
+                            loc1range=loc1range_list[k], loc2range=loc2range_list[k])
+      }
+      
+      df <- rbind(df, ndf)
+    }
+    print(file)
+  }
+  return(df)
+}
+
+
 ######################################## functions for the Summer 2021 data ################################
 # the functions are updated for the November 2021 data
 # need to set data.path, col_order, and the lists to set the parameters
@@ -58,10 +139,13 @@ add_loc_info <- function(layer="locations2021", n=24,
                          range2_list=range2_list,
                          loc1range_list=loc1range_list, 
                          loc2range_list=loc2range_list,
-                         datafiles=datafiles){
+                         datafiles=datafiles,
+                         year=2021,
+                         season="Summer"){
   
   loc <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), 
                  layer=layer, stringsAsFactors = FALSE)
+  # n is the total number of existing sampling sites
   loc$Site <- loc$Site+n
   loc.lonlat <- spTransform(loc, CRS("+init=epsg:4326"))
   lonlat.df <- as.data.frame(loc.lonlat@coords)
@@ -69,8 +153,8 @@ add_loc_info <- function(layer="locations2021", n=24,
   loc.df <- as.data.frame(loc)[,c("Site", "owner")]
   # colnames(loc.df)[2] <- "Owner"
   loc.df <- cbind(lonlat.df, loc.df)
-  loc.df$YEAR <- "2021"
-  loc.df$SEASON <- "Summer"
+  loc.df$YEAR <- year
+  loc.df$SEASON <- season
   df <- readAllTables(boundCell1_list, boundCell2_list,
                       range1_list, range2_list,
                       n=n, pattern=pattern,
