@@ -378,7 +378,7 @@ pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctEld
 
 notes <- c("1st", "2nd", "3rd", "4th", "5th", "6th")
 
-MapDir <- "T:/MPO/Title VI & EJ/2020_TitleVI_update/Maps/2020/20152019"
+MapDir <- "T:/MPO/Title VI & EJ/2022_TitleVI_update/Maps/20162020"
 sink(paste0(MapDir, "/symbology_manual_cuts.txt"))
 for(var in pct.vars){
   tot.var <- tot.vars[which(pct.vars==var)]

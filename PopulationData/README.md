@@ -242,20 +242,20 @@ The explanation after the comma is either the source column or the calculated va
 
 ## Download links for the CLMPO Title VI data
 
-ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally. The links are updated automatically with the most-recent data, as current as 2019.
+ArcMap or ArcGIS Pro is required for reading the feature layer and web map locally. The links are updated automatically with the most-recent data, as current as 2020.
 
-[Service Definition](https://lcog.maps.arcgis.com/home/item.html?id=4e6c93c4183c46fd90bd1b95edee800d)
+[Feature Layer](https://arcg.is/1Sufnz0)
 
-[Feature Layer](https://lcog.maps.arcgis.com/home/item.html?id=bff06c500d9c4749b047fbd7d0ab7a21)
+[Shapefile](https://arcg.is/aLzPH)
 
-[Shapefile](https://lcog.maps.arcgis.com/home/item.html?id=f17c5c349aa9407ab1d48338850ced05)
-
-[Web Map](https://lcog.maps.arcgis.com/home/item.html?id=000d1aaae6144808bf76a113577a939e)
+[Web Map](https://arcg.is/X0H950)
 
 ## Download links for the CLMPO Title VI PDF maps
 [2014 - 2018](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EnM3omAabelNpQDt35dX4ckBM1NmZuAhahaobDWw3e56Bg?e=OVqQE2)
 
 [2015 - 2019](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/Er0KHmKTvEFEjhmNqK51C48BORpezlfErRSnMB0VR81lzw?e=qaxBsW)
+
+[2016 - 2020](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EiEajxcDM-NDmNYOg-tWH28B4Oog60q_GiN6MoOd2eqoqQ?e=DUHRKG)
 
 ## A data requrest related to Title VI from Springfield on July 2021
 
