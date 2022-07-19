@@ -4,12 +4,14 @@
 
 
 ######################################## functions for the Spring 2022 data ################################
-read_OneTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx",
-                         boundCell1="B11:B11", boundCell2="T11:T11",
-                         range1="A12:P60", range2="S12:AH60",
-                         n=24,pattern=".0",
-                         loc1range="B7:B7", loc2range="B8:B8",
-                         OneBound=FALSE){
+
+# n is the last total number of sites
+read_OneTable <- function(filename="01 MLK_Site1.xlsx",
+                          boundCell1="B11:B11", boundCell2="S11:S11",
+                          range1="A12:P60", range2="R12:AG60",
+                          n=51, pattern=" ",
+                          loc1range="B7:B7", loc2range="B8:B8",
+                          OneBound=FALSE){
   
   if(OneBound){
     
@@ -35,26 +37,26 @@ read_OneTable <- function(filename="1.0 LCOG_2021RoyalAve.xlsx",
   
 }
 
-read_AllTables <- function(n=24, pattern=" ",
-                          boundCell1_list=boundCell1_list, 
-                          boundCell2_list=boundCell2_list,
-                          range1_list=range1_list, 
-                          range2_list=range2_list,
-                          loc1range_list=loc1range_list, 
-                          loc2range_list=loc2range_list,
-                          datafiles=datafiles, 
-                          OneBoundSites=c(13, 14)){
+read_AllTables <- function(n=51, pattern=" ",
+                           boundCell1_list=boundCell1_list, 
+                           boundCell2_list=boundCell2_list,
+                           range1_list=range1_list, 
+                           range2_list=range2_list,
+                           loc1range_list=loc1range_list, 
+                           loc2range_list=loc2range_list,
+                           datafiles=datafiles, 
+                           OneBoundSites=c(13, 14)){
   
   for(file in datafiles){
     k = which(datafiles==file)
-    if(file == datafiles[1] & !(1 %in% OneBoundSites)){
+    if(k==1 & !(1 %in% OneBoundSites)){
       
       df <- read_OneTable(filename=file, n=n, pattern=pattern,
-                         boundCell1=boundCell1_list[1], boundCell2=boundCell2_list[1],
-                         range1=range1_list[1], range2=range2_list[1],
-                         loc1range=loc1range_list[1], loc2range=loc2range_list[1])
+                          boundCell1=boundCell1_list[1], boundCell2=boundCell2_list[1],
+                          range1=range1_list[1], range2=range2_list[1],
+                          loc1range=loc1range_list[1], loc2range=loc2range_list[1])
       
-    }else if(file == datafiles[1] & (1 %in% OneBoundSites)){
+    }else if(k==1 & (1 %in% OneBoundSites)){
       
       df <- read_OneTable(filename=file, n=n, pattern=pattern,
                           boundCell1=boundCell1_list[1],
@@ -65,24 +67,24 @@ read_AllTables <- function(n=24, pattern=" ",
     }else{
       if(k %in% OneBoundSites){
         ndf <- read_OneTable(filename=file, n=n, pattern=pattern,
-                            boundCell1=boundCell1_list[k], 
-                            range1=range1_list[k], 
-                            loc1range=loc1range_list[k],
-                            OneBound=TRUE)
+                             boundCell1=boundCell1_list[k], 
+                             range1=range1_list[k], 
+                             loc1range=loc1range_list[k],
+                             OneBound=TRUE)
       }else{
         ndf <- read_OneTable(filename=file, n=n, pattern=pattern,
-                            boundCell1=boundCell1_list[k], boundCell2=boundCell2_list[k],
-                            range1=range1_list[k], range2=range2_list[k],
-                            loc1range=loc1range_list[k], loc2range=loc2range_list[k])
+                             boundCell1=boundCell1_list[k], boundCell2=boundCell2_list[k],
+                             range1=range1_list[k], range2=range2_list[k],
+                             loc1range=loc1range_list[k], loc2range=loc2range_list[k])
       }
       
       df <- rbind(df, ndf)
     }
     print(file)
   }
+  
   return(df)
 }
-
 
 ######################################## functions for the Summer 2021 data ################################
 # the functions are updated for the November 2021 data
@@ -131,17 +133,12 @@ find.closest.points <- function(locdf, tolerance=0.00001, returnSites=TRUE)
   return(df)
 }
 
-add_loc_info <- function(layer="locations2021", n=24,
-                         colOrder = col_order, pattern=".0",
-                         boundCell1_list=boundCell1_list, 
-                         boundCell2_list=boundCell2_list,
-                         range1_list=range1_list, 
-                         range2_list=range2_list,
-                         loc1range_list=loc1range_list, 
-                         loc2range_list=loc2range_list,
-                         datafiles=datafiles,
+add_loc_info <- function(layer="locations2021",
+                         n=24,
                          year=2021,
-                         season="Summer"){
+                         season="Summer",
+                         data=df,
+                         colOrder=col_order){
   
   loc <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), 
                  layer=layer, stringsAsFactors = FALSE)
@@ -155,12 +152,7 @@ add_loc_info <- function(layer="locations2021", n=24,
   loc.df <- cbind(lonlat.df, loc.df)
   loc.df$YEAR <- year
   loc.df$SEASON <- season
-  df <- readAllTables(boundCell1_list, boundCell2_list,
-                      range1_list, range2_list,
-                      n=n, pattern=pattern,
-                      loc1range_list, loc2range_list,
-                      datafiles)
-  ndf <- merge(df, loc.df, by="Site")
+  ndf <- merge(data, loc.df, by="Site")
   ndf <- ndf[,colOrder]
   return(ndf)
 }
@@ -237,9 +229,12 @@ get_loc_info <- function(loc1range="B7:B7", loc2range="B8:B8",
   loc2 <- names(read_excel(paste0(data.path, "/", filename), sheet=1, range=loc2range))
   cross_st <- substr(loc2,2,nchar(loc2)-1)
   
-  if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd", "Hayden Br Rd", "21st St", "Marcola Rd")){
-    locnm <- paste(locnm, "at", cross_st)
-  }
+  locnm <- paste(locnm, "at", cross_st)
+  
+  ## data before 2022 Spring
+  # if(locnm %in% c("S Bertelsen Rd", "Bailey Hill Rd", "Hayden Br Rd", "21st St", "Marcola Rd")){
+  #   locnm <- paste(locnm, "at", cross_st)
+  # }
   
   return(locnm)
 }

@@ -25,20 +25,18 @@ data$Date <- as.Date(data$Date, format = "%Y-%m-%d")
 col_order <- colnames(data)
 
 ############################## Spring 2022 ################################
-# excluding Site 22
 set <- "May2022"
 data.path <- paste0(inpath, "data/", set, "/SiteData")
 datafiles <- list.files(path = data.path, pattern = ".xlsx")
 
-boundCell1_list <- c(rep("B11:B11", 23))
-boundCell2_list <- c(rep("S11:S11", 3), rep("T11:T11", 20))
+boundCell1_list <- c(rep("B11:B11", 24))
+boundCell2_list <- c(rep("S11:S11", 3), rep("T11:T11", 2), rep("S11:S11", 1), rep("T11:T11", 18))
 
 range1_list <- c(rep("A12:P60", 2),rep("A12:P59", 1),
                  rep("A12:P60", 3),rep("A12:P59", 1),
                  rep("A12:P60", 3),rep("A12:P58", 1),
-                 rep("A12:P59", 5),rep("A12:P61", 1),
-                 rep("A12:P62", 1),rep("A12:P60", 1),
-                 
+                 rep("A12:P59", 7),rep("A12:P61", 1),
+                 rep("A12:P62", 1),rep("A12:P60", 2), 
                  rep("A12:P59", 2))
 
 range2_list <- c(rep("R12:AG60", 2),rep("R12:AG59", 1), 
@@ -47,33 +45,43 @@ range2_list <- c(rep("R12:AG60", 2),rep("R12:AG59", 1),
                  rep("S12:AH58", 1),rep("S12:AH59", 1),
                  rep("NA", 2), rep("S12:AH59", 4),
                  rep("S12:AH61", 1),rep("S12:AH62", 1),
-                 rep("A12:P60", 1),
-                 
-                 rep("S12:AH59", 2))
+                 rep("S12:AH60", 2),rep("S12:AH59", 2))
 
-loc1range_list <- c(rep("B7:B7", 23)) 
-loc2range_list <- c(rep("B8:B8", 23))
+loc1range_list <- c(rep("B7:B7", 24)) 
+loc2range_list <- c(rep("B8:B8", 24))
 
 df <- read_AllTables(boundCell1_list, boundCell2_list,
                     range1_list, range2_list,
-                    n=n, pattern=pattern,
+                    n=54, pattern=" ",
                     loc1range_list, loc2range_list,
                     datafiles, 
                     OneBoundSites=c(13, 14))
 
-
-new_data <- add_loc_info(layer="May2022", n=54,
-                         colOrder = col_order, pattern=" ",
-                         boundCell1_list=boundCell1_list, 
-                         boundCell2_list=boundCell2_list,
-                         range1_list=range1_list, 
-                         range2_list=range2_list,
-                         loc1range_list=loc1range_list, 
-                         loc2range_list=loc2range_list,
-                         datafiles=datafiles,
+new_data <- add_loc_info(layer="May2022",
+                         n=54,
                          year=2022,
-                         season="Spring")
+                         season="Spring",
+                         data=df,
+                         colOrder=col_order)
 
+ndata <- rbind(data, new_data)
+ndata$SEASON <- ifelse(ndata$SEASON == "FALL", "Fall", ndata$SEASON)
+
+write.csv(ndata, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
+
+aggdata <- aggregate(x=list(Counts = ndata$VehicleQty), 
+          by=list(Season = paste(ndata$YEAR, ndata$SEASON), Location = ndata$Location_d, 
+                  Site = ndata$Site, Longitude=ndata$Longitude, Latitude=ndata$Latitude), 
+          FUN=sum, na.rm=TRUE)
+
+aggdate <- aggregate(x=list(NDays = ndata$Date), 
+                     by=list(Season = paste(ndata$YEAR, ndata$SEASON), Location = ndata$Location_d, 
+                             Site = ndata$Site, Longitude=ndata$Longitude, Latitude=ndata$Latitude), 
+                     FUN=function(x) length(unique(x)))
+
+aggdata$NDays <- aggdate$NDays
+aggdata$DailyCNT <- aggdata$Counts/aggdata$NDays
+write.csv(aggdata, paste0(outpath, "Traffic_Counts_Site.csv"), row.names = FALSE)
 
 ############################## Fall 2021 #################################
 set <- "November2021"
@@ -104,15 +112,13 @@ loc2range_list <- c(rep("B4:B4", 1),rep("B6:B6", 4),rep("B8:B8", 11))
 datafiles <- list.files(path = data.path, pattern = ".xlsx")
 datafiles <- c(datafiles[1], datafiles[9:16], datafiles[2:8])
 
-new_data <- add_loc_info(layer="Nov2021", n=42,
-                         colOrder = col_order, pattern=" ",
-                         boundCell1_list=boundCell1_list, 
-                         boundCell2_list=boundCell2_list,
-                         range1_list=range1_list, 
-                         range2_list=range2_list,
-                         loc1range_list=loc1range_list, 
-                         loc2range_list=loc2range_list,
-                         datafiles=datafiles)
+df <- readAllTables(boundCell1_list, boundCell2_list,
+                    range1_list, range2_list,
+                    n=n, pattern=pattern,
+                    loc1range_list, loc2range_list,
+                    datafiles)
+
+new_data <- add_loc_info(layer="Nov2021")
 
 ndata <- rbind(data, new_data)
 dataDF <- unique(ndata[,c('Site','Latitude', 'Longitude','Location_d')])
