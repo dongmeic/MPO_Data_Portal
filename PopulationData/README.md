@@ -298,7 +298,7 @@ Read the shapefile in Tableau. Create the map and plots following the 'Communiti
 1. Review the Tableau workbook *T:\Tableau\tableauPop\Workbooks\CombinedPopData.twb* on data sources;
 2. Source data saved at *L:\Research&Analysis\Data\Population\Historical Population* is prepared by Kyle;
 3. Copy data from the source data to *T:\Tableau\tableauPop\Datasources\HistoricalPopulation.xlsx* for Tableau viz update;
-4. Tableau updates require editings on the date ranges and captions;
+4. Tableau updates require editings on the date ranges and captions.
 
 ### Data sources for VMT and population
 
