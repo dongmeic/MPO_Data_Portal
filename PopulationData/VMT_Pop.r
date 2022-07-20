@@ -5,10 +5,58 @@
 
 # load libraries
 library(xlsx)
+library(readxl)
+
 
 vmt_path <- "T:/Data/VMT/VMT_State_and_County"
 pop_path <- "T:/Tableau/tableauPop/Datasources"
 
+############################### Update 2020 #############################
+dt <- read.csv(file.path(pop_path, "VMT_Pop.csv"))
+vmt_state <- read_excel(file.path(vmt_path, "VMT_State.xls"),
+                        range = "G17:H17",
+                        col_names = FALSE)
+vmt_county <- read_excel(file.path(vmt_path, "VMT_County.xlsx"),
+                         range = "B25:B25",
+                         col_names = FALSE)
+filename <- "T:/Tableau/tableauPop/Datasources/HistoricalPopulation.xlsx"
+pop <- read_excel(filename)
+
+
+
+ndt <- data.frame(Year=2020, State_VMT=as.numeric(vmt_state[1,2]),
+                  County_VMT=as.numeric(vmt_county),
+                  State_Pop=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Oregon", 
+                                           "POPULATION"]),
+                  State_GrowthRate=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Oregon", 
+                                                  "5-YEAR AVG. ANNUAL GROWTH RATE"]),
+                  County_Pop=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Lane County (Total)", 
+                                            "POPULATION"]),
+                  County_GrowthRate=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Lane County (Total)", 
+                                                   "5-YEAR AVG. ANNUAL GROWTH RATE"]))
+geos <- c("State", "County")
+vars <- c("PerCap", "AnnGR")
+types <- c("VMT", "Pop")
+
+for(geo in geos){
+  for(var in vars){
+    if(var == "PerCap"){
+      ndt[,paste0(geo, "_", var)] <- ndt[,paste0(geo, "_VMT")]/ndt[,paste0(geo, "_Pop")]
+    }else{
+      for(type in types){
+        x <- ndt[,paste0(geo, "_", type)]
+        y <- dt[dt$Year==2019, paste0(geo, "_", type)]
+        ndt[,paste0(geo, "_", type, "_", var)] <- x/y - 1
+      }
+    }
+  }
+}
+
+dat <- rbind(dt, ndt)
+write.csv(dat, file.path(pop_path, "VMT_Pop.csv"), row.names = FALSE)
+
+
+############################### Before 2020 #############################
 ############################### Read VMT data ###########################
 # open the table in Excel to check the reading range
 vmt_state <- read.xlsx(file = file.path(vmt_path, "VMT_State.xls"),
