@@ -4,7 +4,7 @@ Two dashboards were originally in this data category and the [Population Data](h
 
 The [Population Data](https://www.lcog.org/thempo/page/population-data) dashboard has been further updated on December 15, 2020, by Dongmei Chen. Another dashboard on vehicle miles traveled (VMT) and population was added to this data category at the same time, using the same population data. The data sources are explained [below](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#data-sources-for-vmt-and-population). The script *VMT_Pop.r* cleans data for the time-series VMT and population plots.
 
-## Steps for updates
+## Steps for Title VI updates
 
 1. Download data from Census.gov;
 2. Run the script [Census_TitleVI.r](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI.r) saved on *T:\DCProjects\GitHub\MPO_Data_Portal\PopulationData* with updated year information;
@@ -293,6 +293,12 @@ The detailed data processing steps follow the script *TitleVI_Lane_Douglas.r*, a
 
 Read the shapefile in Tableau. Create the map and plots following the 'Communities of Concern' dashboard settings. The dashboard "Lane_Douglas.twb" is saved at T:\Data\CENSUS\ACS20152019\TitleVI\others\processed.
 
-# Data sources for VMT and population
+## Steps for the demographic data updates
+
+1. Review the Tableau workbook *T:\Tableau\tableauPop\Workbooks\CombinedPopData.twb* on data sources;
+2. Source data saved at *L:\Research&Analysis\Data\Population\Historical Population* is prepared by Kyle;
+3. Copy data from the source data to *T:\Tableau\tableauPop\Datasources\HistoricalPopulation.xlsx* for Tableau viz update;
+
+### Data sources for VMT and population
 
 The VMT data can be downloaded from the [ODOT Data and Maps](https://www.oregon.gov/odot/Data/Pages/Traffic-Counting.aspx#VMT). The downloaded VMT data is saved at T:\Data\VMT\VMT_State_and_County. The current population data can be retrieved from both the [PSU population estimates](https://www.pdx.edu/population-research/population-estimate-reports) and [US Census](https://www.census.gov/programs-surveys/decennial-census/decade.2010.html). The [historical state and lane county population](https://lcog.org/DocumentCenter/View/1370/Historical-Population-of-Lane-County-and-Cities) is saved at L:\Research&Analysis\Data\Population\Historical Population\Historical Population.xls. The table *HistoricalPopulation.xlsx* from T:\Tableau\tableauPop\Datasources is updated and used in the viz workbook *VMT_Pop.twb*. The text file *ReadMe_VMT_Pop.txt* in the same folder explains the data and viz update process. The dashboard is combined with the population data dashboard [here](https://www.lcog.org/thempo/page/Population-Data) and the source dashboard is T:\Tableau\tableauPop\Workbooks\CombinedPopData.twb.
