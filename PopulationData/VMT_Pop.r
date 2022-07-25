@@ -55,7 +55,6 @@ for(geo in geos){
 dat <- rbind(dt, ndt)
 write.csv(dat, file.path(pop_path, "VMT_Pop.csv"), row.names = FALSE)
 
-
 ############################### Before 2020 #############################
 ############################### Read VMT data ###########################
 # open the table in Excel to check the reading range

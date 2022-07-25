@@ -81,7 +81,16 @@ aggdate <- aggregate(x=list(NDays = ndata$Date),
 
 aggdata$NDays <- aggdate$NDays
 aggdata$DailyCNT <- aggdata$Counts/aggdata$NDays
-write.csv(aggdata, paste0(outpath, "Traffic_Counts_Site.csv"), row.names = FALSE)
+write.csv(aggdata, paste0(outpath, "Traffic_Counts_Site.csv"), 
+          row.names = FALSE)
+
+# add coordinates
+path <- paste0(inpath, "data/", set)
+locdf <- read_excel(paste0(path, "/LCOG  Counts May 2022 Report.xlsx"), 
+           range = "A4:E28",
+           col_names = FALSE)
+colnames(locdf) <- c("Site ID", "Roadway", "Cross Street Ref", "Lat", "Long")
+write.csv(locdf, paste0(path, "/coordinates.csv"), row.names = FALSE)
 
 ############################## Fall 2021 #################################
 set <- "November2021"

@@ -3,13 +3,13 @@
 # On April 9th, 2020
 
 # load functions
-source("T:/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Functions.r")
+source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
 ############################## Run after Oct 2020 ################################
 # update ODOT counts data after October 2020
 year <- 2021
-month_range <- "Jan-Apr" #"Oct-Dec" #"Jan-Apr"
+month_range <- "May-Apr" #"Oct-Dec" #"Jan-Apr"
 Update.ODOT.Counts(month_range=month_range, 
                    year=year)
 

@@ -69,16 +69,18 @@ Covert.Hour.Format <- function(x){
 
 Update.ODOT.Counts <- function(month_range="Oct-Dec", 
                                year=2020){
-  old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableaU.csv", stringsAsFactors = FALSE)
+  old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableaU.csv", 
+                         stringsAsFactors = FALSE)
   counts.df <- read_by_stations(month_range=month_range, year=year)
   new.counts <- rbind(old.counts, counts.df)
-  write.csv(new.counts, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableau.csv", row.names = FALSE)
+  write.csv(new.counts, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableau.csv", 
+            row.names = FALSE)
 }
 
 read_by_stations <- function(month_range="Oct-Dec", 
                              year=2020){
   files <- list.files(paste0(inpath, year, "/", month_range), 
-                      pattern = "^VOLUME",
+                      pattern = "^VOLUME|Volume",
                       full.names = FALSE)
   Bfiles <- grep(files, pattern = "EB|WB|SB|NB", value = TRUE)
   
