@@ -5,6 +5,20 @@
 
 ######################################## functions for the Spring 2022 data ################################
 
+# review seasons
+get_season <- function(m){
+  if(m %in% c(12, 1, 2)){
+    s <- "Winter"
+  }else if(m %in% 3:5){
+    s <- "Spring"
+  }else if(m %in% 6:8){
+    s <- "Summer"
+  }else{
+    s <- "Fall"
+  }
+  return(s)
+}
+
 # n is the last total number of sites
 read_OneTable <- function(filename="01 MLK_Site1.xlsx",
                           boundCell1="B11:B11", boundCell2="S11:S11",

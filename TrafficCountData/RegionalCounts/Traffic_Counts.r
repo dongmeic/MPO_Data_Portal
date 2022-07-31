@@ -10,6 +10,7 @@ library(writexl)
 library(rgdal)
 library(reshape2)
 library(stringr)
+library(lubridate)
 
 # load functions and get some global settings
 source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/RegionalCounts/Traffic_Counts_Functions.r")
@@ -63,9 +64,18 @@ new_data <- add_loc_info(layer="May2022",
                          season="Spring",
                          data=df,
                          colOrder=col_order)
+# revise the street names
+loc <- readOGR(dsn=paste0(site.path, "/traffic_count_locations.gdb"), 
+               layer="May2022", stringsAsFactors = FALSE)
+StNames <- loc@data[, c("Street", "Site")]
+StNames$Site <- StNames$Site + 54
+new_data <- merge(new_data, StNames, by="Site")
+new_data <- new_data[, -which(colnames(new_data)=="Location_d")]
+colnames(new_data)[which(colnames(new_data) == "Street")] <- "Location_d"
 
 ndata <- rbind(data, new_data)
 ndata$SEASON <- ifelse(ndata$SEASON == "FALL", "Fall", ndata$SEASON)
+#ndata$SEASON <- unlist(lapply(ndata$Date, function(x) get_season(month(x))))
 
 write.csv(ndata, paste0(outpath, "Traffic_Counts_Vehicles.csv"), row.names = FALSE)
 
@@ -84,13 +94,35 @@ aggdata$DailyCNT <- aggdata$Counts/aggdata$NDays
 write.csv(aggdata, paste0(outpath, "Traffic_Counts_Site.csv"), 
           row.names = FALSE)
 
-# add coordinates
+# add coordinates, complete the rest steps in ArcGIS Pro
 path <- paste0(inpath, "data/", set)
 locdf <- read_excel(paste0(path, "/LCOG  Counts May 2022 Report.xlsx"), 
            range = "A4:E28",
            col_names = FALSE)
-colnames(locdf) <- c("Site ID", "Roadway", "Cross Street Ref", "Lat", "Long")
+colnames(locdf) <- c("SiteID", "Roadway", "CroStRef", "Lat", "Long")
+locdf <- locdf[!is.na(locdf$Lat),]
+locdf$Long <- as.numeric(locdf$Long)
 write.csv(locdf, paste0(path, "/coordinates.csv"), row.names = FALSE)
+
+df2spdf <- function(df, lon_col_name, lat_col_name, trans = TRUE){
+  lonlat <- sp::CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+  lon_col_no <- which(names(df)==lon_col_name)
+  lat_col_no <- which(names(df)==lat_col_name)
+  xy <- data.frame(df[,c(lon_col_no,lat_col_no)])
+  coordinates(xy) <- c(lon_col_name, lat_col_name)
+  proj4string(xy) <- lonlat
+  spdf <- sp::SpatialPointsDataFrame(coords = xy, data = df)
+  if(trans){
+    spdf <- spTransform(spdf, CRS('+proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs'))
+  }
+  return(spdf)
+}
+
+locspdf <- df2spdf(locdf, "Long", "Lat")
+writeOGR(locspdf, dsn = path, 
+         layer = "May22locs", 
+         driver = "ESRI Shapefile",
+         overwrite_layer = TRUE)
 
 ############################## Fall 2021 #################################
 set <- "November2021"

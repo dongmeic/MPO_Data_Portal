@@ -8,7 +8,6 @@ library(readxl)
 library(rgdal)
 library(dplyr)
 
-
 ############################## Download data ##############################
 
 # update year information here
@@ -53,6 +52,15 @@ devtools::install_github("hrecht/censusapi")
 library(censusapi)
 # notes on December 10th, 2020 - having trouble getting an API key
 # and installing Rtools
+
+titlevi <- read.csv("T:/Tableau/tableauTitleVI/Datasources/MPO_summary.csv")
+vars <- c("BlkGrp10", "PopNI5Disa", "PopEld", "HHPoor",  
+          "Pop5yrLEP", "PopMinor", "PopWFUnEmp", "HH0car")
+data <- titlevi[, vars]
+
+write.csv(data, 
+          paste0("T:/Tableau/tableauTitleVI/Datasources/map_data.csv"), 
+          row.names = F)
 
 ############################## Read data ##############################
 # set-ups

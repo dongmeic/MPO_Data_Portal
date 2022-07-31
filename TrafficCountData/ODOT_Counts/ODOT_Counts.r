@@ -6,6 +6,13 @@
 source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
+############################## Length report after May 2021 ######################
+year <- 2021
+
+lrfiles <- list.files(paste0(inpath, year, "/LengthReport"), 
+           pattern = "^Class Data",
+           full.names = FALSE)
+
 ############################## Run after Oct 2020 ################################
 # update ODOT counts data after October 2020
 year <- 2021
