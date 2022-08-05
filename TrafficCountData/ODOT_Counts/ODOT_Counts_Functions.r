@@ -43,7 +43,9 @@ Get.LengthReport <- function(year=2020, month='Nov'){
   df <- df[, c("COUNTY12", "COUNTY2", "COUNTY9", "TwentyFourHour_Date", "Test1",
                "35 - 60", "61 - 149")]
   colnames(df)[1:5] <- c("StationID", "County", "Direction", "Date", "Hour")
-  head(df)
+  #head(df)
+  df$StationID
+  df <- df[!unlist(sapply(df$StationID, function(x) excludedID(x))),]
   df[,"Count"] <- df[,"35 - 60"] + df[,"61 - 149"]
   
   df <- df %>% 
@@ -54,6 +56,10 @@ Get.LengthReport <- function(year=2020, month='Nov'){
            Date=format(Date, "%m/%d/%Y"),
            Hour=unlist(sapply(Hour, Covert.Hour.Format)))
   return(df)
+}
+
+excludedID <- function(x){
+  length(unlist(strsplit(x, "_"))) == 3
 }
 
 Get.StationID <- function(x){

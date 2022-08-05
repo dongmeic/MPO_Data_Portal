@@ -8,7 +8,7 @@ Data are provided by Josh Lucas (Traffic Data Analyst, Josh.lucas@odot.state.or.
 
 ## Dashboard update
 
-The [dashboard](https://thempo.org/902/Motorized-Traffic-Counts) shows the spatial and temporal patterns of the counts and it has been updated to April 2021. 
+The [dashboard](https://thempo.org/902/Motorized-Traffic-Counts) shows the spatial and temporal patterns of the counts and it has been updated to April 2021. There is no length data for Oct 2020 due to a data migration issue when ODOT shift to a new database (Oregon Traffic Monitoring System).
 
 ### Steps to update the dashboard
 
