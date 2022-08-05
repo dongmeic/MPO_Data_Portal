@@ -67,7 +67,7 @@ Two main functions are applied to read and reorganize the tables to the input fi
 
 ### Variable calculation in the script *Census_TitleVI.r* using the tables
 
-The metadata of each table can be found from downloading the table, or searching online.  
+The metadata of each table can be found from downloading the table, or searching online. The table IDs are explained [here](https://www.census.gov/programs-surveys/acs/guidance/which-data-tool/table-ids-explained.html).
 
 **1) B01001 - Sex by age**
 

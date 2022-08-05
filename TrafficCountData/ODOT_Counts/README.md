@@ -4,7 +4,7 @@ The ODOT traffic counts include data primarily from 14 stations and counts with 
 
 ## Source data
 
-Data are provided by Josh Lucas (Traffic Data Analyst, Josh.lucas@odot.state.or.us).
+Data are provided by ODOT.
 
 ## Dashboard update
 
