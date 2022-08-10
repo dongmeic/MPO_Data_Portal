@@ -11,6 +11,54 @@ library(reshape2)
 library(stringr)
 library(lubridate)
 
+read_LR_files <- function(year=2021){
+  lrfiles <- list.files(paste0(inpath, year, "/LengthReport"), 
+                        pattern = "^Class Data",
+                        full.names = TRUE)
+  for(file in lrfiles){
+    print(file)
+    if(file==lrfiles[1]){
+      df <- read_LR_file(filename = file)
+    }else{
+      ndf <- read_LR_file(filename = file)
+      df <- rbind(df, ndf)
+    }
+  }
+  return(df)
+}
+
+read_LR_file <- function(filename=NULL){
+  sheets <- excel_sheets(filename)
+  selected_sheets <- grep(sheets, pattern = "EB|WB|SB|NB", value = TRUE)
+  selected_sheets <- grep(selected_sheets, pattern = "_1_|_2_|_3_", 
+                          value = TRUE, invert = TRUE)
+  for(sheet in selected_sheets){
+    print(sheet)
+    if(sheet==selected_sheets[1]){
+      df <- read_LR_sheet(filename=filename, sheetname=sheet)
+    }else{
+      ndf <- read_LR_sheet(filename=filename, sheetname=sheet)
+      df <- rbind(df, ndf)
+    }
+  }
+  return(df)
+}
+
+read_LR_sheet <- function(filename=NULL, sheetname=NULL){
+  dt <- read_excel(filename, sheet = sheetname, skip=24, n_max=25) %>%
+    select(c("Date", "Hour", "0 - 19", "20 - 34", "35 - 60", "61 - 149")) %>%
+    mutate(Count=`35 - 60`+`61 - 149`) %>%
+    select(c("Date", "Hour", "Count")) %>%
+    mutate(StationID=str_split(sheet, "_")[[1]][1], 
+           Direction=str_split(sheet, "_")[[1]][2],
+           Day=substr(weekdays(Date), 1, 3),
+           Date=format(Date, "%m/%d/%Y"),
+           Hour=unlist(sapply(Hour, Covert.Hour.Format))) %>%
+    select(StationID, Direction, Date, Day, Hour, Count)
+  
+  return(dt)
+}
+
 Update.ODOT.LengthData <- function(month=NULL, 
                                year=NULL, multi_month=FALSE, 
                                months=NULL){
@@ -88,7 +136,7 @@ read_by_stations <- function(month_range="Oct-Dec",
   files <- list.files(paste0(inpath, year, "/", month_range), 
                       pattern = "^VOLUME|Volume",
                       full.names = FALSE)
-  Bfiles <- grep(files, pattern = "EB|WB|SB|NB", value = TRUE)
+  files <- grep(files, pattern = "EB|WB|SB|NB", value = TRUE)
   
   for(filenm in Bfiles){
     if(filenm == Bfiles[1]){

@@ -7,21 +7,35 @@ source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_C
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
 ############################## Length report after May 2021 ######################
-year <- 2021
 
-lrfiles <- list.files(paste0(inpath, year, "/LengthReport"), 
-           pattern = "^Class Data",
-           full.names = FALSE)
+old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv", 
+                       stringsAsFactors = FALSE)
+df <- read_LR_files()
 
-file <- paste0(inpath, year, "/LengthReport/", lrfiles[1])
-file.exists(file)
-length(excel_sheets(file))
-dt <- read_excel(file)
-
-df <- Get.LengthReport()
 head(df)
 
 ############################## Run after Oct 2020 ################################
+
+# update ODOT counts data after October 2020
+year <- 2022
+month_range <- "May-Jun"
+Update.ODOT.Counts(month_range=month_range, 
+                   year=year)
+
+year <- 2021
+month_range <- "May-Apr" #"Oct-Dec" #"Jan-Apr"
+Update.ODOT.Counts(month_range=month_range, 
+                   year=year)
+
+if(FALSE){
+  old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableaU.csv", 
+                         stringsAsFactors = FALSE)
+}
+
+#update length report data after April 2021 by month
+# the counts are organized by day in each sheet
+# ignore the classes above 149
+
 # recover the data to a certain date
 if(FALSE){
   file <- "T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv"
@@ -31,17 +45,6 @@ if(FALSE){
   old.counts <- old.counts[old.counts$Date < "2020-11-01",]
   write.csv(old.counts, file, row.names = FALSE)
 }
-
-# update ODOT counts data after October 2020
-year <- 2021
-month_range <- "May-Apr" #"Oct-Dec" #"Jan-Apr"
-Update.ODOT.Counts(month_range=month_range, 
-                   year=year)
-
-#update length report data after April 2021 by month
-# the counts are organized by day in each sheet
-# ignore the classes above 149
-
 
 # update length report data after October 2020 by month
 # it takes a while to write out the data
