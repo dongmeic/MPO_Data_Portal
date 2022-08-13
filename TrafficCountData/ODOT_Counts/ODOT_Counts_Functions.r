@@ -1,4 +1,4 @@
-# This script was created to collect functions for the data cleaning of ODOT counts
+# This script was created to collect functions for the cleaning of ODOT counts
 # By Dongmei Chen (dchen@lcog.org)
 # On April 9th, 2020
 
@@ -49,13 +49,14 @@ read_LR_sheet <- function(filename=NULL, sheetname=NULL){
     select(c("Date", "Hour", "0 - 19", "20 - 34", "35 - 60", "61 - 149")) %>%
     mutate(Count=`35 - 60`+`61 - 149`) %>%
     select(c("Date", "Hour", "Count")) %>%
-    mutate(StationID=str_split(sheet, "_")[[1]][1], 
-           Direction=str_split(sheet, "_")[[1]][2],
+    mutate(StationID=str_split(sheetname, "_")[[1]][1], 
+           Direction=str_split(sheetname, "_")[[1]][2],
            Day=substr(weekdays(Date), 1, 3),
            Date=format(Date, "%m/%d/%Y"),
            Hour=unlist(sapply(Hour, Covert.Hour.Format))) %>%
     select(StationID, Direction, Date, Day, Hour, Count)
-  
+  dt <- dt[!(dt$Hour %in% c("Total #:00 NA", "Total %:00 NA")),]
+  df$Direction <- unlist(lapply(df$Direction, function(x) str_split(x, " ")[[1]][1]))
   return(dt)
 }
 

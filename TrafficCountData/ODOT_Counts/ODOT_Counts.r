@@ -7,12 +7,35 @@ source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_C
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
 ############################## Length report after May 2021 ######################
-
-old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv", 
+outfile <- "T:/Tableau/tableauODOTCounts/Datasources/ODOT_HourlyForTableau_LongVehicles.csv"
+old.counts <- read.csv(outfile, 
                        stringsAsFactors = FALSE)
-df <- read_LR_files()
+#old.counts <- old.counts[!is.na(old.counts$Hour),]
+#old.counts$Date <- as.Date(old.counts$Date, format = "%m/%d/%Y")
 
-head(df)
+ptm <- proc.time()
+df <- read_LR_files()
+proc.time() - ptm
+
+ndf <- rbind(old.counts, df)
+write.csv(ndf, outfile, row.names = FALSE)
+
+ptm <- proc.time()
+df <- read_LR_files(year=2022)
+proc.time() - ptm
+ndf <- rbind(old.counts, df)
+
+write.csv(ndf, outfile, row.names = FALSE)
+
+file <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/2021/LengthReport/Class Data Lane County 2021-05.xlsx"
+sheet <- "20004_WB"
+test <- read_LR_sheet(filename = file, sheetname = sheet)
+
+ptm <- proc.time()
+test2 <- read_LR_file(filename = file)
+proc.time() - ptm
+
+test1 <- rbind(old.counts, test)
 
 ############################## Run after Oct 2020 ################################
 
