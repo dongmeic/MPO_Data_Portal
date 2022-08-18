@@ -74,6 +74,7 @@ get_OD_data <- function(year=2019, export=TRUE){
 
 ############################## Update with new data ################################################
 
+# this will run for 8 hours or so
 data <- get_OD_data()
 
 
