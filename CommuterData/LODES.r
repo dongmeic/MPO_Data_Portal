@@ -1,4 +1,4 @@
-# This script was created to organize LODES data
+# This script was created to organize LODES data and was discarded due to inefficiency
 # LEHD - Longitudinal Employer-Household Dynamics
 # LODES - LEHD Origin-Destination Employment Statistics
 # By Dongmei Chen (dchen@lcog.org)
@@ -19,6 +19,7 @@ clean_text <- function(x){
   return(text3)
 }
 
+# this function is replaced by using a dictionary in Python
 getCity <- function(blockID){
   cities <- read.csv(paste0(outpath,"/or_city_blockIDs.csv"))
   cities$BlockIDs <- unlist(lapply(cities$BlockIDs, function(x) clean_text(x)))
@@ -39,7 +40,7 @@ get_OD_data <- function(year=2019, export=TRUE){
   or_od$w_geocode <- as.character(or_od$w_geocode)
   or_od$h_geocode <- as.character(or_od$h_geocode)
   
-  # this will take a while (about 8 hours)
+  # this will take a while
   ptm <- proc.time()
   or_od$w_city <- unlist(lapply(or_od$w_geocode, function(x) getCity(x)))
   proc.time() - ptm
@@ -74,7 +75,7 @@ get_OD_data <- function(year=2019, export=TRUE){
 
 ############################## Update with new data ################################################
 
-# this will run for 8 hours or so
+# this will run for a long time
 data <- get_OD_data()
 
 
