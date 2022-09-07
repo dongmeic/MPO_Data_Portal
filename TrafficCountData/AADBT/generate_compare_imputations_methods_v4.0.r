@@ -53,8 +53,7 @@
 #	options(scipen = 6)
 	options(scipen=999)
 	#Set working directory
-	setwd("//wpdotfill09/R_VMP3_USERS/tdb069//Data/Counts/Non Motorized/ODOT/")
-	
+	setwd("T:/DCProjects/Modeling/AADBT/reading/Test/Data")
 	
 	
 	#set parallel backend (Windows)
@@ -133,27 +132,31 @@
 	#Counts data
 	#####################
 	#Create vector of file names
-	All_Files. <- file.info(dir(paste(getwd(),"/Counts Data/Step 3 - Counts with Errors",sep=""), full.names=TRUE))$ctime
-	names(All_Files.) <- dir(paste(getwd(),"/Counts Data/Step 3 - Counts with Errors",sep=""), full.names=TRUE)
-	#Daily counts by sub location 
-	File <- All_Files.[grep("Daily_Sub_Location_Id", names(All_Files.))]
-	File <- names(File[File%in%max(File)])
+	# All_Files. <- file.info(dir(paste(getwd(),"/Counts Data/Step 3 - Counts with Errors",sep=""), full.names=TRUE))$ctime
+	# names(All_Files.) <- dir(paste(getwd(),"/Counts Data/Step 3 - Counts with Errors",sep=""), full.names=TRUE)
+	# #Daily counts by sub location 
+	# File <- All_Files.[grep("Daily_Sub_Location_Id", names(All_Files.))]
+	# File <- names(File[File%in%max(File)])
+	File <- "Daily_Sub_Location_Id_406683.RData"
 	Load_Daily_Sub_Location_Id.. <- assignLoad(File)
 	
 	#Supporting Data
 	###################
 	#Locate latest files
-	All_Files. <- file.info(dir(paste("Supporting Data/API Call Summary Information",sep=""), full.names=TRUE))$ctime
-	names(All_Files.) <- dir(paste("Supporting Data/API Call Summary Information",sep=""), full.names=TRUE)
-	All_Files. <- All_Files.[agrep(".RData",names(All_Files.))]
-	#Site information form API Call----
-	Select_Files. <- All_Files.[grep("Site_Location_Info", names(All_Files.))]
-	File <- names(Select_Files.[Select_Files.%in%max(Select_Files.)])
-	Site_Location_Info.. <- assignLoad(file = File)
+	# All_Files. <- file.info(dir(paste("Supporting Data/API Call Summary Information",sep=""), full.names=TRUE))$ctime
+	# names(All_Files.) <- dir(paste("Supporting Data/API Call Summary Information",sep=""), full.names=TRUE)
+	# All_Files. <- All_Files.[agrep(".RData",names(All_Files.))]
+	# #Site information form API Call----
+	# Select_Files. <- All_Files.[grep("Site_Location_Info", names(All_Files.))]
+	# File <- names(Select_Files.[Select_Files.%in%max(Select_Files.)])
+	# Site_Location_Info.. <- assignLoad(file = File)
 	#Load spatial data
-	Site_Location_Info_Sp <- assignLoad( file ="Supporting Data/API Call Summary Information/Site_Location_Info_Sp_116.RData")
+	#Site_Location_Info_Sp <- assignLoad( file ="Supporting Data/API Call Summary Information/Site_Location_Info_Sp_116.RData")
+	Site_Location_Info_Sp <- assignLoad( file = "Site_Location_Info_Sp_116.RData")
 	#Load store climate data
-	Load_Store_Climate_Data.. <- assignLoad( file ="//wpdotfill09/R_VMP3_USERS/tdb069/Data/Climate/Processed/NOAA_Data.RData")
+	#Load_Store_Climate_Data.. <- assignLoad( file ="//wpdotfill09/R_VMP3_USERS/tdb069/Data/Climate/Processed/NOAA_Data.RData")
+	Load_Store_Climate_Data.. <- assignLoad( file = "NOAA_Data.RData")
+	
 	
 #SARM Validation 
 #-----------------------------	
@@ -1228,7 +1231,7 @@
   Input_Data.. <- Daily..[Daily..$Device_Name%in%"Portland Ave. Northside" &  Daily..$User_Type_Desc%in%"Bicycle",]
   Input_Data..$TMAX <- (Input_Data..$TMAX /10) * (9/5) +32 
   Input_Data..[,c("Date","TMAX","TMAX_2")]
-  #0°C × 9/5) + 32 = 32°F
+  #0?C ? 9/5) + 32 = 32?F
 	
   #Setup LM control parameters
   Control_ <- trainControl(method = "repeatedcv",number = 10, repeats = 1,search = "grid", allowParallel = TRUE)

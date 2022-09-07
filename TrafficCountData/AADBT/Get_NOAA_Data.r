@@ -32,6 +32,7 @@
 	library(readxl)	
 	library(Metrics)
   library(geosphere)
+  library(rjson)
 
 	
 #Set up R environment
@@ -39,16 +40,12 @@
 	#Set scientific notation
 	options(scipen = 6)
 	#Set working directory
-	setwd("//wpdotfill09/R_VMP3_USERS/tdb069//Data/Counts/Non Motorized/ODOT/")
+  setwd("T:/DCProjects/Modeling/AADBT/reading/Test/Data")
 	
 	#Set NOAA API Key 
 	######################
-	#ODOT Key 
-	options(noaakey = "qQemNzfjikmxTfcerzovSzDSnhbGGhyY" )
-	#Perosnal key - hotmail
-	options(noaakey = "GGApKKxTNFzxpdKQkoMROllWZrcZSPfU" )
-	#Perosnal key - gmail
-	options(noaakey = "TizJmQwiDYoBmXAfXvgxlbnWVCOamclJ" )
+  keypath <- "T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/AADBT/"
+	options(noaakey = rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$noaa$token)
 	
 #Define custom scripts functions
 #------------------------------
@@ -71,8 +68,8 @@
 	File <- names(Select_Files.[Select_Files.%in%max(Select_Files.)])
 	Site_Location_Info.. <- assignLoad(file = File)
 	#Load spatial data
-	Site_Location_Info_Sp <- assignLoad( file ="Supporting Data/API Call Summary Information/Site_Location_Info_Sp_116.RData")
-	
+	#Site_Location_Info_Sp <- assignLoad( file ="Supporting Data/API Call Summary Information/Site_Location_Info_Sp_116.RData")
+	Site_Location_Info_Sp <- assignLoad( file = "Site_Location_Info_Sp_116.RData")
 	
 #Determine which stations to use for each count location
 #--------------------------------------------------------
