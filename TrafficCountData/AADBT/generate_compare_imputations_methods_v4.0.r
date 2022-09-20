@@ -205,12 +205,12 @@
 	#Daily.. <- Daily..[Daily..$Is_Holiday%in%FALSE,]
 	#Remove consecutive zeros
 	Daily.. <- Daily..[!(Daily..$Error_Code%in%c(1,3)),]
-	#Summarize number of observations agian with cleaned data
+	#Summarize number of observations again with cleaned data
 	Daily_Summary.. <- left_join(Daily_Summary.., Daily.. %>% group_by(Device_Name, User_Type_Desc,Year) %>% summarise(Obs_N_Clean = length(Counts[!(is.na(Counts))])), by = c("Device_Name", "User_Type_Desc", "Year"))
 	Daily.. <- left_join(Daily..,Daily_Summary.., by = c("Device_Name", "User_Type_Desc", "Year"))
 	#Select only sites with 360 days or more
 	Daily.. <- Daily..[Daily..$Obs_N_Clean >=350,]
-	#Add week colum
+	#Add week column
 	Daily..$Week <- week(Daily..$Date)
 	Daily.. <- Daily..[!(is.na(Daily..$Device_Name)),]
 	#Do just 2018 for now
@@ -304,7 +304,7 @@
 	reg_Mat <- expand.grid(c(TRUE,FALSE), c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE), c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE),c(TRUE,FALSE))
 	
 	#Use model found to be best in previous agaistive search method
-	SARM_Models.. <- assignLoad(file = "Models/Imputation/SARM_Annualization_Models.RData")
+	SARM_Models.. <- assignLoad(file = "SARM_Annualization_Models.RData")
 		
 	#Create a data.frame to store the results
 	##############################
@@ -362,7 +362,7 @@
 					Model_Data.. <- Select_Data_3..					
 					
 					#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-					#Negative binomail regression
+					#Negative binomial regression
 					#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 					#Define Imputation type object
 					Imputation_Type <- "Negative_Binomial"					
