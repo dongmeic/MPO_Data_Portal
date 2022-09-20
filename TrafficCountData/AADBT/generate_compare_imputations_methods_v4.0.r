@@ -149,7 +149,8 @@
 	# #Site information form API Call----
 	# Select_Files. <- All_Files.[grep("Site_Location_Info", names(All_Files.))]
 	# File <- names(Select_Files.[Select_Files.%in%max(Select_Files.)])
-	# Site_Location_Info.. <- assignLoad(file = File)
+	#Site_Location_Info.. <- assignLoad(file = File)
+	Site_Location_Info.. <- assignLoad(file ="Site_Location_Info_116.RData")
 	#Load spatial data
 	#Site_Location_Info_Sp <- assignLoad( file ="Supporting Data/API Call Summary Information/Site_Location_Info_Sp_116.RData")
 	Site_Location_Info_Sp <- assignLoad( file = "Site_Location_Info_Sp_116.RData")
@@ -288,7 +289,7 @@
 	  
 	#Summarize climate data for select locations
 	Select_Climate_Data.. <- Climate_Data..[Climate_Data..$City%in%unique(Daily..$City),]
-	Select_Climate_Data.. %>% group_by(City) %>% summarise(Mean_Max_Temp = mean(TMAX_Trans), Total_Precip = sum((PRCP/10),na.rm=T) / length(unique(Year)) * 0.0393701, Total_Snow = sum((SNOW/10)) /length(unique(Year)) * 0.0393701)
+	Select_Climate_Data.. %>% group_by(City) %>% summarise(Mean_Max_Temp = mean(TMAX), Total_Precip = sum((PRCP/10),na.rm=T) / length(unique(Year)) * 0.0393701, Total_Snow = sum((SNOW/10)) /length(unique(Year)) * 0.0393701)
 	
 	
 	
@@ -404,7 +405,7 @@
 							Temp_Std_Beta_Coeff.. <- as.data.frame(coefficients(lm.beta(Model)))
 							colnames(Temp_Std_Beta_Coeff..) <- "Coefficient"
 							Temp_Std_Beta_Coeff..$Variable <- rownames(Temp_Std_Beta_Coeff.. )
-							Temp_Std_Beta_Coeff..$Device_Name <-device_name
+							Temp_Std_Beta_Coeff..$Device_Name <- device_name
 							Temp_Std_Beta_Coeff..$User_Type_Desc <- user_type
 							Temp_Std_Beta_Coeff..$Months_Select <- paste(Months_Select.,collapse="-")
 							Temp_Std_Beta_Coeff..$Year <- year
@@ -798,7 +799,7 @@
 	#Determine devices with multiple years
 	x <- Daily.. %>% group_by(Device_Name, User_Type_Desc) %>% summarise(N_Year = length(unique(Year)))
 	x <- x[x$N_Year>1,]
-	filter(Daily.., Device_Name
+	filter(Daily.., Device_Name)
 	
 	for(device_name in unique( Daily_Counts_Summary..$Device_Name )){
 	  Select_Data_1.. <-  Daily_Counts_Summary.. [ Daily_Counts_Summary.. $Device_Name%in%device_name,]
