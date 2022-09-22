@@ -112,7 +112,7 @@ for(city in c("Eugene", "Springfield")){
   
   #Determine years to look up in climate data
   Years. <- as.character(2012:2021)
-  #Initiate a data frame to store retreived data
+  #Initiate a data frame to store retrieved data
   Load_Climate_Data.. <- data.frame()
   
   for(station_id in Station_Ids.){

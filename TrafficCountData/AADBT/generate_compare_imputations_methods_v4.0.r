@@ -1,7 +1,7 @@
 #Author: Josh Roll 
 #Date: 11/11/2019
 #Description:   Use hold out analysis and test holding out each combination of months to determine the error for each month and total annual estimation.  Comparing the pre-selected negative binomial statistical model against 
-#machine leanring algorithms
+#machine learning algorithms
 #Version
 #1.0
 #2.0
@@ -163,7 +163,7 @@
 #-----------------------------	
 	#SARM Validation 
 	#-----------------------------	
-	#Review and determine completness of daily counts 
+	#Review and determine completeness of daily counts 
 	#########################
 	#Select just the total 
 	Daily.. <- Load_Daily_Sub_Location_Id..[Load_Daily_Sub_Location_Id..$Collection_Type_Desc%in%"Permanent" & Load_Daily_Sub_Location_Id..$Direction%in%"Total",]
@@ -196,7 +196,7 @@
 	#Manually fix the last day of 2018 - try 
 	Daily..$Daylight_Mins[Daily..$Date%in%as.Date("2018-12-31")]<- 529
 	Daily..$Daylight_Mins[Daily..$Date%in%as.Date("2019-12-31")]<- 529
-	#Sumamrize the number of records by device and by year
+	#Summarize the number of records by device and by year
 	##############
 	Daily_Counts_Summary.. <- Daily.. %>% group_by(Device_Name,User_Type_Desc, Year) %>% summarise(Count = length(Counts))
 	#Create a summary of daily observations to device what data to use
@@ -224,10 +224,10 @@
 	Daily.. <- Daily..[!(Daily..$Device_Name%in%c("Alder north of 18th Ave","Newport Ave. Northside","Newport Ave. Southside") & Daily..$User_Type_Desc%in%"Bicycle"),]
 	#Select user types
 	Daily.. <- Daily..[Daily..$User_Type_Desc%in%c("Bicycle","Pedestrian"),]
-	#Summarise final number of device by user type and year used in the factoring testing below
+	#Summarize final number of device by user type and year used in the factoring testing below
 	Daily_Summary_Year.. <- Daily.. %>% group_by(Year,User_Type_Desc) %>% summarise(Device_Count = length(unique(Device_Name)), Mean_AADT = mean(Counts), Median_AADT = median(Counts), 
 		Obs_N = length(Counts) / length(unique(Device_Name)))
-	#Sumamrize the number of records by device and by year
+	#Summarize the number of records by device and by year
 	##############
 	Daily_Counts_Summary..  <- Daily.. %>% group_by(Device_Name, User_Type_Desc,Year) %>% summarise(Obs_N = length(Counts[!(is.na(Counts))]),ADT = round(mean(Counts, na.rm=T)))
 	#Remove locations with issues after review (below)
@@ -282,7 +282,7 @@
 
 	#Remove locations/years with known issues
 	##############################
-	Daily_Counts_Summary.. <- Daily_Counts_Summary..[!((Daily_Counts_Summary..$Device_Name%in%"Fern Ridge Path west of Chambers" & Daily_Counts_Summary..$Year%in%c("2013","2014"))),]
+	Daily_Counts_Summary.. <- Daily_Counts_Summary..[!((Daily_Counts_Summary..$Device_Name%in% c("Fern Ridge Path west of Chambers", "Minto North") & Daily_Counts_Summary..$Year%in%c("2013","2014"))),]
 	
 	#Count number of unique locations
 	length(unique(Daily_Counts_Summary..$Device_Name))
@@ -324,7 +324,7 @@
 	Rf_Models_ <- list()
 	#Create a data frame to store standardized beta coefficients
 	Std_Beta_Coeff_ <- list()
-	#initialize a dataframe to store negative binomical regression 
+	#initialize a dataframe to store negative binomial regression 
 	Coefficients.. <- data.frame()
 	Std_Beta_Coeff.. <- data.frame()
 	#Set up parallel processing
@@ -372,7 +372,7 @@
 					Est_Sum_Month_ <- list()
 					Obs_Sum_Month_ <- list()
 					Est_Sum_Annual_ <- list()
-					#initialize a dataframe to store negative binomical regression 
+					#initialize a dataframe to store negative binomial regression 
 					#Coefficients.. <- data.frame()
 					#Std_Beta_Coeff.. <- data.frame()
 					#Initiate a start timer
@@ -466,7 +466,7 @@
 					Temp_Obs_Est..$Median_APE_Daily <- round(unlist(Daily_Median_APE_),4)
 					#Add Imputation type
 					Temp_Obs_Est..$Imputation_Type <- Imputation_Type
-					#Stire in master data frame
+					#Store in master data frame
 					Obs_Est.. <- rbind(Obs_Est.., Temp_Obs_Est..)
 					#Store model coefficients
 					#All_Coefficients.. <- rbind(All_Coefficients.., Coefficients..)
@@ -565,7 +565,7 @@
 					Temp_Obs_Est..$Median_APE_Daily <- round(unlist(Daily_Median_APE_),4)
 					#Add Imputation type
 					Temp_Obs_Est..$Imputation_Type <- Imputation_Type
-					#Stire in master data frame
+					#Store in master data frame
 					Obs_Est.. <- rbind(Obs_Est.., Temp_Obs_Est..)
 							
 					#-------------------------------------------------------------------------------------------------------------------------------------
@@ -738,7 +738,7 @@
 					Temp_Obs_Est..$Median_APE_Daily <- round(unlist(Daily_Median_APE_),4)
 					#Add Imputation type
 					Temp_Obs_Est..$Imputation_Type <- Imputation_Type
-					#Stire in master data frame
+					#Store in master data frame
 					Obs_Est.. <- rbind(Obs_Est.., Temp_Obs_Est..)
 					
 				}
@@ -832,7 +832,7 @@
 	        Model_Data.. <- Select_Data_3..					
 	        
 	        #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	        #Negative binomail regression
+	        #Negative binomial regression
 	        #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	        #Define Imputation type object
 	        Imputation_Type <- "Negative_Binomial"					
@@ -842,7 +842,7 @@
 	        Est_Sum_Month_ <- list()
 	        Obs_Sum_Month_ <- list()
 	        Est_Sum_Annual_ <- list()
-	        #initialize a dataframe to store negative binomical regression 
+	        #initialize a dataframe to store negative binomial regression 
 	        Coefficients.. <- data.frame()
 	        #Initiate a start timer
 	        Master_Start_Time <- Sys.time()
@@ -1113,7 +1113,7 @@
 	        Temp_Obs_Est..$Median_APE_Daily <- round(unlist(Daily_Median_APE_),4)
 	        #Add Imputation type
 	        Temp_Obs_Est..$Imputation_Type <- Imputation_Type
-	        #Stire in master data frame
+	        #Store in master data frame
 	        Obs_Est.. <- rbind(Obs_Est.., Temp_Obs_Est..)
 	        
 	        #-------------------------------------------------------------------------------------------------------------------------------------
@@ -1244,7 +1244,7 @@
   #Show example tree
   fancyRpartPlot(Model, caption = NULL,main = "Decision Tree Example\nDaily Features and Bicycle Counts\nMethod: Recursive Partioning",tweak  = 1.5)
   
-  #Pull out variable importance infomration
+  #Pull out variable importance information
   Var_Imp.. <- varImp(Model)
   dat <- Var_Imp..
   dat$Feature <- rownames(dat)
