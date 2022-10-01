@@ -162,7 +162,7 @@ for(city in c("Eugene", "Springfield")){
   #Prepare temperature and precipitation data
   ############################
   
-  #Create a vector of cliamte data types to iterate through below
+  #Create a vector of climate data types to iterate through below
   Climate_Data_Types. <- c("TMAX","PRCP","SNOW")
   #Initialize a data frame
   #Format_Climate_Data.. <- data.frame(Date = NULL, CIty = NULL)
@@ -185,7 +185,7 @@ for(city in c("Eugene", "Springfield")){
       Station_Select.. <- left_join(Station_Select.., Min_Station_Distance.., by = c("Year","distance"))
       Station_Select.. <-  Station_Select..[ Station_Select..$Is_Nearest%in%TRUE,]
       Select_Climate_Data..  <- left_join(Select_Climate_Data.., Station_Select..[,c("id","Year","Is_Nearest")], by = c("id","Year"))
-      #Selectr only climate data for select data type that is nearest
+      #Select only climate data for select data type that is nearest
       Near_Climate_Data.. <-   Select_Climate_Data..[  Select_Climate_Data..$Is_Nearest%in%TRUE,]
       #Add count site id
       #Near_Climate_Data..$Sub_Location_Id <- sub_location_id
