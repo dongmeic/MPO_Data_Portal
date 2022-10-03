@@ -125,7 +125,7 @@
 	#initialize counter to track progress below
 	count = 1
 
-	for(city in unique(Load_Stations_Info..$City)[1:10]){
+	for(city in c("Eugene", "Springfield", "Coburg")){
 	 #Create vector of station names closest to count location
 	  Station_Ids. <- paste("GHCND:",Load_Stations_Info..$id[Load_Stations_Info..$City%in%city],sep="")
 	  #Add stations to certain cities since the assigned stations for these cities are still missing data types

@@ -35,17 +35,23 @@ library(rjson)
 options(warn = -1)
 setwd("T:/DCProjects/Modeling/AADBT/reading/Test/Data")
 
+#Set NOAA API Key 
+######################
+keypath <- "T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/AADBT/"
+options(noaakey = rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$noaa$token)
+
 inpath <- 'T:/Data/COUNTS/Nonmotorized Counts/Summary Tables/Bicycle/'
 outpath <- "T:/DCProjects/StoryMap/BikeCounting"
 locdata <- read.csv("T:/Data/COUNTS/Nonmotorized Counts/Supporting Data/Supporting Bicycle Data/CountLocationInformation.csv")
 
-# create a city coordinate dataframe
+#Create a city coordinate data frame
 site_coords <- locdata[,c("Longitude", "Latitude")]
 site_coords$Location <- locdata$Location
 site_coords$City <- locdata$City
 city_coords <- site_coords %>% group_by(City) %>% summarise(Longitude = mean(Longitude),Latitude = mean(Latitude))
 city_coords$id <- 1:nrow(city_coords)
 
+#Collect NOAA station info
 noaa_data <- data.frame()
 for(i in 1:3){
   noaa_stations <- meteo_nearby_stations(city_coords[i,], lat_colname = "Latitude",
@@ -64,7 +70,7 @@ calendar <- data.frame(Date = seq(as.Date("2012-01-01"),as.Date("2021-12-31"),1)
 calendar$Year <- year(calendar$Date)
 calendar_summary <- calendar %>%group_by(Year) %>%summarize(Days_in_Year = length(Date))
 
-
+#Download NOAA data
 retrieve_climate_data <- function(city="Eugene", 
                                   years=as.character(2012:2021), 
                                   dtypes=c("PRCP","TMAX","SNOW")){
@@ -107,7 +113,9 @@ retrieve_climate_data <- function(city="Eugene",
 }
 
 load_climate_data_eug <- retrieve_climate_data()
+load_climate_data_spr <- retrieve_climate_data(city="Springfield")
 
+#Clean climate data based on completeness of records and nearness to bike counting sites 
 summarize_climate_data <- function(climate_data = load_climate_data_eug){
   
   #Summarize counts and determine which stations to use based on completeness and nearness to site
@@ -138,9 +146,11 @@ summarize_climate_data <- function(climate_data = load_climate_data_eug){
 }
 
 select_climate_summary_eug <- summarize_climate_data()
+select_climate_summary_spr <- summarize_climate_data(climate_data = load_climate_data_spr)
 
 climate_data_types <- c("TMAX","PRCP","SNOW")
 
+#
 format_climate_data <- function(city="Eugene",
                                 climate_data=load_climate_data_eug,
                                 select_climate_summary=select_climate_summary_eug){
@@ -161,7 +171,8 @@ format_climate_data <- function(city="Eugene",
       MinStationDistance$Is_Nearest <- TRUE
       station_selected <- left_join(station_selected, MinStationDistance, by = c("Year","distance"))
       station_selected <-  station_selected[ station_selected$Is_Nearest%in%TRUE,]
-      select_climate_data  <- left_join(select_climate_data, station_selected[,c("id","Year","Is_Nearest")], by = c("id","Year"))
+      select_climate_data  <- left_join(select_climate_data, station_selected[,c("id","Year","Is_Nearest")], 
+                                        by = c("id","Year"))
       #Select only climate data for select data type that is nearest
       near_climate_data <- select_climate_data[  select_climate_data$Is_Nearest%in%TRUE,]
       #Add city
@@ -181,6 +192,9 @@ format_climate_data <- function(city="Eugene",
 }
 
 format_climate_data_eug <- format_climate_data()
+format_climate_data_spr <- format_climate_data(city="Springfield",
+                                               climate_data=load_climate_data_spr,
+                                               select_climate_summary=select_climate_summary_spr)
 
 add_sunlight_data <- function(city="Eugene",
                               format_climate_data=format_climate_data_eug){
@@ -205,38 +219,19 @@ add_sunlight_data <- function(city="Eugene",
 
 
 stored_climate_data_eug <- add_sunlight_data()
+stored_climate_data_spr <- add_sunlight_data(city="Springfield",
+                                             format_climate_data=format_climate_data_spr)
 
-combine_city_data <- function(cities=c("Eugene", "Springfield", "Coburg")){
-    
-  for(city in cities){
-      load_climate_data <- retrieve_climate_data(city=city)
-      select_clim_sum <- summarize_climate_data(climate_data = load_climate_data)
-      format_clim_data <- format_climate_data(city=city,
-                                              climate_data=load_climate_data,
-                                              select_climate_summary=select_clim_sum)
-      stored_climate_data <- add_sunlight_data(city=city,
-                                               format_climate_data=format_clim_data)
-      if(city=="Eugene"){
-        stored_clim_data <- stored_climate_data
-      }else{
-        stored_clim_data <- rbind(stored_clim_data, stored_climate_data)
-      }
-      print(paste(city,"Complete"))
-  }
- 
-  return(stored_climate_data)
-}
+load_store_climate_data <- rbind(stored_climate_data_eug, stored_climate_data_spr)
+save(load_store_climate_data, file = "noaa_data_by_city.RData")
 
-stored_climate_data <- combine_city_data()
-
-Load_Store_climate_data <- stored_climate_data 
 #Graph the weather data
 ##############################
 pdf("Reports/SARM Analysis/climate_data_review.pdf", height = 11, width = 11)
 
-for(city in unique(Load_Store_climate_data$City)){
+for(city in unique(load_store_climate_data$City)){
   #Select data
-  select_climate_data <- Load_Store_climate_data[Load_Store_climate_data$City%in%city,]
+  select_climate_data <- load_store_climate_data[load_store_climate_data$City%in%city,]
   #Reformat
   select_climate_data <- melt(select_climate_data, id.vars = c("City","Date"), variable.name = "Data_Type",value.name = "Value")
   #plot
@@ -248,5 +243,5 @@ for(city in unique(Load_Store_climate_data$City)){
   
   print(Plot)
 }
-#Close pdf
 dev.off()	
+
