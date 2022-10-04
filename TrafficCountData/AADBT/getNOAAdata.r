@@ -3,12 +3,9 @@
 # By Dongmei Chen (dchen@lcog.org)
 # On September 29th, 2022
 
-library(readxl)
 library(lubridate)
 library(rgdal)
-library(RColorBrewer)
 library(classInt)
-library(rgdal)
 library(rgeos)
 library(MASS)
 library(AER)
@@ -19,7 +16,6 @@ library(maptools)
 library(ggplot2)
 library(tigris)
 library(RColorBrewer)
-library(dplyr)
 library(gridExtra)
 library(grid)
 library(StreamMetabolism)
@@ -41,8 +37,6 @@ setwd("T:/DCProjects/Modeling/AADBT/reading/Test/Data")
 keypath <- "T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/AADBT/"
 options(noaakey = rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$noaa$token)
 
-inpath <- 'T:/Data/COUNTS/Nonmotorized Counts/Summary Tables/Bicycle/'
-outpath <- "T:/DCProjects/StoryMap/BikeCounting"
 locdata <- read.csv("T:/Data/COUNTS/Nonmotorized Counts/Supporting Data/Supporting Bicycle Data/CountLocationInformation.csv")
 
 #Create a city coordinate data frame
@@ -96,7 +90,7 @@ retrieve_climate_data <- function(city="Eugene",
                                         stationid = station_id, 
                                         startdate = Start_Date, 
                                         enddate = End_Date,
-                                        limit = 1000, 
+                                        limit = 1000,
                                         add_units = T)$data)
         print(paste(city, station_id, yr, dt))
       }
