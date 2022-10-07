@@ -70,111 +70,227 @@ write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts.csv"), row.names = FALSE)
 site_coords <- locdata[,c("Longitude", "Latitude")]
 site_coords$Location <- locdata$Location
 site_coords$City <- locdata$City
-site_coords$id <- 1:nrow(site_coords)
+city_coords <- site_coords %>% group_by(City) %>% summarise(Longitude = mean(Longitude),Latitude = mean(Latitude))
+city_coords$id <- 1:nrow(city_coords)
 
-noaa_data <- data.frame()
-loc_data <- data.frame()
-
-locations <- unique(aggdata$Location)
-# need to manually fix error - Error: Bad Gateway (HTTP 502)
-loc <- "RosaParksPathSouthQ"
-locations <- locations[which(locations==loc):length(locations)]
-for(location in locations){
-  ptm <- proc.time()
-  locdata <- meteo_nearby_stations(site_coords[site_coords$Location == location,], 
-                                lat_colname = "Latitude",
-                                lon_colname = "Longitude", 
-                                station_data = ghcnd_stations(),
-                                var = "all", 
-                                year_min = 2012, 
-                                year_max = 2021, 
-                                radius = NULL,  
-                                limit = 10)
-  
-  names(locdata) <- "data"
-  locdata <- locdata$data
-  locdata$location <- location
-  loc_data <- rbind(loc_data, locdata)
-  
-  locdate <- aggdata[aggdata$Location == location, c("Location", "Date")]
-  ObsDates <- locdate$Date
-  dates <- sort(as.Date(ObsDates, "%Y-%m-%d"))
-  Start_Date <- dates[1]
-  End_Date <- dates[length(dates)]
-  years <- unique(year(dates))
-  n <- length(years)
-
-  print(paste("Check climate data for", location, "from", Start_Date, 
-              "to", End_Date, paste0("(", n, " years)")))
-
-  for(year in years){
-    if(year == years[1]){
-      StartDate <- paste0(year, "-",str_pad(month(Start_Date), 2, pad="0"),"-01")
-      EndDate <- paste0(year, "-12-31")
-    }else if(year == years[length(years)]){
-      StartDate <- paste0(year, "-01-01")
-      EndDate <- paste0(year, "-",str_pad(month(End_Date), 2, pad="0"),"-31")
-    }else{
-      StartDate <- paste0(year, "-01-01")
-      EndDate <- paste0(year, "-12-31")
-    }
-    
-    for(dt in c("PRCP","TMAX","SNOW")){
-      station_ids <- paste0('GHCND:', locdata$id)y
-      # in case missing data
-      station_ids <- c(station_ids, "GHCND:USW00024221")
-      for(station_id in station_ids){
-        clim <- ncdc(datasetid = 'GHCND', 
-                     datatypeid = dt,
-                     stationid = station_id, 
-                     startdate = StartDate, 
-                     enddate = EndDate,
-                     add_units = T)$data
-        clim$location <- location
-        test <- rbind(test, clim)
-        #noaa_data <- rbind(noaa_data,clim) # the loop is too long to run
-        print(paste(dt, station_id, "from", StartDate, "to", EndDate, "for", location))
-      }
-    }
-  }
-  print(paste("Got climate data for", location))
-  print(proc.time() - ptm)
+# collect NOAA station info
+noaa_station_data <- data.frame()
+for(i in 1:3){
+  noaa_stations <- meteo_nearby_stations(city_coords[i,], lat_colname = "Latitude",
+                                         lon_colname = "Longitude", station_data = ghcnd_stations(),
+                                         var = "all", year_min = 2012, year_max = 2021, radius = NULL,  limit = 30)	
+  temp_stations_info <- do.call("rbind",noaa_stations)
+  temp_stations_info$City <- city_coords[i,]$City
+  noaa_station_data <- rbind(noaa_station_data,temp_stations_info)
 }
 
-# remove the duplicated due to the 502 Bad Gateway Error
-noaa_data <- unique(noaa_data)
-loc_data <- unique(loc_data)
-write.csv(loc_data, paste0(outpath, "noaa_stations.csv"), row.names = FALSE)
-write.csv(noaa_data, paste0(outpath, "noaa_data.csv"), row.names = FALSE)
+# create a data frame of station information
+stations_info <- noaa_station_data
+stations_info <- stations_info[!(duplicated(stations_info$id)),]
+
+calendar <- data.frame(Date = seq(as.Date("2012-01-01"),as.Date("2021-12-31"),1))
+calendar$Year <- year(calendar$Date)
+calendar_summary <- calendar %>% group_by(Year) %>% summarize(Days_in_Year = length(Date))
+
+# download NOAA data
+retrieve_climate_data <- function(years=as.character(2012:2021), 
+                                  dtypes=c("PRCP","TMAX","SNOW")){
+  
+  station_ids <- paste("GHCND:", stations_info$id,sep="")
+  # in case missing data in all other stations
+  station_ids <- c(station_ids, "GHCND:USW00024221")
+  
+  load_climate_data <- data.frame()
+  n <- length(station_ids)
+  
+  for(station_id in station_ids){
+    for(yr in years){
+      
+      Start_Date <- paste(yr,"-01-01",sep="")
+      End_Date <- paste(yr,"-12-31",sep="")
+      
+      for(dt in dtypes){
+        #Store in data frame
+        load_climate_data <- rbind(load_climate_data, 
+                                   ncdc(datasetid = 'GHCND', 
+                                        datatypeid = dt,
+                                        stationid = station_id, 
+                                        startdate = Start_Date, 
+                                        enddate = End_Date,
+                                        limit = 1000,
+                                        add_units = T)$data)
+        print(paste(station_id, yr, dt))
+      }
+    }
+    print(paste(n - which(station_ids == station_id), "more stations to check ..."))
+  }
+  climate_data <- load_climate_data
+  climate_data$id <- gsub("GHCND:","",climate_data$station)
+  #Format names and date
+  climate_data$Date <- as.Date(climate_data$date, format = "%Y-%m-%d")
+  #Add year
+  climate_data$Year <- year(climate_data$Date)
+  #Add station name
+  climate_data <- left_join(climate_data, stations_info, by = "id")
+  return(climate_data)
+}
+
+load_climate_data <- retrieve_climate_data()
+noaa_data <- load_climate_data
+
+# adjust the units to match with latter review
+noaa_data[noaa_data$datatype %in% c("PRCP","TMAX"),]$value <- noaa_data[noaa_data$datatype %in% c("PRCP","TMAX"),]$value / 10 
+
+locations <- unique(aggdata$Location)
+k <- length(locations)
 
 noaa_data$date <- unlist(lapply(noaa_data$date, function(x) strsplit(x, split = "T")[[1]][1]))
 noaa_data$station <- unlist(lapply(noaa_data$station, function(x) strsplit(x, split = ":")[[1]][2]))
+noaa_data[noaa_data$station == "USW00024221", "name"] <- "EUGENE MAHLON SWEET FIELD"
+noaa_data[noaa_data$station == "USW00024221", "latitude"] <- 44.13311
+noaa_data[noaa_data$station == "USW00024221", "longitude"] <- -123.21563
 
-names(loc_data)[1] <- "station"
-
+ptm <- proc.time()
 for(location in locations){
-  dates <- as.character(sort(as.Date(aggdata[aggdata$Location == location, 'Date'], "%Y-%m-%d")))
+  dates <- aggdata[aggdata$Location == location,]$Date
   for(date in dates){
-    for(dtype in c("PRCP","TMAX","SNOW")){
-      clim <- noaa_data[noaa_data$location == location & noaa_data$date == date & noaa_data$datatype == dtype,]
-      if(dim(clim)[1] > 1){
-        locdt <- loc_data[loc_data$location == location & loc_data$station %in% clim$station,]
-        if(dim(locdt)[1] == 1){
-          # choose the data from the close station
-          aggdata[aggdata$Location == location & aggdata$Date == date, dtype] <- clim[clim$station == locdt$station,]$value
-        }else{
-          
-        }
-          
-      }else if(dim(clim)[1] == 1){
-        # when there is only one value
-        aggdata[aggdata$Location == location & aggdata$Date == date, dtype] <- clim$value
+    climdata <- noaa_data[noaa_data$date == date,]
+    climdata <- climdata[!(is.na(climdata$longitude) | 
+                         is.na(climdata$latitude) |
+                         is.na(climdata$value)),]
+      
+    for(dtype in c("PRCP", "SNOW", "TMAX")){
+      climdat <- climdata[climdata$datatype == dtype,]
+      
+      if(dim(climdat)[1] == 0){
+        aggdata[aggdata$Location == location 
+                & aggdata$Date == date, dtype] <- NA
+      }else if(dtype == "TMAX"){
+        aggdata[aggdata$Location == location 
+                & aggdata$Date == date, dtype] <- climdat$value
       }else{
-        # look for data from other stations
-      }
+        aggdata[aggdata$Location == location 
+                & aggdata$Date == date, dtype] <- idw(aggdata[aggdata$Location == location,]$Longitude[1],
+                                                      aggdata[aggdata$Location == location,]$Latitude[1],
+                                                      climdat$longitude,
+                                                      climdat$latitude,
+                                                      climdat$value)
+      }                      
+      
+      print(paste(location, date, dtype))
     }
-      
-      
+  }
+  print(paste("Got climate data for the site", location))
+  print(paste(k - which(locations == location), "more locations to check ..."))
+}
+print(proc.time() - ptm)
+
+# check the NA data in NOAA
+# dates with missing climate data
+naclimdates <- as.character(sort(as.Date(unique(aggdata$Date[is.na(aggdata$PRCP)]), "%Y-%m-%d")))
+aggdata_na <- aggdata[is.na(aggdata$PRCP),]
+locations <- unique(aggdata_na$Location)
+
+"2013-01-08" %in% noaa_data$date
+# check manually downloaded data
+datanoaa <- read.csv(paste0(outpath, "3084343.csv"))
+data_noaa <- datanoaa[!(is.na(datanoaa$PRCP) | is.na(datanoaa$SNOW) | is.na(datanoaa$TMAX)),]
+
+# check the missing dates to see if they are in the downloaded NOAA data
+missingdates <- vector()
+checkeddates <- vector()
+for(date in naclimdates){
+  if(!(date %in% data_noaa$DATE)){
+    missingdates <- c(missingdates, date)
+    print(date)
+  }else{
+    checkeddates <- c(checkeddates, date)
   }
 }
+
+# fill in data that covers all the three variables
+ptm <- proc.time()
+for(location in locations){
+  dates <- aggdata_na[aggdata_na$Location == location,]$Date
+  for(date in dates){
+    if(date %in% checkeddates){
+      climdata <- data_noaa[data_noaa$DATE == date,]
+      for(dtype in c("PRCP", "SNOW", "TMAX")){
+        if(dim(climdata)[1] == 1){
+          aggdata[aggdata$Location == location 
+                  & aggdata$Date == date, dtype] <- climdata[,dtype]
+        }else{
+          aggdata[aggdata$Location == location 
+                  & aggdata$Date == date, dtype] <- idw(aggdata[aggdata$Location == location,]$Longitude[1],
+                                                        aggdata[aggdata$Location == location,]$Latitude[1],
+                                                        climdata$LONGITUDE,
+                                                        climdata$LATITUDE,
+                                                        climdata[,dtype])
+        }
+      }
+    }
+  }
+  print(paste("Got climate data for the site", location))
+  print(paste(k - which(locations == location), "more locations to check ..."))
+}
+print(proc.time() - ptm)
+
+# check again missing data
+naclimdates2 <- as.character(sort(as.Date(unique(aggdata$Date[is.na(aggdata$PRCP)]), "%Y-%m-%d")))
+aggdata_na2 <- aggdata[is.na(aggdata$PRCP),]
+locations2 <- unique(aggdata_na$Location)
+
+data_noaa2 <- datanoaa[!(is.na(datanoaa$PRCP) | is.na(datanoaa$SNOW)),]
+# check again the missing dates to see if they are in the downloaded NOAA data
+missingdates <- vector()
+checkeddates <- vector()
+for(date in naclimdates2){
+  if(!(date %in% data_noaa2$DATE)){
+    missingdates <- c(missingdates, date)
+    #print(date)
+  }else{
+    checkeddates <- c(checkeddates, date)
+  }
+}
+
+# fill in data that covers all the two variables
+ptm <- proc.time()
+for(location in locations2){
+  dates <- aggdata_na2[aggdata_na2$Location == location,]$Date
+  for(date in dates){
+    if(date %in% checkeddates){
+      climdata <- data_noaa2[data_noaa2$DATE == date,]
+      for(dtype in c("PRCP", "SNOW")){
+        if(dim(climdata)[1] == 1){
+          aggdata[aggdata$Location == location 
+                  & aggdata$Date == date, dtype] <- climdata[,dtype]
+        }else{
+          aggdata[aggdata$Location == location 
+                  & aggdata$Date == date, dtype] <- idw(aggdata[aggdata$Location == location,]$Longitude[1],
+                                                        aggdata[aggdata$Location == location,]$Latitude[1],
+                                                        climdata$LONGITUDE,
+                                                        climdata$LATITUDE,
+                                                        climdata[,dtype])
+        }
+      }
+    }
+  }
+  print(paste("Got climate data for the site", location))
+  print(paste(k - which(locations == location), "more locations to check ..."))
+}
+print(proc.time() - ptm)
+
+# last check on the NA climate data
+aggdata_na3 <- aggdata[is.na(aggdata$TMAX),]
+naclimdates3 <- as.character(sort(as.Date(unique(aggdata$Date[is.na(aggdata$TMAX)]), "%Y-%m-%d")))
+
+head(datanoaa[datanoaa$DATE %in% naclimdates3,])
+
+check_climate_data <- ncdc(datasetid = 'GHCND',
+                           datatypeid = 'TMAX',
+                           stationid = 'GHCND:USW00024221',
+                           startdate = '2013-01-08', 
+                           enddate = '2013-02-27',
+                           limit = 1000,
+                           add_units = T)$data
 
