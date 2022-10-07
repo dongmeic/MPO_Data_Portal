@@ -9,6 +9,7 @@ library(stringr)
 library(geosphere)
 library(dplyr)
 library(StreamMetabolism)
+library(sf)
 
 # functions
 # weight by distance
@@ -68,6 +69,7 @@ locdata <- read.csv(paste0(locpath, 'CountLocationInformation.csv'))
 aggdata <- merge(aggdata, locdata[,locvars], by = 'Location')
 write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts.csv"), row.names = FALSE)
 
+################################################ GET NOAA DATA ###################################################
 site_coords <- locdata[,c("Longitude", "Latitude")]
 site_coords$Location <- locdata$Location
 site_coords$City <- locdata$City
@@ -338,3 +340,15 @@ ptm <- proc.time()
 aggdata$Daylight_Mins <- mapply(function(x, y, z) getDaylight(x, y, z), aggdata$Latitude, aggdata$Longitude, aggdata$Date)
 print(proc.time() - ptm)
 
+
+################################################ GET BIKEPATH DATA ###################################################
+
+# this variable is the same as FacilityType but with more details
+# create a location shapefile
+df <- locdata[,c("Location", "Longitude", "Latitude")]
+loc_sf <- st_as_sf(df, coords = c("Longitude", "Latitude"))
+loc_sf <- st_set_crs(loc_sf, 4269)
+st_write(loc_sf, dsn = paste0(outpath, "shp"), 
+         layer = "BikeCountsLocations", 
+         driver = "ESRI Shapefile",
+         delete_layer = TRUE)
