@@ -8,6 +8,7 @@ library(lubridate)
 library(stringr)
 library(geosphere)
 library(dplyr)
+library(StreamMetabolism)
 
 # functions
 # weight by distance
@@ -321,5 +322,19 @@ for(location in locations3){
   print(paste("Got climate data for the site", location))
   print(paste(k - which(locations2 == location), "more locations to check ..."))
 }
+print(proc.time() - ptm)
+
+# add sunlight data
+
+getDaylight <- function(lat, lon, date){
+  sunlight_data <- sunrise.set(lat = lat, lon = lon, 
+                               as.Date(date), timezone = "UTC-8")
+  return(as.numeric(sunlight_data$sunset - sunlight_data$sunrise) * 60)
+}
+
+getDaylight(selectlocdate$Latitude, selectlocdate$Longitude, date)
+
+ptm <- proc.time()
+aggdata$Daylight_Mins <- mapply(function(x, y, z) getDaylight(x, y, z), aggdata$Latitude, aggdata$Longitude, aggdata$Date)
 print(proc.time() - ptm)
 
