@@ -10,6 +10,7 @@ library(geosphere)
 library(dplyr)
 library(StreamMetabolism)
 library(sf)
+library(odbc)
 
 # functions
 # weight by distance
@@ -352,3 +353,23 @@ st_write(loc_sf, dsn = paste0(outpath, "shp"),
          layer = "BikeCountsLocations", 
          driver = "ESRI Shapefile",
          delete_layer = TRUE)
+
+con <- dbConnect(odbc(),
+                 Driver = "SQL Server",
+                 Server = "rliddb.int.lcog.org,5433",
+                 Database = "RLIDGeo",
+                 Trusted_Connection = "True")
+sql = "
+SELECT 
+OBJECTID AS id,
+ftypedes,
+Shape.STAsBinary() AS geom
+FROM dbo.BikeFacility
+WHERE status = 'built';
+"
+bikeways <- st_read(con, geometry_column = "geom", query = sql) %>% st_set_crs(2914)
+points <- st_transform(loc_sf, crs = 2914)
+line_idx <- st_nearest_feature(points, bikeways)
+points$LineType <- bikeways[line_idx,]$ftypedes
+
+aggdata <- left_join(aggdata, points, by="Location") %>% select(-geometry)
