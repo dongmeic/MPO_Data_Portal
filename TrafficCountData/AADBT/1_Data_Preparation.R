@@ -139,7 +139,10 @@ load_climate_data <- retrieve_climate_data()
 noaa_data <- load_climate_data
 
 # adjust the units to match with latter review
-noaa_data[noaa_data$datatype %in% c("PRCP","TMAX"),]$value <- noaa_data[noaa_data$datatype %in% c("PRCP","TMAX"),]$value / 10 
+noaa_datas1 <- noaa_data[noaa_data$datatype %in% c("PRCP","TMAX"),]
+noaa_datas1$value <- noaa_datas1$value / 10
+noaa_datas2 <- noaa_data[noaa_data$datatype == "SNOW",]
+noaa_data <- rbind(noaa_datas1, noaa_datas2)
 
 locations <- unique(aggdata$Location)
 k <- length(locations)
@@ -190,8 +193,8 @@ print(proc.time() - ptm)
 naclimdates <- as.character(sort(as.Date(unique(aggdata$Date[is.na(aggdata$PRCP)]), "%Y-%m-%d")))
 aggdata_na <- aggdata[is.na(aggdata$PRCP),]
 locations <- unique(aggdata_na$Location)
+k <- length(locations)
 
-"2013-01-08" %in% noaa_data$date
 # check manually downloaded data
 datanoaa <- read.csv(paste0(outpath, "3084343.csv"))
 data_noaa <- datanoaa[!(is.na(datanoaa$PRCP) | is.na(datanoaa$SNOW) | is.na(datanoaa$TMAX)),]
@@ -202,7 +205,6 @@ checkeddates <- vector()
 for(date in naclimdates){
   if(!(date %in% data_noaa$DATE)){
     missingdates <- c(missingdates, date)
-    print(date)
   }else{
     checkeddates <- c(checkeddates, date)
   }
@@ -238,7 +240,8 @@ print(proc.time() - ptm)
 # check again missing data
 naclimdates2 <- as.character(sort(as.Date(unique(aggdata$Date[is.na(aggdata$PRCP)]), "%Y-%m-%d")))
 aggdata_na2 <- aggdata[is.na(aggdata$PRCP),]
-locations2 <- unique(aggdata_na$Location)
+locations2 <- unique(aggdata_na2$Location)
+k <- length(locations2)
 
 data_noaa2 <- datanoaa[!(is.na(datanoaa$PRCP) | is.na(datanoaa$SNOW)),]
 # check again the missing dates to see if they are in the downloaded NOAA data
@@ -247,7 +250,6 @@ checkeddates <- vector()
 for(date in naclimdates2){
   if(!(date %in% data_noaa2$DATE)){
     missingdates <- c(missingdates, date)
-    #print(date)
   }else{
     checkeddates <- c(checkeddates, date)
   }
@@ -276,21 +278,48 @@ for(location in locations2){
     }
   }
   print(paste("Got climate data for the site", location))
-  print(paste(k - which(locations == location), "more locations to check ..."))
+  print(paste(k - which(locations2 == location), "more locations to check ..."))
 }
 print(proc.time() - ptm)
 
 # last check on the NA climate data
 aggdata_na3 <- aggdata[is.na(aggdata$TMAX),]
 naclimdates3 <- as.character(sort(as.Date(unique(aggdata$Date[is.na(aggdata$TMAX)]), "%Y-%m-%d")))
+locations3 <- unique(aggdata_na3$Location)
+k <- length(locations3)
 
-head(datanoaa[datanoaa$DATE %in% naclimdates3,])
 
-check_climate_data <- ncdc(datasetid = 'GHCND',
-                           datatypeid = 'TMAX',
-                           stationid = 'GHCND:USW00024221',
-                           startdate = '2013-01-08', 
-                           enddate = '2013-02-27',
-                           limit = 1000,
-                           add_units = T)$data
+# check_climate_data <- ncdc(datasetid = 'GHCND',
+#                            datatypeid = 'TMAX',
+#                            stationid = 'GHCND:USW00024221',
+#                            startdate = '2013-01-08', 
+#                            enddate = '2013-02-27',
+#                            limit = 1000,
+#                            add_units = T)$data
+
+# collect missed data
+for(year in 2013:2017){
+  if(year == 2013){
+    dtnoaa <- read.csv(paste0(outpath, "missed/", year, ".csv"))
+    dtnoaa <- dtnoaa[,c("DATE", "TMAX")]
+  }else{
+    ndtnoaa <- read.csv(paste0(outpath, "missed/", year, ".csv"))
+    ndtnoaa <- ndtnoaa[,c("DATE", "TMAX")]
+    dtnoaa <- rbind(dtnoaa, ndtnoaa)
+  }
+}
+
+# fill in data that covers missing TMAX
+ptm <- proc.time()
+for(location in locations3){
+  dates <- aggdata_na3[aggdata_na3$Location == location,]$Date
+  for(date in dates){
+    climdata <- dtnoaa[dtnoaa$DATE == date,]
+    aggdata[aggdata$Location == location 
+            & aggdata$Date == date, 'TMAX'] <- climdata[,'TMAX']
+  }
+  print(paste("Got climate data for the site", location))
+  print(paste(k - which(locations2 == location), "more locations to check ..."))
+}
+print(proc.time() - ptm)
 
