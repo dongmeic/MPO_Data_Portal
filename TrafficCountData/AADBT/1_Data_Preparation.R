@@ -12,6 +12,7 @@ library(StreamMetabolism)
 library(sf)
 library(odbc)
 
+
 # functions
 # weight by distance
 idw <- function(lon, lat, lonv, latv, varv){
@@ -68,7 +69,7 @@ locvars <- c('CountType', 'Direction', 'FacilityType', 'RoadWidth', 'City',
              'IsSidewalk', 'Location_Description')
 locdata <- read.csv(paste0(locpath, 'CountLocationInformation.csv'))
 aggdata <- merge(aggdata, locdata[,locvars], by = 'Location')
-write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts.csv"), row.names = FALSE)
+#write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts.csv"), row.names = FALSE)
 
 ################################################ GET NOAA DATA ###################################################
 site_coords <- locdata[,c("Longitude", "Latitude")]
@@ -157,6 +158,7 @@ noaa_data[noaa_data$station == "USW00024221", "name"] <- "EUGENE MAHLON SWEET FI
 noaa_data[noaa_data$station == "USW00024221", "latitude"] <- 44.13311
 noaa_data[noaa_data$station == "USW00024221", "longitude"] <- -123.21563
 
+# collect climate data for each bike counting sampling site from NOAA
 ptm <- proc.time()
 for(location in locations){
   dates <- aggdata[aggdata$Location == location,]$Date
@@ -328,14 +330,11 @@ for(location in locations3){
 print(proc.time() - ptm)
 
 # add sunlight data
-
 getDaylight <- function(lat, lon, date){
   sunlight_data <- sunrise.set(lat = lat, lon = lon, 
                                as.Date(date), timezone = "UTC-8")
   return(as.numeric(sunlight_data$sunset - sunlight_data$sunrise) * 60)
 }
-
-getDaylight(selectlocdate$Latitude, selectlocdate$Longitude, date)
 
 ptm <- proc.time()
 aggdata$Daylight_Mins <- mapply(function(x, y, z) getDaylight(x, y, z), aggdata$Latitude, aggdata$Longitude, aggdata$Date)
@@ -373,3 +372,9 @@ line_idx <- st_nearest_feature(points, bikeways)
 points$LineType <- bikeways[line_idx,]$ftypedes
 
 aggdata <- left_join(aggdata, points, by="Location") %>% select(-geometry)
+
+write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"), row.names = FALSE)
+
+################################################ GET LRAPA DATA ###################################################
+
+aggdata <- read.csv(paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"))

@@ -174,8 +174,7 @@
 	#Assign city to daily count data
 	Daily..  <- left_join(Daily.., as.data.frame(Site_Location_Info..)[,c("Vendor_Site_Id","City")], by = c("Vendor_Site_Id"))
 	#Convert city variable to character
-	Daily..$City <- as.character(Daily..$City)  
-	#Make a copy of the climate data
+	
 	Climate_Data.. <- 	Load_Store_Climate_Data..
 	#Remove duplicated
 	Climate_Data..$Index <- paste(Climate_Data..$Date, Climate_Data..$City, sep="-")
@@ -208,13 +207,15 @@
 	#Summarize number of observations again with cleaned data
 	Daily_Summary.. <- left_join(Daily_Summary.., Daily.. %>% group_by(Device_Name, User_Type_Desc,Year) %>% summarise(Obs_N_Clean = length(Counts[!(is.na(Counts))])), by = c("Device_Name", "User_Type_Desc", "Year"))
 	Daily.. <- left_join(Daily..,Daily_Summary.., by = c("Device_Name", "User_Type_Desc", "Year"))
-	#Select only sites with 360 days or more
+	#Select only sites with 360 days or moreDaily..$City <- as.character(Daily..$City)  
+	#Make a copy of the climate data
 	Daily.. <- Daily..[Daily..$Obs_N_Clean >=350,]
 	#Add week column
 	Daily..$Week <- week(Daily..$Date)
 	Daily.. <- Daily..[!(is.na(Daily..$Device_Name)),]
 	#Do just 2018 for now
-	Daily.. <- Daily..[Daily..$Year%in%c("2017","2018","2019"),]
+	#Daily.. <- Daily..[Daily..$Year%in%c("2017","2018","2019"),]
+	Daily.. <- Daily..[Daily..$Year%in%c("2019"),]
 	#Remove locations that are duplicates or have known issues
 	##############
 	#Remove combination of user type and location
