@@ -1,4 +1,4 @@
-# This script was created to prepare data for AADBT estimation
+# This script was created to prepare data from NOAA, bikeways, and LRAPA for AADBT estimation
 # By Dongmei Chen (dchen@lcog.org)
 # On September 29th, 2022
 
@@ -11,6 +11,10 @@ library(dplyr)
 library(StreamMetabolism)
 library(sf)
 library(odbc)
+library(readxl)
+library(sp)
+library(mapview)
+library(tidyverse)
 
 
 # functions
@@ -42,6 +46,7 @@ setwd("T:/DCProjects/Modeling/AADBT/reading/Test/Data")
 
 keypath <- "T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/AADBT/"
 options(noaakey = rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$noaa$token)
+
 inpath <- 'T:/Data/COUNTS/Nonmotorized Counts/Summary Tables/Bicycle/'
 outpath <- 'T:/DCProjects/Modeling/AADBT/input/'
 locpath <- 'T:/Data/COUNTS/Nonmotorized Counts/Supporting Data/Supporting Bicycle Data/'
@@ -377,4 +382,55 @@ write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"), row.na
 
 ################################################ GET LRAPA DATA ###################################################
 
+setwd("T:/DCProjects/Modeling/AADBT/data/air_quality")
+outpath <- 'T:/DCProjects/Modeling/AADBT/input/'
 aggdata <- read.csv(paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"))
+
+# organize LRAPA data
+files <- list.files()
+
+read_PM25 <- function(file){
+  df <- read_excel(file, skip = 2)
+  df <- df[-1,]
+  head(df)
+  site <- str_split(str_split(names(read_excel(file, n_max=1)), pattern=": ")[[1]][2], 
+                    pattern = "  ")[[1]][1]
+  df$Site <- rep(site, dim(df)[1])
+  df <- df %>% select(c("Date", "Neph_PM25", "Site"))
+  return(df)
+}
+
+combine_PM25 <- function(files){
+  for(file in files){
+    if(file == files[1]){
+      df <- read_PM25(file = file)
+    }else{
+      ndf <- read_PM25(file = file)
+      df <- rbind(df, ndf)
+    }
+  }
+  return(df)
+}
+
+df <- combine_PM25(files=files)
+
+# create points for the sampling locations, see https://data.lrapa.org/ for the locations
+sitedf <- data.frame(x = c(493288, 488680, 490310, 498577), 
+               y = c(4874794, 4879349, 4884738, 4877060),
+               Site= c("Amazon Park", "HWY99", "Wilkes Drive", "Springfield City Hall"))
+xy <- sitedf[,c(1,2)]
+# spdf <- SpatialPointsDataFrame(coords = xy, data = sitedf,
+#                                proj4string = CRS("+proj=utm +zone=10 +datum=WGS84"))
+sfpoints <- st_as_sf(x = sitedf, 
+                     coords = c("x", "y"),
+                     crs = "+proj=utm +zone=10 +datum=WGS84")
+mapview(sfpoints)
+sfpoints <- st_transform(sfpoints, crs = CRS("+init=epsg:4326"))
+sdf <- sfpoints
+separated_coord <- sdf %>%
+  mutate(Long = unlist(map(sdf$geometry,1)),
+         Lat = unlist(map(sdf$geometry,2)))
+sdf <- separated_coord[,c('Site', 'Long', 'Lat')] %>% st_drop_geometry()
+
+df <- merge(df, sdf, by = 'Site')
+head(df)
