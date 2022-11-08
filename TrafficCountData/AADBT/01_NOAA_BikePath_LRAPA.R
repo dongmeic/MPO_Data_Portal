@@ -385,6 +385,7 @@ write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"), row.na
 setwd("T:/DCProjects/Modeling/AADBT/data/air_quality")
 outpath <- 'T:/DCProjects/Modeling/AADBT/input/'
 aggdata <- read.csv(paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"))
+aggdata$Date <- as.Date(aggdata$Date, "%Y-%m-%d")
 
 # organize LRAPA data
 files <- list.files()
@@ -433,4 +434,10 @@ separated_coord <- sdf %>%
 sdf <- separated_coord[,c('Site', 'Long', 'Lat')] %>% st_drop_geometry()
 
 df <- merge(df, sdf, by = 'Site')
+dat <- df
 head(df)
+df$Date <- as.Date(df$Date, "%m/%d/%Y")
+df <- df[df$Neph_PM25 != 'NA',]
+df$Neph_PM25 <- as.numeric(df$Neph_PM25)
+df <- na.omit(df)
+df <- df[df$Neph_PM25 > 0, ]
