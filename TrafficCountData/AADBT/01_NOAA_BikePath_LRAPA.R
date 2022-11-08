@@ -461,3 +461,5 @@ for(loc in unique(aggdata$Location)){
   }
   print(paste("completed", loc))
 }
+
+write.csv(aggdata, paste0(outpath, "Daily_Bike_Counts_With_VarData.csv"), row.names = FALSE)
