@@ -441,3 +441,23 @@ df <- df[df$Neph_PM25 != 'NA',]
 df$Neph_PM25 <- as.numeric(df$Neph_PM25)
 df <- na.omit(df)
 df <- df[df$Neph_PM25 > 0, ]
+
+# add LRAPA
+
+for(loc in unique(aggdata$Location)){
+  dates <- unique(aggdata[aggdata$Location == loc,]$Date)
+  for(date in dates){
+    if(date %in% df$Date){
+      pm_df <- df[df$Date == date,]
+      aggdata[aggdata$Location == loc & aggdata$Date == date, "PM25"] <- idw(lon=aggdata[aggdata$Location == loc,]$Longitude[1],
+                                                                                  lat=aggdata[aggdata$Location == loc,]$Latitude[1],
+                                                                                  pm_df$Long,
+                                                                                  pm_df$Lat,
+                                                                                  pm_df$Neph_PM25)
+      
+    }else{
+      print(paste(loc, date, "PM2.5 data not available"))
+    }
+  }
+  print(paste("completed", loc))
+}
