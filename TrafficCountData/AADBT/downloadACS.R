@@ -7,20 +7,21 @@ census_api_key(rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$acs$key
 
 # place to store results and combine them
 # Block groups are not currently available for the 2008-2012 ACS and earlier.
-years <- 2013:2020
+years <- 2012:2020
 res <- vector("list",length(years))
 names(res) <- years
 
 # variables that you want
 #        Tot Pop     White non-Hisp  FemHeadHouse  FamPoverty
-vars <- c('B01001_001','B03002_003','B11003_016','B17010_002')
+#vars <- c('B01001_001','B03002_003','B11003_016','B17010_002')
+vars <- c('S1901_C01_001E', 'S1901_C01_012E', 'S1901_C01_013E')
 
 # loop over years, save data
 # could also apply county filter, see help(get_acs)
 for (y in years){
   # download data
   ld <- as.data.frame(get_acs(year = y,
-                              geography='cbg',
+                              geography='tract',
                               survey='acs5',
                               variables = vars,
                               state="OR",
