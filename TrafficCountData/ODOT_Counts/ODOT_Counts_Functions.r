@@ -56,7 +56,7 @@ read_LR_sheet <- function(filename=NULL, sheetname=NULL){
            Hour=unlist(sapply(Hour, Covert.Hour.Format))) %>%
     select(StationID, Direction, Date, Day, Hour, Count)
   dt <- dt[!(dt$Hour %in% c("Total #:00 NA", "Total %:00 NA")),]
-  df$Direction <- unlist(lapply(df$Direction, function(x) str_split(x, " ")[[1]][1]))
+  dt$Direction <- unlist(lapply(dt$Direction, function(x) str_split(x, " ")[[1]][1]))
   return(dt)
 }
 

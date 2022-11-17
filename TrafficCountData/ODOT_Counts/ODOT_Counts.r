@@ -13,12 +13,16 @@ old.counts <- read.csv(outfile,
 #old.counts <- old.counts[!is.na(old.counts$Hour),]
 #old.counts$Date <- as.Date(old.counts$Date, format = "%m/%d/%Y")
 
+# this will run for a while
 ptm <- proc.time()
 df <- read_LR_files(year=2022, keyw = "Lane County")
 proc.time() - ptm
 ndf <- rbind(old.counts, df)
 
 write.csv(ndf, outfile, row.names = FALSE)
+
+filename = "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/2022/LengthReport/Lane County August Length Data.xlsx"
+
 
 ############################## Run after Oct 2020 ################################
 
