@@ -11,9 +11,9 @@ library(reshape2)
 library(stringr)
 library(lubridate)
 
-read_LR_files <- function(year=2021){
+read_LR_files <- function(year=2021, keyw="Class Data"){
   lrfiles <- list.files(paste0(inpath, year, "/LengthReport"), 
-                        pattern = "^Class Data",
+                        pattern = paste0("^", keyw),
                         full.names = TRUE)
   for(file in lrfiles){
     print(file)
@@ -139,8 +139,8 @@ read_by_stations <- function(month_range="Oct-Dec",
                       full.names = FALSE)
   files <- grep(files, pattern = "EB|WB|SB|NB", value = TRUE)
   
-  for(filenm in Bfiles){
-    if(filenm == Bfiles[1]){
+  for(filenm in files){
+    if(filenm == files[1]){
       df = read_by_month_range(month_range=month_range,
                                filenm=filenm)
     }else{

@@ -14,35 +14,18 @@ old.counts <- read.csv(outfile,
 #old.counts$Date <- as.Date(old.counts$Date, format = "%m/%d/%Y")
 
 ptm <- proc.time()
-df <- read_LR_files()
-proc.time() - ptm
-
-ndf <- rbind(old.counts, df)
-write.csv(ndf, outfile, row.names = FALSE)
-
-ptm <- proc.time()
-df <- read_LR_files(year=2022)
+df <- read_LR_files(year=2022, keyw = "Lane County")
 proc.time() - ptm
 ndf <- rbind(old.counts, df)
 
 write.csv(ndf, outfile, row.names = FALSE)
-
-file <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/2021/LengthReport/Class Data Lane County 2021-05.xlsx"
-sheet <- "20004_WB"
-test <- read_LR_sheet(filename = file, sheetname = sheet)
-
-ptm <- proc.time()
-test2 <- read_LR_file(filename = file)
-proc.time() - ptm
-
-test1 <- rbind(old.counts, test)
 
 ############################## Run after Oct 2020 ################################
 
 # update ODOT counts data after October 2020
 year <- 2022
-month_range <- "May-Jun"
-Update.ODOT.Counts(month_range=month_range, 
+month_range <- "Jul-Oct" #"May-Jun"
+Update.ODOT.Counts(month_range=month_range,       
                    year=year)
 
 year <- 2021
