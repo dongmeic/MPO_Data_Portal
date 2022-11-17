@@ -1,5 +1,5 @@
 # This script was created by Dongmei Chen (dchen@lcog.org) to reorganize and calculate data
-#  for the LTD transit dashboard 
+#  for the LTD transit dashboard, the dashboard has been adjusted to monthly data
 # (https://www.lcog.org/thempo/page/Transit-Ridership-Data) on May 29th, 2020
 
 library(rgdal)
@@ -8,7 +8,7 @@ library(dplyr)
 library(tools)
 library(lubridate)
 
-source("T:/GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r")
+source("T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r")
 
 # reorganize historic data since 2011
 bodarding.path <- "T:/Data/LTD Data/BoardingSince2011/"
