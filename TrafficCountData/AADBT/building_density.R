@@ -125,17 +125,27 @@ bounds_blds_sf <- merge(joined, density_calc, by="GEOID")
 
 #calculate building density
 bounds_blds_sf <- bounds_blds_sf %>%
-  mutate(b_dens = totarea/poly_area * 100)
+  mutate(b_dens = totarea/poly_area * 100) %>% 
+  filter(as.vector(b_dens) <= 100) %>%
+  select(GEOID, geometry, b_dens) 
 
+bounds_blds <- unique(bounds_blds_sf)
+
+bikeloc <- st_read('T:/DCProjects/Modeling/AADBT/input/shp/BikeCountsLocations.shp') %>% 
+  st_transform(4326)
 #set interactive mode
 #tmap_mode('view')
 tmap_mode('plot')
 
 #plot with basemap
 #tm_basemap("Stamen.TonerLite") +
-  tm_shape(bounds_blds_sf) +
+  tm_shape(bounds_blds) +
   tm_polygons(col="b_dens",
-              id="name",
+              id="GEOID",
               title= "Building Density as % of Land Area",
-              alpha=.8)
+              alpha=.8) +
+    tm_shape(bikeloc) +
+    tm_dots( col='blue', alpha=0.4, size = 0.3)
+  
+  
 
