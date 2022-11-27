@@ -131,7 +131,8 @@ bounds_blds_sf <- bounds_blds_sf %>%
 
 bounds_blds <- unique(bounds_blds_sf)
 
-bikeloc <- st_read('T:/DCProjects/Modeling/AADBT/input/shp/BikeCountsLocations.shp') %>% 
+outpath <- "T:/DCProjects/Modeling/AADBT/input/shp"
+bikeloc <- st_read(file.path(outpath, 'BikeCountsLocations.shp')) %>% 
   st_transform(4326)
 #set interactive mode
 #tmap_mode('view')
@@ -147,5 +148,9 @@ tmap_mode('plot')
     tm_shape(bikeloc) +
     tm_dots( col='blue', alpha=0.4, size = 0.3)
   
-  
+st_write(obj=bounds_blds, 
+         dsn=outpath, 
+         layer='building_density_census_tract', 
+         driver='ESRI Shapefile', 
+         delete_layer = TRUE)
 
