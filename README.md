@@ -24,3 +24,11 @@ The [**TrafficCountData**](https://github.com/dongmeic/MPO_Data_Portal/tree/mast
 ## Transit Data
 
 The [**TransitData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/TransitData) folder includes scripts *LTDTransit.r* to organize LTD passenger counts and merge with stop coordinates for the [Transit Ridership Data](https://www.lcog.org/thempo/page/transit-ridership-data) viz, and *Bikes_on_Buses.r* to organize LTD bike counts and merge with stop coordinates for the [Bikes on Buses](https://www.lcog.org/thempo/page/bikes-buses) viz.
+
+## When to Update
+
+1. When ACS 5Y data is published, update the Title VI dashboard and maps first and the commuter data and population data when all data sources available;
+
+2. When crash data is published, update the crash maps first and the rest in the crash data category other data sources are updated;
+
+3. Traffic count data and transit data are updated when requesting data from agencies, and the frequency can be flexible.
