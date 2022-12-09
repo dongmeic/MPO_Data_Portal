@@ -7,23 +7,26 @@
 library(readxl)
 library(rgdal)
 library(dplyr)
+library(rjson)
+library(tidycensus)
 
 ############################## Download data ##############################
 
 # update year information here
-yrrange <- "20162020"
-year <- 2020
-yr = 20
+yrrange <- "20172021"
+year <- 2021
+yr = 21
 
 # create a new folder if not exist
 mainDir <- "T:/Data/CENSUS"
 subDir <- sprintf("ACS%s.", yrrange)
+# prints an warning if exists
 dir.create(file.path(mainDir, subDir))
 newDir <- "TitleVI"
 dir.create(file.path(mainDir, subDir, newDir))
 # set the work directory for downloads
 setwd(file.path(mainDir, subDir))
-#### manual download ####
+#### manual download 5-yr data ####
 # extract the downloaded files
 zipfiles <- list.files(path = ".", pattern = "zip", all.files = TRUE)
 for(zipfile in zipfiles){
@@ -42,25 +45,22 @@ for(zipfile in zipfiles){
   unzip(zipfile = paste0(path1yr, "/", zipfile), exdir = path1yr)
 }
 
-# move the 1-year table B18101 from the 5-year folder to the 1-year folder
+# In 2020, move the 1-year table B18101 from the 5-year folder to 
+# the 1-year folder, since only 1Y data available
 
-# alternatively, use API to access Census.Gov
-# install API - one time setting
-library("devtools")
-# require Rtools to build R package
-devtools::install_github("hrecht/censusapi")
-library(censusapi)
-# notes on December 10th, 2020 - having trouble getting an API key
-# and installing Rtools
+# # alternatively, use API to access Census.Gov
+# keypath <- "T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/AADBT/"
+# census_api_key(rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$acs$key, 
+#                install = TRUE, overwrite=TRUE)
 
-titlevi <- read.csv("T:/Tableau/tableauTitleVI/Datasources/MPO_summary.csv")
-vars <- c("BlkGrp10", "PopNI5Disa", "PopEld", "HHPoor",  
-          "Pop5yrLEP", "PopMinor", "PopWFUnEmp", "HH0car")
-data <- titlevi[, vars]
-
-write.csv(data, 
-          paste0("T:/Tableau/tableauTitleVI/Datasources/map_data.csv"), 
-          row.names = F)
+# titlevi <- read.csv("T:/Tableau/tableauTitleVI/Datasources/MPO_summary.csv")
+# vars <- c("BlkGrp10", "PopNI5Disa", "PopEld", "HHPoor",  
+#           "Pop5yrLEP", "PopMinor", "PopWFUnEmp", "HH0car")
+# data <- titlevi[, vars]
+# 
+# write.csv(data, 
+#           paste0("T:/Tableau/tableauTitleVI/Datasources/map_data.csv"), 
+#           row.names = F)
 
 ############################## Read data ##############################
 # set-ups
@@ -90,13 +90,20 @@ readtable <- function(filenm.start= sprintf("ACSDT5Y%d.", year),
   return(dat)
 }
 
-read1yrtable <- function(yr = 18, tablenm = "B01001"){
+read1yrtable <- function(yr = 18, tablenm = "B01001", 
+                         ext="-Data"){ #ext="_data_with_overlays_"
   inpath <- paste0("T:/Data/CENSUS/ACS20", yr)
   filenm <- list.files(path = inpath, 
                        pattern = paste0(yr,".",tablenm,
-                                        "_data_with_overlays_"))
+                                        ext))
   dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
-  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+  if(sum(grepl("MA", colnames(dat))) > 0){
+    dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "X",
+                                            grep("EA|MA", colnames(dat), value = TRUE)))]
+  }else{
+    dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+  }
+  
   dat2 <- apply(dat2, 2, as.numeric)
   return(dat2)
 }
