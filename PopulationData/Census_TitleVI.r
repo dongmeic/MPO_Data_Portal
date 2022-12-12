@@ -9,6 +9,7 @@ library(rgdal)
 library(dplyr)
 library(rjson)
 library(tidycensus)
+library(sf)
 
 ############################## Download data ##############################
 
@@ -69,8 +70,10 @@ tablenm <- "B01001"
 
 # functions
 # stren - string end number in the GeoID
-readtable <- function(filenm.start= sprintf("ACSDT5Y%d.", year), 
-                      tablenm="B01001", stren = 21){
+readtable <- function(filenm.start=sprintf("ACSDT5Y%d.", year), 
+                      tablenm="B01001", 
+                      ext="-Data",
+                      stren=21){
   mainDir <- "T:/Data/CENSUS"
   subDir <- sprintf("ACS%s.", yrrange)
   newDir <- "TitleVI"
@@ -79,10 +82,11 @@ readtable <- function(filenm.start= sprintf("ACSDT5Y%d.", year),
   filenm <- list.files(path = inpath, 
                        pattern = paste0(filenm.start,
                                         tablenm,
-                                        "_data_with_overlays_"))
+                                        ext))
   
   dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
-  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "X",
+                                            grep("EA|MA", colnames(dat), value = TRUE)))]
   dat2 <- apply(dat2, 2, as.numeric)
   dat <- cbind(as.data.frame(dat[-1,which(names(dat)=="GEO_ID")]), as.data.frame(dat2))
   colnames(dat)[1] <- "GEO_ID"
@@ -197,14 +201,10 @@ if(max(change$Year) == (year - 1)){
 write.csv(change, paste0(outpath, "/TitleVIchangeovertime.csv"), row.names = FALSE)
 
 ############################## Read block group shapefile ##############################
-bg.shp <- readOGR(dsn = outpath, layer = "MPO_BG", stringsAsFactors = FALSE)
 
-# create a table to match blockgroup with the MPO boundary 
-# by copying data from previous blockgroupdata.xlsx
-path <- "C:/Users/clid1852/OneDrive - lanecouncilofgovernments/DataPortal/census" # no need for updates
-bginmpo <- read_excel(paste0(path, "/blockgroup_in_mpo.xlsx"))
-bginmpo$PctGQinside <- ifelse(is.na(bginmpo$PctGQinside), 0, bginmpo$PctGQinside)
-head(bginmpo)
+bgpath <- "T:/Data/CENSUS/TIGER"
+bg.shp <- st_read(dsn = bgpath, layer = "MPO_BG")
+bginmpo <- read.csv(paste0(bgpath, "/blockgroup_in_mpo.csv"))
 
 ############################## Get 5-year data ##############################
 # get data from all the tables
@@ -322,22 +322,24 @@ bgdata <- bgdata %>% rename(PctHH0car=pc_zero_car, HH0car=zero_car, PctRentHH=pc
                             RntHHNoCar=B25044_010E)
 
 # double check the data
-colnames(bgdata)[colnames(bgdata)=='GEO_ID'] <- 'BlkGrp10'
+colnames(bgdata)[colnames(bgdata)=='GEO_ID'] <- 'BlkGrp20'
+colnames(bginmpo)[colnames(bginmpo)=='GEOID'] <- 'BlkGrp20'
 
 vars <- names(bgdata)[!(grepl('Pct', names(bgdata)) | (names(bgdata) %in% c("GEO_ID", "CT_ID", "HHsize", 'Occupancy')))]
-bgdata <- merge(bgdata, bginmpo, by = 'BlkGrp10')
+bgdata <- merge(bgdata, bginmpo, by = 'BlkGrp20')
 
 # correct data with percentage in MPO
 for(var in vars[-1]){
-  if(var == "GQPop"){
-    bgdata[,var] <- bgdata[,var] * bgdata$PctGQinside
-  }else{
+  # if(var == "GQPop"){
+  #   bgdata[,var] <- bgdata[,var] * bgdata$PctGQinside
+  # }else{
     bgdata[,var] <- bgdata[,var] * bgdata$PctInside
-  }
+  # }
 }
 
 # get MPO data only
-bgdata <- bgdata[bgdata$InsideArea != 0,]
+#bgdata <- bgdata[bgdata$InsideArea != 0,]
+bgdata <- bgdata[bgdata$PctInside != 0,]
 selected <- names(bgdata)[names(bgdata) %in% grep('Pct', names(bgdata), value = TRUE) &
                               !(names(bgdata) %in% names(bginmpo))]
 #mpoavg <- apply(bgdata[,selected], 2, mean, na.rm=TRUE)
@@ -364,14 +366,17 @@ write.csv(bgdata, paste0(outpath, "/MPO_summary.csv"), row.names = FALSE)
 
 # Update these numbers on the dashboard
 mpoavg[1:4]
+# 2017-2021
+# PctElderly   PctDisab    PctPoor   PctMinor 
+# 0.1685620  0.1683580  0.1669944  0.2159047 
 ############################## Get shapefile data ##############################
 names(bg.shp)[1] <- names(bgdata)[1]
-bg.shp <- merge(bg.shp, bgdata, by="BlkGrp10")
+bg.shp <- merge(bg.shp, bgdata, by="BlkGrp20")
 bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
 bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
 # warnings on "Shape_Area" can be ignored
-writeOGR(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
-         overwrite_layer=TRUE)
+st_write(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
+         delete_layer=TRUE)
 
 ############################## Others #################################
 # further notes for mapping: determine the classification of the percentage of 
@@ -393,7 +398,7 @@ pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctEld
 
 notes <- c("1st", "2nd", "3rd", "4th", "5th", "6th")
 
-MapDir <- "T:/MPO/Title VI & EJ/2022_TitleVI_update/Maps/20162020"
+MapDir <- "T:/MPO/Title VI & EJ/2023_TitleVI_update/Maps"
 sink(paste0(MapDir, "/symbology_manual_cuts.txt"))
 for(var in pct.vars){
   tot.var <- tot.vars[which(pct.vars==var)]
@@ -423,4 +428,3 @@ for(var in pct.vars){
   cat("\n")
 }
 sink()
-
