@@ -105,11 +105,11 @@ add.colon <- function(v){
 }
 
 get.time.data <- function(foldername = "JTW_TimeLeaving_B08302", 
-                          year = 2018,
+                          year = 2021,
                           tablenm = "B08302", 
                           filenm.end = "-Data",
                           colnm = 'Time.Leaving.for.Work..Census.',
-                          toRemove = "Estimate!!Total!!",
+                          toRemove = "Annotation of Estimate!!Total:!!",
                           time = TRUE){
   filenm.start <- paste0("ACSDT5Y", year, ".")
   #data.file <- paste0(filenm.start, tablenm, "_data_with_overlays_", filenm.end, ".csv")
@@ -122,8 +122,10 @@ get.time.data <- function(foldername = "JTW_TimeLeaving_B08302",
   colnames(dat)[1] <- "Name"
   #metadata.file <- paste0(filenm.start, tablenm, "_metadata_", filenm.end, ".csv")
   metadata.file <- paste0(filenm.start, tablenm, "-Column-Metadata.csv")
-  metadat <- read.csv(paste0(inpath, foldername, "/", metadata.file), stringsAsFactors = FALSE)
-  metadat <- metadat[,-3]
+  metadat <- read.csv(paste0(inpath, foldername, "/", metadata.file), 
+                      stringsAsFactors = FALSE, 
+                      skip = 1)
+  #metadat <- metadat[,-3]
   dat.t <- as.data.frame(t(dat))
   dat.t <- dat.t[-3:-1,]
   rownames <- row.names(dat.t)
@@ -133,18 +135,19 @@ get.time.data <- function(foldername = "JTW_TimeLeaving_B08302",
   colnames(dat.est) <- geography
   df.stk <- stack(dat.est)
   colnames(df.stk) <- c("Estimate", "Geography")
-  metadat <- metadat[metadat$GEO_ID %in% grep("E", metadat$GEO_ID, value = TRUE),]
-  metadat <- metadat[-2:-1,]
+  metadat <- metadat[metadat$GEO_ID %in% grep("EA", metadat$GEO_ID, value = TRUE),]
+  metadat <- metadat[-1,]
   dat.moe <- dat.t[row.names(dat.t) %in% grep("M", row.names(dat.t), value = TRUE),]
   df.stk$MOE_Est <- stack(dat.moe)$values
   if(time){
-    df.stk[,colnm] <- rep(add.colon(str_remove(metadat$id, toRemove)), 5)
+    df.stk[,colnm] <- rep(add.colon(str_remove(metadat$Geography, toRemove)), 5)
+    # need to define timesteps
     df.stk$`Time.Leaving.for.Work` <- rep(timesteps, 5)
     df.stk$Year <- rep(year, dim(df.stk)[1])
     df.stk <- df.stk[, c("Year", "Geography", colnm,
                          "Time.Leaving.for.Work", "Estimate", "MOE_Est")]
   }else{
-    df.stk[,colnm] <- rep(str_remove(metadat$id, toRemove), 5)
+    df.stk[,colnm] <- rep(str_remove(metadat$Geography, toRemove), 5)
     df.stk$Year <- rep(year, dim(df.stk)[1])
     df.stk <- df.stk[, c("Year", "Geography", colnm,
                          "Estimate", "MOE_Est")]

@@ -183,17 +183,21 @@ B08302.df <- get.time.data(year = 2021)
 B08303.df <- get.time.data(foldername = "JTW_TravelTime_B08303", 
                            year = 2021,
                            tablenm = "B08303",
-                           colnm = "Length.of.Commute", 
-                           toRemove = "Estimate!!Total:!!", time = FALSE)
+                           colnm = "Length.of.Commute",
+                           time = FALSE)
 
 time.leaving.file <- "TimeLeavingForWork_AllYears.csv"
 time.leaving <- read.csv(paste0(outfolder, time.leaving.file))
+#time.leaving <- time.leaving %>% filter(Year != year)
 tail(time.leaving)
 time.leaving <- rbind(time.leaving, B08302.df)
-write.csv(time.leaving, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"), row.names = FALSE)
+write.csv(time.leaving, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"), 
+          row.names = FALSE)
 
 travel.time.file <- "TravelTimeToWork_AllYears.csv"
 travel.time <- read.csv(paste0(outfolder, travel.time.file))
+#travel.time <- travel.time %>% filter(Year != year) 
 tail(travel.time)
 travel.time <- rbind(travel.time, B08303.df)
-write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), row.names = FALSE)
+write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), 
+          row.names = FALSE)
