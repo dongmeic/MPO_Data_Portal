@@ -369,6 +369,25 @@ mpoavg[1:4]
 # 2017-2021
 # PctElderly   PctDisab    PctPoor   PctMinor 
 # 0.1685620  0.1683580  0.1669944  0.2159047 
+# mpoavg
+# PctElderly   PctDisab    PctPoor   PctMinor   PctUnEmp     PctLEP  PctHH0car  PctRentHH 
+# 0.16856201 0.16835799 0.16699439 0.21590469 0.07127118 0.02702321 0.08916891 0.47276171 
+
+mpotot <- c(sum(bgdata$PopEld), 
+            sum(bgdata$PopNI5Disa),
+            sum(bgdata$HHPoor),
+            sum(bgdata$PopMinor),
+            sum(bgdata$PopWrkF16*bgdata$PctUnEmp),
+            sum(bgdata$Pop5yrLEP),
+            sum(bgdata$HH0car),
+            sum(bgdata$RenterHHs))
+names(mpotot) <- c("PopEld", "PopDisa", "HHPoor", "PopMinor", "PopUnEmp", 
+                   "PopLEP", "HH0car", "RenterHHs")
+
+# mpotot
+# PopEld    PopDisa    HHPoor    PopMinor  PopUnEmp    PopLEP    HH0car   RenterHHs 
+# 45403.870 43200.473  18651.340 58156.098 10202.056   6934.604  9959.135 52802.011 
+
 ############################## Get shapefile data ##############################
 names(bg.shp)[1] <- names(bgdata)[1]
 bg.shp <- merge(bg.shp, bgdata, by="BlkGrp20")
