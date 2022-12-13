@@ -6,33 +6,40 @@
 # load libraries
 library(xlsx)
 library(readxl)
+library(openxlsx)
+library(dplyr)
 
 
 vmt_path <- "T:/Data/VMT/VMT_State_and_County"
 pop_path <- "T:/Tableau/tableauPop/Datasources"
 
-############################### Update 2020 #############################
+############################### Update since 2020 #############################
 dt <- read.csv(file.path(pop_path, "VMT_Pop.csv"))
+# VMT_State.xls is updated by mannually adding the most recent year data
+# update the range by adding one to the number
 vmt_state <- read_excel(file.path(vmt_path, "VMT_State.xls"),
-                        range = "G17:H17",
+                        range = "G18:H18",
                         col_names = FALSE)
-vmt_county <- read_excel(file.path(vmt_path, "VMT_County.xlsx"),
-                         range = "B25:B25",
-                         col_names = FALSE)
+
+# vmt_county <- read_excel(file.path(vmt_path, "VMT_County.xlsx"),
+#                          range = "B25:B25",
+#                          col_names = FALSE) # discontinue since 2021
+vmt_county <- read.xlsx("https://www.oregon.gov/odot/Data/documents/VMT_County.xlsx",
+                         sheet=1,startRow = 5) %>% filter(COUNTY=="LANE") 
+vmt_county <- vmt_county[1,2]
 filename <- "T:/Tableau/tableauPop/Datasources/HistoricalPopulation.xlsx"
 pop <- read_excel(filename)
 
-
-
-ndt <- data.frame(Year=2020, State_VMT=as.numeric(vmt_state[1,2]),
+year = 2021
+ndt <- data.frame(Year=year, State_VMT=as.numeric(vmt_state[1,2]),
                   County_VMT=as.numeric(vmt_county),
-                  State_Pop=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Oregon", 
+                  State_Pop=as.numeric(pop[pop$YEAR==year & pop$GEOGRAPHY=="Oregon", 
                                            "POPULATION"]),
-                  State_GrowthRate=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Oregon", 
+                  State_GrowthRate=as.numeric(pop[pop$YEAR==year & pop$GEOGRAPHY=="Oregon", 
                                                   "5-YEAR AVG. ANNUAL GROWTH RATE"]),
-                  County_Pop=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Lane County (Total)", 
+                  County_Pop=as.numeric(pop[pop$YEAR==year & pop$GEOGRAPHY=="Lane County (Total)", 
                                             "POPULATION"]),
-                  County_GrowthRate=as.numeric(pop[pop$YEAR==2020 & pop$GEOGRAPHY=="Lane County (Total)", 
+                  County_GrowthRate=as.numeric(pop[pop$YEAR==year & pop$GEOGRAPHY=="Lane County (Total)", 
                                                    "5-YEAR AVG. ANNUAL GROWTH RATE"]))
 geos <- c("State", "County")
 vars <- c("PerCap", "AnnGR")
