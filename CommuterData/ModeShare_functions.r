@@ -8,20 +8,37 @@ library(dplyr)
 library(reshape2)
 library(stringr)
 
+# read tables since 2021
 readtable <- function(foldername="JTW_TravelMode_B08301", 
-                      year=2018, 
+                      year=2021, 
                       tablenm="B08301", 
-                      filenm.end = "_data_with_overlays_2020-05-13T143128.csv"){
+                      filenm.end = "-Data"){
   filenm.start <- paste0("ACSDT5Y", year, ".")
-  filenm.end <- paste0("_data_with_overlays_", filenm.end, ".csv")
+  filenm.end <- paste0(filenm.end, ".csv")
   filenm <- paste0(filenm.start, tablenm, filenm.end)
   dat <- read.csv(paste0(inpath, foldername, "/", filenm), stringsAsFactors = FALSE)
-  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "X",
+                                          grep("EA|MA", colnames(dat), value = TRUE)))]
   dat2 <- apply(dat2, 2, as.numeric)
-  dat <- cbind(as.data.frame(dat[-1,2]), as.data.frame(dat2))
-  colnames(dat)[1] <- "Name"
+  dat <- cbind(as.data.frame(dat[-1,which(names(dat) %in% c("GEO_ID", "NAME"))]), as.data.frame(dat2))
+  colnames(dat)[2] <- "Name"
   return(dat)
 }
+
+# readtable <- function(foldername="JTW_TravelMode_B08301", 
+#                       year=2018, 
+#                       tablenm="B08301", 
+#                       filenm.end = "2020-05-13T143128"){
+#   filenm.start <- paste0("ACSDT5Y", year, ".")
+#   filenm.end <- paste0("_data_with_overlays_", filenm.end, ".csv")
+#   filenm <- paste0(filenm.start, tablenm, filenm.end)
+#   dat <- read.csv(paste0(inpath, foldername, "/", filenm), stringsAsFactors = FALSE)
+#   dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+#   dat2 <- apply(dat2, 2, as.numeric)
+#   dat <- cbind(as.data.frame(dat[-1,2]), as.data.frame(dat2))
+#   colnames(dat)[1] <- "Name"
+#   return(dat)
+# }
 
 get.data.by.mode <- function(cols=c("007", "008", "009", "010"), 
                              mode="Car, truck, or van - drove alone",
@@ -90,18 +107,21 @@ add.colon <- function(v){
 get.time.data <- function(foldername = "JTW_TimeLeaving_B08302", 
                           year = 2018,
                           tablenm = "B08302", 
-                          filenm.end = "2020-05-15T131849",
+                          filenm.end = "-Data",
                           colnm = 'Time.Leaving.for.Work..Census.',
                           toRemove = "Estimate!!Total!!",
                           time = TRUE){
   filenm.start <- paste0("ACSDT5Y", year, ".")
-  data.file <- paste0(filenm.start, tablenm, "_data_with_overlays_", filenm.end, ".csv")
+  #data.file <- paste0(filenm.start, tablenm, "_data_with_overlays_", filenm.end, ".csv")
+  data.file <- paste0(filenm.start, tablenm, filenm.end, ".csv")
   dat <- read.csv(paste0(inpath, foldername, "/", data.file), stringsAsFactors = FALSE)
-  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+  dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "X",
+                                          grep("EA|MA", colnames(dat), value = TRUE)))]
   dat2 <- apply(dat2, 2, as.numeric)
   dat <- cbind(as.data.frame(dat[-1,"NAME"]), as.data.frame(dat2))
   colnames(dat)[1] <- "Name"
-  metadata.file <- paste0(filenm.start, tablenm, "_metadata_", filenm.end, ".csv")
+  #metadata.file <- paste0(filenm.start, tablenm, "_metadata_", filenm.end, ".csv")
+  metadata.file <- paste0(filenm.start, tablenm, "-Column-Metadata.csv")
   metadat <- read.csv(paste0(inpath, foldername, "/", metadata.file), stringsAsFactors = FALSE)
   metadat <- metadat[,-3]
   dat.t <- as.data.frame(t(dat))

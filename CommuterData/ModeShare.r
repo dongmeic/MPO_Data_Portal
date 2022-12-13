@@ -3,7 +3,7 @@
 # (https://thempo.org/904/Commuter-Data) on May 12th, 2020
 
 inpath <- "T:/Data/TranspData for Web/JTW_AllYears/JTW ACS 5-Yr All Years/"
-outfolder <- "//clsrv111.int.lcog.org/transpor/Tableau/tableauJourneyToWork/Datasources/"
+outfolder <- "T:/Tableau/tableauJourneyToWork/Datasources/"
 source("T:/DCProjects/GitHub/MPO_Data_Portal/CommuterData/ModeShare_functions.r")
 
 ################################## One-time data cleaning ##################################
@@ -32,9 +32,8 @@ unique(mode.share$Mode) # check metadata for details
 ################################## Read new yearly data and append to the input tables ##################################
 # Mode share
 # B08301 - Means of transportation to work
-year = 2020
-B08301 <- readtable(year = year, 
-                    filenm.end = "2022-08-11T185014") 
+year = 2021
+B08301 <- readtable(year = year) 
 B08301T <- B08301 %>% # get target columns (T represents target)
   select(B08301_001E, B08301_001M,
          B08301_003E, B08301_003M, B08301_004E, B08301_004M,
@@ -76,8 +75,9 @@ mode.share <- rbind(mode.share, B08301TE.df)
 write.csv(mode.share, paste0(outfolder, "ModeShare_ALL_Years.csv"), row.names = FALSE)
 
 # Mode share by vehicle available
-B08141 <- readtable(foldername = "JTW_ModeByVehiclesAvailable_B08141", year= 2020, 
-                    tablenm = "B08141",filenm.end = "2022-08-11T185605")
+B08141 <- readtable(foldername = "JTW_ModeByVehiclesAvailable_B08141", 
+                    year= 2021, 
+                    tablenm = "B08141")
 
 col.list <- list(c("012", "013", "014", "015"),
                  c("017", "018", "019", "020"),
@@ -107,8 +107,9 @@ write.csv(mode.by.vehicles, paste0(outfolder, "ModeByVehiclesAvailable_AllYears.
 
 
 # Mode share by poverty status
-B08122 <- readtable(foldername = "JTW_ModeByPovertyStatus_B08122", year = 2020, 
-                    tablenm = "B08122", filenm.end = "2022-08-11T185457")
+B08122 <- readtable(foldername = "JTW_ModeByPovertyStatus_B08122", 
+                    year = 2021, 
+                    tablenm = "B08122")
 
 modecolnm = "Travel.Mode"
 type = "Poverty.Status"
@@ -177,12 +178,11 @@ timesteps <- c("Midnight to 5 AM","5 to 5:30 AM","5:30 to 6 AM",
                 "9 to 10 AM", "10 to 11 AM", "11 AM to Noon",          
                 "Noon to 4 PM", "4 PM to Midnight")
 
-B08302.df <- get.time.data(year = 2020, filenm.end = "2022-08-11T185118")
+B08302.df <- get.time.data(year = 2021)
 
 B08303.df <- get.time.data(foldername = "JTW_TravelTime_B08303", 
-                           year = 2020,
+                           year = 2021,
                            tablenm = "B08303",
-                           filenm.end = "2022-08-11T185248",
                            colnm = "Length.of.Commute", 
                            toRemove = "Estimate!!Total:!!", time = FALSE)
 
