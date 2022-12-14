@@ -1,7 +1,6 @@
 library(rjson)
 library(tidycensus)
 
-
 keypath <- "T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/AADBT/"
 census_api_key(rjson::fromJSON(file=paste0(keypath, "config/keys.json"))$acs$key, install = TRUE)
 

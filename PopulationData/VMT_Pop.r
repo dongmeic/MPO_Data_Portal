@@ -9,7 +9,6 @@ library(readxl)
 library(openxlsx)
 library(dplyr)
 
-
 vmt_path <- "T:/Data/VMT/VMT_State_and_County"
 pop_path <- "T:/Tableau/tableauPop/Datasources"
 
@@ -27,6 +26,7 @@ vmt_state <- read_excel(file.path(vmt_path, "VMT_State.xls"),
 vmt_county <- read.xlsx("https://www.oregon.gov/odot/Data/documents/VMT_County.xlsx",
                          sheet=1,startRow = 5) %>% filter(COUNTY=="LANE") 
 vmt_county <- vmt_county[1,2]
+# need to update the historical data
 filename <- "T:/Tableau/tableauPop/Datasources/HistoricalPopulation.xlsx"
 pop <- read_excel(filename)
 
