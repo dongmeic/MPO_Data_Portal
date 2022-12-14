@@ -14,6 +14,10 @@ pop_path <- "T:/Tableau/tableauPop/Datasources"
 
 ############################### Update since 2020 #############################
 dt <- read.csv(file.path(pop_path, "VMT_Pop.csv"))
+year = 2021
+
+# if any mistake found in the new data
+dt <- dt[dt$Year != year,]
 # VMT_State.xls is updated by mannually adding the most recent year data
 # update the range by adding one to the number
 vmt_state <- read_excel(file.path(vmt_path, "VMT_State.xls"),
@@ -30,7 +34,6 @@ vmt_county <- vmt_county[1,2]
 filename <- "T:/Tableau/tableauPop/Datasources/HistoricalPopulation.xlsx"
 pop <- read_excel(filename)
 
-year = 2021
 ndt <- data.frame(Year=year, State_VMT=as.numeric(vmt_state[1,2]),
                   County_VMT=as.numeric(vmt_county),
                   State_Pop=as.numeric(pop[pop$YEAR==year & pop$GEOGRAPHY=="Oregon", 
@@ -60,6 +63,8 @@ for(geo in geos){
 }
 
 dat <- rbind(dt, ndt)
+# update state pop
+#dat[dat$Year %in% 2010:2021, "State_Pop"] <- pop[pop$YEAR %in% 2010:2021 & pop$GEOGRAPHY=="Oregon", ]$POPULATION
 write.csv(dat, file.path(pop_path, "VMT_Pop.csv"), row.names = FALSE)
 
 ############################### Before 2020 #############################

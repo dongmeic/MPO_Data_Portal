@@ -18,16 +18,25 @@ colnames(pop)
 unique(pop$GEOGRAPHY)
 
 ############################## update US population ###############################
-update_US_pop <- function(years = c(2011:2019, 2021)){
+update_pop <- function(years = c(2011:2019, 2021), geo="us"){
   res <- vector("list",length(years))
   names(res) <- years
   
   for (y in years){
     # download data
-    ld <- as.data.frame(get_acs(year = y,
-                                geography='us',
-                                survey='acs1',
-                                variables = 'B01003_001E'))
+    if(geo=="us"){
+      ld <- as.data.frame(get_acs(year = y,
+                                  geography=geo,
+                                  survey='acs1',
+                                  variables = 'B01003_001E'))
+    }else{
+      ld <- as.data.frame(get_acs(year = y,
+                                  geography=geo,
+                                  survey='acs1',
+                                  variables = 'B01003_001E',
+                                  state="OR"))
+    }
+    
     # reshape long to wide
     ld2 <- reshape(ld,
                    idvar="GEOID",
@@ -44,7 +53,7 @@ update_US_pop <- function(years = c(2011:2019, 2021)){
   return(combo[,-which(names(combo)=="GEOID")])
 }
 
-uspop <- update_US_pop()
+uspop <- update_pop()
 
 pop20 <- get_decennial(geography = "us",
                        year = 2020,
@@ -54,13 +63,38 @@ pop10 <- get_decennial(geography = "us",
                        year = 2010,
                        variables = 'P001001')
 
+GEO <- "United States"
 for(year in 2010:2021){
   if(year == 2010){
-    pop[pop$YEAR==year & pop$GEOGRAPHY=="United States", "POPULATION"] <- pop10$value
+    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop10$value
   }else if(year == 2020){
-    pop[pop$YEAR==year & pop$GEOGRAPHY=="United States", "POPULATION"] <- pop20$value
+    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop20$value
   }else{
-    pop[pop$YEAR==year & pop$GEOGRAPHY=="United States", "POPULATION"] <- uspop[uspop$year==year, "estimate.B01003_001"]
+    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- uspop[uspop$year==year, "estimate.B01003_001"]
+  }
+}
+
+############################## update OR population ###############################
+orpop <- update_pop(geo = "state")
+
+pop20or <- get_decennial(geography = "state",
+                         year = 2020,
+                         variables = 'P1_001N',
+                         state="OR")
+
+pop10or <- get_decennial(geography = "state",
+                         year = 2010,
+                         variables = 'P001001',
+                         state="OR")
+
+GEO <- "Oregon"
+for(year in 2010:2021){
+  if(year == 2010){
+    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop10or$value
+  }else if(year == 2020){
+    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop20or$value
+  }else{
+    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- orpop[orpop$year==year, "estimate.B01003_001"]
   }
 }
 
@@ -105,3 +139,6 @@ newpop <- rbind(pop, dt)
 newpop$DATE <- as.Date(newpop$DATE)
 write_xlsx(list(PopulationRaw=newpop), path = filename,
            col_names = TRUE)
+
+# write_xlsx(list(PopulationRaw=pop), path = filename,
+#            col_names = TRUE)
