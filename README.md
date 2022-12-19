@@ -11,7 +11,7 @@ The [**CommuterData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/C
 
 ## Crash Data
 
-The [**CrashData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CrashData) folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.lcog.org/thempo/page/transportation-safety-emphasis-areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2019/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the [FARS Data](https://www.lcog.org/thempo/page/fars-data) viz.
+The [**CrashData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CrashData) folder includes scripts *SafetyEmphasisAreas.r* to define and calculate variables in the [Transportation Safety Emphasis Areas](https://www.lcog.org/thempo/page/transportation-safety-emphasis-areas) viz, and *US_FARS.r* to organize [VMT](https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm) (Note: edit the year information on the website link to get the most recent year data) and [FARS](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) data for the [FARS Data](https://www.lcog.org/thempo/page/fars-data) viz.
 
 ## Population Data
 
@@ -29,6 +29,15 @@ The [**TransitData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/Tr
 
 1. When ACS 5Y data is published, update the Title VI dashboard and maps first and the commuter data and population data when all data sources available;
 
-2. When crash data is published, update the crash maps first and the rest in the crash data category other data sources are updated;
+2. When crash data is published, update the crash maps first and the rest in the crash data category when other data sources are updated;
 
 3. Traffic count data and transit data are updated when requesting data from agencies, and the frequency can be flexible.
+
+## SQL database
+### steps to organize the database
+
+1. Review the data tables in the "Datasources";
+
+2. Organize the tables in the SQL database in the exact way they are read in the scripts;
+
+3. Test the data links
