@@ -1,5 +1,5 @@
 # This script was created to update US FARS (Fatality Analysis Reporting System) data 
-# data downloaded from https://www.fhwa.dot.gov/policyinformation/statistics/2019/vm2.cfm (VMT) and 
+# data downloaded from https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm (VMT) and 
 # https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx (fatalities) for the 
 # tableau dashboard "US_FARS_VMT Fatality Rate OneMap_DC"
 # By Dongmei Chen (dchen@lcog.org)
@@ -34,9 +34,10 @@ unique(US_FARS_data$State)
 vmt <- vmt[vmt$STATE %in% unique(US_FARS_data$State), ]
 fars <- fars[fars$State %in% unique(US_FARS_data$State), ]
 
-
-ndf <- data.frame(State=unique(US_FARS_data$State), Year=rep(2019, 50), VMT=round(vmt$TOTAL, 0),
-                  Fatalities=fars$`2019`, FatalityRate=round((fars$`2019`/round(vmt$TOTAL, 0))*100, 2))
+year <- 2020
+colnames(fars)[2:3] <- c("Now", "Past")
+ndf <- data.frame(State=unique(US_FARS_data$State), Year=rep(year, 50), VMT=round(vmt$TOTAL, 0),
+                  Fatalities=fars$Now, FatalityRate=round((fars$Now/round(vmt$TOTAL, 0))*100, 2))
 
 US_FARS_data <- rbind(US_FARS_data, ndf)
 US_FARS_data <- US_FARS_data[order(US_FARS_data$State),] 
