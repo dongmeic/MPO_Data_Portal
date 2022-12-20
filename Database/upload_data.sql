@@ -1,0 +1,1 @@
+select * from mode_share
