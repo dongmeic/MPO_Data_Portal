@@ -19,7 +19,7 @@ yrrange <- "20172021"
 year <- 2021
 yr = 21
 
-#unzip_data(yrrange=yrrange, year=year)
+unzip_data(yrrange=yrrange, year=year)
 
 # In 2020, move the 1-year table B18101 from the 5-year folder to 
 # the 1-year folder, since only 1Y data available
@@ -39,9 +39,6 @@ yr = 21
 #           row.names = F)
 
 ############################## Read data ##############################
-# set-ups
-outpath <- "T:/Tableau/tableauTitleVI/Datasources"
-
 # get data for change over time
 # factor
 outdata <- get_MPOavg_data(yr=yr)
@@ -72,16 +69,12 @@ if(max(change$Year) == (year - 1)){
 
 ############################## Read block group shapefile ##############################
 
-bgpath <- "T:/Data/CENSUS/TIGER/Lane"
-bg.shp <- st_read(dsn = bgpath, layer = paste0("MPO_blockgroup", year))
-bginmpo <- read.csv(paste0(bgpath, "/blockgroup_in_mpo_", year, ".csv"))
-
 bgdata <- get_TitleVI_data()
 
 bgdata <- adjust_TitleVI_data()[[1]]
 
 # Update these numbers on the dashboard
-mpoavg <- adjust_TitleVI_data(export=FALSE)[[2]]
+mpoavg <- adjust_TitleVI_data()[[2]]
 mpoavg[1:4]
 # 2017-2021
 # PctElderly   PctDisab    PctPoor   PctMinor 
@@ -106,12 +99,9 @@ names(mpotot) <- c("PopEld", "PopDisa", "HHPoor", "PopMinor", "PopUnEmp",
 # 45403.870 43200.473  18651.340 58156.098 10202.056   6934.604  9959.135 52802.011 
 
 ############################## Get shapefile data ##############################
-bg.shp <- merge(bg.shp, bgdata, by="GEOID")
-bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
-bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
-# warnings on "Shape_Area" can be ignored
-# st_write(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
-#          delete_layer=TRUE)
+
+bg.shp <- adjust_TitleVI_data()[[3]]
+
 
 # ############################## Others #################################
 # # further notes for mapping: determine the classification of the percentage of 
