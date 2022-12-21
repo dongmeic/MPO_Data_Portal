@@ -397,53 +397,53 @@ bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
 st_write(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile",
          delete_layer=TRUE)
 
-############################## Others #################################
-# further notes for mapping: determine the classification of the percentage of 
-# concerns based on the quantile of population
-outpath <- "T:/Tableau/tableauTitleVI/Datasources"
-
-bgdata <- read.csv(paste0(outpath, "/MPO_summary.csv"),  stringsAsFactors = FALSE)
-tot.vars <- c("TotalPOP", "PopWrkF16", "PopGE5", "HH", "PopNInst5", "TotalPOP", "HH")
-pop.vars <- c("PopMinor", "PopWFUnEmp", "Pop5yrLEP", "HH0car", "PopNI5Disa", "PopEld", "HHPoor")
-pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctElderly", "PctPoor")
-
-# test some functions
-# library(Hmisc)
-# cuts <- split(bgdata[,pct.vars[5]], cut2(bgdata[,pop.vars[5]], g=6))
-# library(gtools)
-# levels(quantcut(bgdata[,pop.vars[5]], 6))
-# range(bgdata[bgdata[,pop.vars[5]]>=0.326 & bgdata[,pop.vars[5]]<= 97.9,
-#        pct.vars[5]])
-
-notes <- c("1st", "2nd", "3rd", "4th", "5th", "6th")
-
-MapDir <- "T:/MPO/Title VI & EJ/2023_TitleVI_update/Maps"
-sink(paste0(MapDir, "/symbology_manual_cuts.txt"))
-for(var in pct.vars){
-  tot.var <- tot.vars[which(pct.vars==var)]
-  df <- bgdata[,c(tot.var, var)]
-  df <- df[order(df[,var]),]
-  df$cumsum <-  cumsum(df[, tot.var])
-  avg <- sum(df[, tot.var])/6
-  cuts <- avg * c(1:6)
-  v <- vector()
-  for(cut in cuts){
-    df$diff <- df$cumsum - cut
-    cat(paste0('The ', notes[which(cuts==cut)], ' cut for ', var, ' is ', 
-               df[abs(df$diff) == min(abs(df$diff)),var], '\n'))
-    if(which(cuts==cut)==1){
-      pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
-      cat(paste0('The total population for this cut is ', pop,'\n'))
-      last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
-      v <- c(v, pop)
-    }else{
-      pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))] - last.cum
-      cat(paste0('The total population for this cut is ', pop,'\n'))
-      last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
-      v <- c(v, pop)
-    }
-  }
-  cat(paste("The average population size is", mean(v), "\n"))
-  cat("\n")
-}
-sink()
+# ############################## Others #################################
+# # further notes for mapping: determine the classification of the percentage of 
+# # concerns based on the quantile of population
+# outpath <- "T:/Tableau/tableauTitleVI/Datasources"
+# 
+# bgdata <- read.csv(paste0(outpath, "/MPO_summary.csv"),  stringsAsFactors = FALSE)
+# tot.vars <- c("TotalPOP", "PopWrkF16", "PopGE5", "HH", "PopNInst5", "TotalPOP", "HH")
+# pop.vars <- c("PopMinor", "PopWFUnEmp", "Pop5yrLEP", "HH0car", "PopNI5Disa", "PopEld", "HHPoor")
+# pct.vars <- c("PctMinor", "PctUnEmp", "PctLEP", "PctHH0car", "PctDisab", "PctElderly", "PctPoor")
+# 
+# # test some functions
+# # library(Hmisc)
+# # cuts <- split(bgdata[,pct.vars[5]], cut2(bgdata[,pop.vars[5]], g=6))
+# # library(gtools)
+# # levels(quantcut(bgdata[,pop.vars[5]], 6))
+# # range(bgdata[bgdata[,pop.vars[5]]>=0.326 & bgdata[,pop.vars[5]]<= 97.9,
+# #        pct.vars[5]])
+# 
+# notes <- c("1st", "2nd", "3rd", "4th", "5th", "6th")
+# 
+# MapDir <- "T:/MPO/Title VI & EJ/2023_TitleVI_update/Maps"
+# sink(paste0(MapDir, "/symbology_manual_cuts.txt"))
+# for(var in pct.vars){
+#   tot.var <- tot.vars[which(pct.vars==var)]
+#   df <- bgdata[,c(tot.var, var)]
+#   df <- df[order(df[,var]),]
+#   df$cumsum <-  cumsum(df[, tot.var])
+#   avg <- sum(df[, tot.var])/6
+#   cuts <- avg * c(1:6)
+#   v <- vector()
+#   for(cut in cuts){
+#     df$diff <- df$cumsum - cut
+#     cat(paste0('The ', notes[which(cuts==cut)], ' cut for ', var, ' is ', 
+#                df[abs(df$diff) == min(abs(df$diff)),var], '\n'))
+#     if(which(cuts==cut)==1){
+#       pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+#       cat(paste0('The total population for this cut is ', pop,'\n'))
+#       last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+#       v <- c(v, pop)
+#     }else{
+#       pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))] - last.cum
+#       cat(paste0('The total population for this cut is ', pop,'\n'))
+#       last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
+#       v <- c(v, pop)
+#     }
+#   }
+#   cat(paste("The average population size is", mean(v), "\n"))
+#   cat("\n")
+# }
+# sink()
