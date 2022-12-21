@@ -1,38 +1,44 @@
 # This script was created by Dongmei Chen (dchen@lcog.org) to calculate data for the
 # commuter mode share and length of commute data dashboards 
-# (https://thempo.org/904/Commuter-Data) on May 12th, 2020
+# (https://www.lcog.org/thempo/page/commuter-mode-shares) on May 12th, 2020
 
 inpath <- "T:/Data/TranspData for Web/JTW_AllYears/JTW ACS 5-Yr All Years/"
 outfolder <- "T:/Tableau/tableauJourneyToWork/Datasources/"
 source("T:/DCProjects/GitHub/MPO_Data_Portal/CommuterData/ModeShare_functions.r")
 
-################################## One-time data cleaning ##################################
-mode.share.file <- "ModeShare_ALL_Years.xlsx"
-mode.by.vehicles.file <- "ModeByVehiclesAvailable_AllYears.xlsx"
-mode.by.poverty.file <- "ModeByPovertyStatus_AllYears.xlsx"
+# set up parameters
+year = 2021
+test = TRUE
+output = FALSE
+new_data_only = TRUE
 
-# check the original tables for Tableau viz
-mode.share <- read_excel(paste0(outfolder, mode.share.file), sheet = "ForViz")
-mode.share <- mode.share[mode.share$Year != 2000, ]
-head(mode.share)
-write.csv(mode.share, paste0(outfolder, "ModeShare_ALL_Years.csv"), row.names = FALSE)
-mode.by.vehicles <- read_excel(paste0(outfolder, mode.by.vehicles.file), sheet = "ForViz")
-head(mode.by.vehicles)
-write.csv(mode.by.vehicles, paste0(outfolder, "ModeByVehiclesAvailable_AllYears.csv"), row.names = FALSE)
-mode.by.poverty <- read_excel(paste0(outfolder, mode.by.poverty.file), sheet = "ForViz")
-head(mode.by.poverty)
-write.csv(mode.by.poverty, paste0(outfolder, "ModeByPovertyStatus_AllYears.csv"), row.names = FALSE)
-
-# get data from the raw data
-# 1. Mode share - raw data include estimate and its margin of errors in each mode
-# the final output should be: Year, Geography, Mode, Estimate, MOE_Est,
-# Share, MOE_Share, SharePct, MOE_SharePct
-unique(mode.share$Mode) # check metadata for details
+# ################################## One-time data cleaning ##################################
+# mode.share.file <- "ModeShare_ALL_Years.xlsx"
+# mode.by.vehicles.file <- "ModeByVehiclesAvailable_AllYears.xlsx"
+# mode.by.poverty.file <- "ModeByPovertyStatus_AllYears.xlsx"
+# 
+# # check the original tables for Tableau viz
+# mode.share <- read_excel(paste0(outfolder, mode.share.file), sheet = "ForViz")
+# mode.share <- mode.share[mode.share$Year != 2000, ]
+# head(mode.share)
+# write.csv(mode.share, paste0(outfolder, "ModeShare_ALL_Years.csv"), row.names = FALSE)
+# mode.by.vehicles <- read_excel(paste0(outfolder, mode.by.vehicles.file), sheet = "ForViz")
+# head(mode.by.vehicles)
+# write.csv(mode.by.vehicles, paste0(outfolder, "ModeByVehiclesAvailable_AllYears.csv"), row.names = FALSE)
+# mode.by.poverty <- read_excel(paste0(outfolder, mode.by.poverty.file), sheet = "ForViz")
+# head(mode.by.poverty)
+# write.csv(mode.by.poverty, paste0(outfolder, "ModeByPovertyStatus_AllYears.csv"), row.names = FALSE)
+# 
+# # get data from the raw data
+# # 1. Mode share - raw data include estimate and its margin of errors in each mode
+# # the final output should be: Year, Geography, Mode, Estimate, MOE_Est,
+# # Share, MOE_Share, SharePct, MOE_SharePct
+# unique(mode.share$Mode) # check metadata for details
 
 ################################## Read new yearly data and append to the input tables ##################################
 # Mode share
 # B08301 - Means of transportation to work
-year = 2021
+
 B08301 <- readtable(year = year) 
 B08301T <- B08301 %>% # get target columns (T represents target)
   select(B08301_001E, B08301_001M,
@@ -71,8 +77,15 @@ B08301TE.df$SharePct <- B08301TE.df$Share * 100
 B08301TE.df$MOE_SharePct <- B08301TE.df$MOE_Share * 100
 
 mode.share <- read.csv(paste0(outfolder, "ModeShare_ALL_Years.csv"))
-mode.share <- rbind(mode.share, B08301TE.df)
-write.csv(mode.share, paste0(outfolder, "ModeShare_ALL_Years.csv"), row.names = FALSE)
+if(test){
+  mode.share <- mode.share[mode.share$Year != year,]
+}
+if(!new_data_only){
+  mode.share <- rbind(mode.share, B08301TE.df)
+}
+if(output){
+  write.csv(mode.share, paste0(outfolder, "ModeShare_ALL_Years.csv"), row.names = FALSE)
+}
 
 # Mode share by vehicle available
 B08141 <- readtable(foldername = "JTW_ModeByVehiclesAvailable_B08141", 
@@ -102,9 +115,15 @@ mode.by.vehicles.file <- "ModeByVehiclesAvailable_AllYears.csv"
 mode.by.vehicles <- read.csv(paste0(outfolder, mode.by.vehicles.file))
 colnames(B08141.df) <- colnames(mode.by.vehicles)
 head(mode.by.vehicles)
-mode.by.vehicles <- rbind(mode.by.vehicles, B08141.df)
-write.csv(mode.by.vehicles, paste0(outfolder, "ModeByVehiclesAvailable_AllYears.csv"), row.names = FALSE)
-
+if(test){
+  mode.by.vehicles <- mode.by.vehicles[mode.by.vehicles$Year != year,]
+}
+if(!new_data_only){
+  mode.by.vehicles <- rbind(mode.by.vehicles, B08141.df)
+}
+if(output){
+  write.csv(mode.by.vehicles, paste0(outfolder, "ModeByVehiclesAvailable_AllYears.csv"), row.names = FALSE)
+}
 
 # Mode share by poverty status
 B08122 <- readtable(foldername = "JTW_ModeByPovertyStatus_B08122", 
@@ -157,18 +176,25 @@ for(l in 1:length(col.list)){
 mode.by.poverty.file <- "ModeByPovertyStatus_AllYears.csv"
 mode.by.poverty <- read.csv(paste0(outfolder, mode.by.poverty.file))
 head(mode.by.poverty)
-mode.by.poverty <- rbind(mode.by.poverty, B08122.df)
-write.csv(mode.by.poverty, paste0(outfolder, "ModeByPovertyStatus_AllYears.csv"), row.names = FALSE)
+if(test){
+  mode.by.poverty <- mode.by.poverty[mode.by.poverty$Year != year,]
+}
+if(!new_data_only){
+  mode.by.poverty <- rbind(mode.by.poverty, B08122.df)
+}
+if(output){
+  write.csv(mode.by.poverty, paste0(outfolder, "ModeByPovertyStatus_AllYears.csv"), row.names = FALSE)
+}
 
-################################## One-time data cleaning ##################################
-# Length of commute
-time.leaving.file <- "TimeLeavingForWork_AllYears.xlsx"
-time.leaving <- read_excel(paste0(outfolder, time.leaving.file), sheet = "ForViz")
-write.csv(time.leaving, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"), row.names = FALSE)
-
-travel.time.file <- "TravelTimeToWork_AllYears.xlsx"
-travel.time <- read_excel(paste0(outfolder, travel.time.file), sheet = "ForViz")
-write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), row.names = FALSE)
+# ################################## One-time data cleaning ##################################
+# # Length of commute
+# time.leaving.file <- "TimeLeavingForWork_AllYears.xlsx"
+# time.leaving <- read_excel(paste0(outfolder, time.leaving.file), sheet = "ForViz")
+# write.csv(time.leaving, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"), row.names = FALSE)
+# 
+# travel.time.file <- "TravelTimeToWork_AllYears.xlsx"
+# travel.time <- read_excel(paste0(outfolder, travel.time.file), sheet = "ForViz")
+# write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), row.names = FALSE)
 
 ################################## Read new yearly data and append to the input tables ##################################
 
@@ -190,14 +216,33 @@ time.leaving.file <- "TimeLeavingForWork_AllYears.csv"
 time.leaving <- read.csv(paste0(outfolder, time.leaving.file))
 #time.leaving <- time.leaving %>% filter(Year != year)
 tail(time.leaving)
-time.leaving <- rbind(time.leaving, B08302.df)
-write.csv(time.leaving, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"), 
-          row.names = FALSE)
+if(test){
+  time.leaving <- time.leaving[time.leaving$Year != year,]
+}
+if(!new_data_only){
+  time.leaving <- rbind(time.leaving, B08302.df)
+}
+if(output){
+  write.csv(time.leaving, paste0(outfolder, "TimeLeavingForWork_AllYears.csv"),
+            row.names = FALSE)
+}
 
 travel.time.file <- "TravelTimeToWork_AllYears.csv"
 travel.time <- read.csv(paste0(outfolder, travel.time.file))
 #travel.time <- travel.time %>% filter(Year != year) 
 tail(travel.time)
-travel.time <- rbind(travel.time, B08303.df)
-write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"), 
-          row.names = FALSE)
+if(test){
+  travel.time <- travel.time[travel.time$Year != year,]
+}
+if(!new_data_only){
+  travel.time <- rbind(travel.time, B08303.df)
+}
+if(output){
+  write.csv(travel.time, paste0(outfolder, "TravelTimeToWork_AllYears.csv"),
+            row.names = FALSE)
+}
+
+if(new_data_only){
+  save(mode.share, mode.by.vehicles, mode.by.poverty, time.leaving, travel.time, 
+     file = paste0(outfolder, "mode_share_data.RData"))
+}

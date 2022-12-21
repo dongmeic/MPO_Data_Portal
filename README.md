@@ -34,10 +34,13 @@ The [**TransitData**](https://github.com/dongmeic/MPO_Data_Portal/tree/master/Tr
 3. Traffic count data and transit data are updated when requesting data from agencies, and the frequency can be flexible.
 
 ## SQL database
+
+To organize data sources in one place, all the regularly-updated data sets are uploaded to the GIS_CLMPO database in RLID. The data update process is recreated using python. 
+
 ### steps to organize the database
 
 1. Review the data tables in the "Datasources";
 
-2. Organize the tables in the SQL database in the exact way they are read in the scripts;
+2. Organize the tables in the SQL database;
 
-3. Test the data links
+3. Test the data links and edit data connection on Tableau
