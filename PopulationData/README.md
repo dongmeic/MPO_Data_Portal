@@ -53,7 +53,7 @@ In 2020, [only 5-year data is available](https://www.census.gov/newsroom/press-r
 
 18. [B25010 Average Household Size Of Occupied Housing Units By Tenure 1Y](https://data.census.gov/cedsci/table?q=B25010&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2021.B25010&hidePreview=false), [B25010 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25010&g=400XX00US28117)
 
-19. [B25044 Tenure By Vehicles Available 1Y](https://data.census.gov/cedsci/table?q=ACSDT1Y2021.B25044&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2021.B25044&hidePreview=false),[B25044 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25044&g=400XX00US28117)
+19. [B25044 Tenure By Vehicles Available 1Y](https://data.census.gov/cedsci/table?q=ACSDT1Y2021.B25044&g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2021.B25044&hidePreview=false), [B25044 Average Household Size Of Occupied Housing Units By Tenure 5Y](https://data.census.gov/cedsci/table?q=B25044&g=400XX00US28117)
 
 20. [B18101 Sex By Age By Disability Status 1Y](https://data.census.gov/cedsci/table?t=Disability&g=400C100US28117&tid=ACSDT1Y2021.B18101&hidePreview=false), [B18101 Sex By Age By Disability Status 5Y](https://data.census.gov/cedsci/table?t=Disability&g=400XX00US28117&tid=ACSDT5Y2021.B18101)
 
