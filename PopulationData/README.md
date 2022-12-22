@@ -264,7 +264,11 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 
 The scripts on Title VI data calculation were reorganized to cover [data since 2013](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI_Since2013.r), following the steps below:
 
-1. Collect TIGER/Line shapefile in Lane and calculate the MPO area percentage; 
+1. [Collect TIGER/Line shapefile in Lane and calculate the MPO area percentage](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Central_Lane_block_group.ipynb);
+
+2. Download and organize Title VI data since 2013 and run the [script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI_Since2013.r);
+
+3. [Upload Title VI data to SQL](https://github.com/dongmeic/MPO_Data_Portal/blob/master/Database/upload_Title_VI_data.ipynb)
 
 
 ## A data request related to Title VI from Springfield on July 2021
