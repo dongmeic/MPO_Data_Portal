@@ -15,11 +15,9 @@ source('T:/DCProjects/GitHub/MPO_Data_Portal/PopulationData/Census_TitleVI_funct
 ############################## Download data ##############################
 
 # update year information here
-yrrange <- "20172021"
 year <- 2021
-yr = 21
 
-unzip_data(yrrange=yrrange, year=year)
+unzip_data(year=year)
 
 # In 2020, move the 1-year table B18101 from the 5-year folder to 
 # the 1-year folder, since only 1Y data available
@@ -41,7 +39,7 @@ unzip_data(yrrange=yrrange, year=year)
 ############################## Read data ##############################
 # get data for change over time
 # factor
-outdata <- get_MPOavg_data(yr=yr)
+outdata <- get_MPOavg_data(year = year)
 
 ############################## Update change over time ##############################
 # output should look like this, use data from ACS2013-2017

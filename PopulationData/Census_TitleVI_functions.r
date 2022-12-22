@@ -3,7 +3,9 @@ outpath <- "T:/Tableau/tableauTitleVI/Datasources"
 
 # functions
 
-unzip_data <- function(yrrange="20172021", year=2021){
+unzip_data <- function(year=2021){
+  
+  yrrange <- paste0(year-4, year)
   # create a new folder if not exist
   mainDir <- "T:/Data/CENSUS"
   subDir <- sprintf("ACS%s.", yrrange)
@@ -34,11 +36,13 @@ unzip_data <- function(yrrange="20172021", year=2021){
 }
 
 # stren - string end number in the GeoID
-readtable <- function(yrrange="20172021",
+readtable <- function(year=2021,
                       tablenm="B01001", 
                       stren=21){
+  
+  yrrange <- paste0(year-4, year)
   mainDir <- "T:/Data/CENSUS"
-  subDir <- sprintf("ACS%s.", yrrange)
+  subDir <- sprintf("ACS%s", yrrange)
   newDir <- "TitleVI"
   inpath <- file.path(mainDir, subDir, newDir)
   
@@ -48,18 +52,25 @@ readtable <- function(yrrange="20172021",
   
   dat <- read.csv(paste0(inpath, "/", filenm), stringsAsFactors = FALSE)
   dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "X",
-                                          grep("EA|MA", colnames(dat), value = TRUE)))]
+                                          grep("EA|MA", colnames(dat), value = TRUE),
+                                          "GEO.id", "GEO.id2", "GEO.display.label"))]
   dat2 <- apply(dat2, 2, as.numeric)
-  dat <- cbind(as.data.frame(dat[-1,which(names(dat)=="GEO_ID")]), as.data.frame(dat2))
+  if('GEO.id' %in% colnames(dat)){
+    idcol = 'GEO.id'
+  }else{
+    idcol = 'GEO_ID'
+  }
+  dat <- cbind(as.data.frame(dat[-1,which(names(dat)==idcol)]), as.data.frame(dat2))
   colnames(dat)[1] <- "GEO_ID"
   dat$GEO_ID <- substr(dat$GEO_ID, 10, stren)
   return(dat)
 }
 
-read1yrtable <- function(yr = 21, tablenm = "B01001"){
+read1yrtable <- function(year = 2021, tablenm = "B01001"){
   
+  yr <- substr(as.character(year), 3, 4)
   inpath <- paste0("T:/Data/CENSUS/ACS20", yr)
-  files <- list.files(path = inpath,pattern = '.csv')
+  files <- list.files(path = inpath, pattern = '.csv')
   
   filenm <- grep("_with_ann|Data|_data_with_overlays", 
                  grep(tablenm, files, value = TRUE), 
@@ -70,40 +81,40 @@ read1yrtable <- function(yr = 21, tablenm = "B01001"){
     dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "X",
                                             grep("EA|MA", colnames(dat), value = TRUE)))]
   }else{
-    dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME"))]
+    dat2 <- dat[-1,-which(names(dat) %in% c("GEO_ID", "NAME", "GEO.id", "GEO.id2", "GEO.display.label"))]
   }
   
   dat2 <- apply(dat2, 2, as.numeric)
   return(dat2)
 }
 
-get_MPOavg_data <- function(yr=21, year=2021){
-  disabled = sum(read1yrtable(yr, "B18101")[c("B18101_004E","B18101_007E", 
+get_MPOavg_data <- function(year=2021){
+  disabled = sum(read1yrtable(year, "B18101")[c("B18101_004E","B18101_007E", 
                                               "B18101_010E", "B18101_013E",
                                               "B18101_016E", "B18101_019E",
                                               "B18101_023E", "B18101_026E",
                                               "B18101_029E", "B18101_032E",
                                               "B18101_035E", "B18101_038E")])
   
-  elderly = sum(read1yrtable(yr, "B01001")[c("B01001_020E","B01001_021E", "B01001_022E", 
+  elderly = sum(read1yrtable(year, "B01001")[c("B01001_020E","B01001_021E", "B01001_022E", 
                                              "B01001_023E","B01001_024E","B01001_025E",
                                              "B01001_044E","B01001_045E","B01001_046E", 
                                              "B01001_047E","B01001_048E","B01001_049E")])
   
-  minority = read1yrtable(yr, "B03002")
+  minority = read1yrtable(year, "B03002")
   minority = minority["B03002_001E"] - minority["B03002_003E"]
-  poverty = read1yrtable(yr, "B17017")["B17017_002E"]
-  renters = read1yrtable(yr, "B25044")["B25044_009E"]
-  unemployed = read1yrtable(yr, "B23025")["B23025_005E"]
-  zero_cars = sum(read1yrtable(yr, "B25044")[c("B25044_003E", "B25044_010E")])
+  poverty = read1yrtable(year, "B17017")["B17017_002E"]
+  renters = read1yrtable(year, "B25044")["B25044_009E"]
+  unemployed = read1yrtable(year, "B23025")["B23025_005E"]
+  zero_cars = sum(read1yrtable(year, "B25044")[c("B25044_003E", "B25044_010E")])
   
-  disabled.mpo = read1yrtable(yr, "B18101")["B18101_001E"]
-  elderly.mpo = read1yrtable(yr, "B01001")["B01001_001E"]
-  minority.mpo = read1yrtable(yr, "B03002")["B03002_001E"]
-  poverty.mpo = read1yrtable(yr, "B17017")["B17017_001E"]
-  renters.mpo = read1yrtable(yr, "B25044")["B25044_001E"]
-  unemployed.mpo = read1yrtable(yr, "B23025")["B23025_002E"]
-  zero_cars.mpo = read1yrtable(yr, "B25044")["B25044_001E"]
+  disabled.mpo = read1yrtable(year, "B18101")["B18101_001E"]
+  elderly.mpo = read1yrtable(year, "B01001")["B01001_001E"]
+  minority.mpo = read1yrtable(year, "B03002")["B03002_001E"]
+  poverty.mpo = read1yrtable(year, "B17017")["B17017_001E"]
+  renters.mpo = read1yrtable(year, "B25044")["B25044_001E"]
+  unemployed.mpo = read1yrtable(year, "B23025")["B23025_002E"]
+  zero_cars.mpo = read1yrtable(year, "B25044")["B25044_001E"]
   
   years = rep(year, 7)
   factor = c("Disabled",
@@ -144,19 +155,20 @@ get_MPOavg_data <- function(yr=21, year=2021){
   return(outdata)
 }
 
-get_TitleVI_data <- function(yrrange="20172021"){
+get_TitleVI_data <- function(year=2021){
+
   ############################## Get 5-year data ##############################
   # get data from all the tables
-  sex.by.age <- readtable(yrrange, tablenm="B01001")
-  race <- readtable(yrrange, tablenm = 'B03002')
-  english <- readtable(yrrange, tablenm = 'B16004')
-  poverty <- readtable(yrrange, tablenm = 'B17017')
-  employment <- readtable(yrrange, tablenm = 'B23025')
-  occupancy <- readtable(yrrange, tablenm = 'B25002')
-  poptenure <- readtable(yrrange, tablenm = 'B25008')
-  hhtenure <- readtable(yrrange, tablenm = 'B25010')
-  vehicles <- readtable(yrrange, tablenm = 'B25044')
-  disability <- readtable(yrrange, tablenm = 'B18101', stren = 20) 
+  sex.by.age <- readtable(year, tablenm="B01001")
+  race <- readtable(year, tablenm = 'B03002')
+  english <- readtable(year, tablenm = 'B16004')
+  poverty <- readtable(year, tablenm = 'B17017')
+  employment <- readtable(year, tablenm = 'B23025')
+  occupancy <- readtable(year, tablenm = 'B25002')
+  poptenure <- readtable(year, tablenm = 'B25008')
+  hhtenure <- suppressWarnings(readtable(year, tablenm = 'B25010'))
+  vehicles <- readtable(year, tablenm = 'B25044')
+  disability <- readtable(year, tablenm = 'B18101', stren = 20) 
   #head(names(disability))
   #head(disability)
   
@@ -263,9 +275,10 @@ get_TitleVI_data <- function(yrrange="20172021"){
   return(bgdata)
 }
 
-adjust_TitleVI_data <- function(yrrange="20172021", year=2021, export=FALSE){
+adjust_TitleVI_data <- function(year=2021, export=FALSE){
   
-  bgdata <- get_TitleVI_data(yrrange)
+  bgdata <- get_TitleVI_data(year)
+  
   
   # double check the data
   if(!('GEOID' %in% colnames(bgdata))){
@@ -275,7 +288,7 @@ adjust_TitleVI_data <- function(yrrange="20172021", year=2021, export=FALSE){
   vars <- names(bgdata)[!(grepl('Pct', names(bgdata)) | (names(bgdata) %in% c("GEO_ID", "CT_ID", "HHsize", 'Occupancy')))]
   
   bgpath <- "T:/Data/CENSUS/TIGER/Lane"
-  bg.shp <- st_read(dsn = bgpath, layer = paste0("MPO_blockgroup", year))
+  bg.shp <- st_read(dsn = bgpath, layer = paste0("MPO_blockgroup", year), quiet = TRUE)
   bginmpo <- read.csv(paste0(bgpath, "/blockgroup_in_mpo_", year, ".csv"))
   
   bgdata <- merge(bgdata, bginmpo, by = 'GEOID')
@@ -312,6 +325,7 @@ adjust_TitleVI_data <- function(yrrange="20172021", year=2021, export=FALSE){
   }
   bgdata$ComofConce <- rowSums(bgdata[, c("Minority", "Elderly", "Poor", "Disabled")])
   bgdata <- bgdata[, -which(names(bgdata) %in% c('CT_ID', 'InsideArea', 'PctInside', 'PctGQinside'))]
+  bgdata$Year <- rep(year, dim(bgdata)[1])
   
   bg.shp <- merge(bg.shp, bgdata, by="GEOID")
   bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
