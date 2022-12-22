@@ -1,6 +1,7 @@
 # This script was created by Dongmei Chen (dchen@lcog.org) to calculate data for the
 # commuter mode share and length of commute data dashboards 
 # (https://www.lcog.org/thempo/page/commuter-mode-shares) on May 12th, 2020
+# update on Dec. 2022 to transfer data to GIS_CLMPO
 
 inpath <- "T:/Data/TranspData for Web/JTW_AllYears/JTW ACS 5-Yr All Years/"
 outfolder <- "T:/Tableau/tableauJourneyToWork/Datasources/"

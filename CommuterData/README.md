@@ -31,9 +31,11 @@ The links above are different only on the table ID. Below descibes how to get th
 
 1. Download tables from the above [links](https://github.com/dongmeic/MPO_Data_Portal/tree/master/CommuterData#data-sources), extract and save the tables in the specific folders;
 
-2. Review and update the input files based on the [R script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CommuterData/ModeShare.r);
+2. Review and update the parameters based on the [R script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CommuterData/ModeShare.r);
 
-3. Refresh all extracts in `ModeShare_DC.twb` and `CommuteLength_DC.twb` in the T:\Tableau\tableauJourneyToWork\Workbooks folder.
+3. Run the [Jupyter Notebook](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CommuterData/update_mode_share.ipynb) to update data;
+
+4. Refresh all extracts in `ModeShare_DC2.twb` and `CommuteLength_DC2.twb` in the T:\Tableau\tableauJourneyToWork\Workbooks folder (`ModeShare_DC.twb` and `CommuteLength_DC.twb` used local data files and were updated to 2021)
 
 ## Functions
 Four functions are applied to read and reorganize the tables to get the input files: *readtable* to read the raw data, remove unused rows and columns, and convert the values from character to numeric; *get.data.by.mode* to reorganize the table B08141 and calculate mode share percent; *add.colon* to add colon to the time format from the tables B08302 and B08303; *get.time.data* to reorganize the tables B08302 and B08303 and calculate share percent.   
