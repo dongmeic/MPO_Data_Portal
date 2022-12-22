@@ -37,7 +37,8 @@ for(year in yearlist){
   print(year)
 }
 
-write.csv(df, paste0(outpath, "/TitleVIchangeovertime_review.csv"), row.names = FALSE)
+write.csv(df, paste0(outpath, "/TitleVIchangeovertime_review.csv"), 
+          row.names = FALSE)
 
 for(year in yearlist){
   if(year==yearlist[1]){

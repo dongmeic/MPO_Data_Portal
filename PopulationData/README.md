@@ -260,6 +260,11 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 
 [2017 - 2021](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EvjZBbfiNABIipwVKWXJguMBtUp9RR450yLlKyYb1yc9hg?e=IfZQjs)
 
+## Title VI data update since 2013
+
+The scripts on Title VI data calculation were reorganized to cover [data since 2013](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI_Since2013.r). 
+
+
 ## A data request related to Title VI from Springfield on July 2021
 
 City of Springfield requested the block group data for the Springfield area that shows zero car households and poverty in a map that can be zoomed into. The spatial data for the Springfield area can be downloaded [here](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData/TitleVI_Download). The dashboard [Zero-car households and households below poverty level by city](https://public.tableau.com/views/Zero-carhouseholdsandhouseholdsbelowpovertylevelbycity/TitleVI?:language=en-US&:display_count=n&:origin=viz_share_link) is also created for the data request. To download the selected data from the dashboard, click Download on the bottom right, choose a file format (recommend Data or Crosstab), confirm the download and make notes on the data. The column "ShowVar" indicates the variable selected and the column values are the values for the selected variable. Other variables are explained [above](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#variable-explanations-in-the-block-group-data), and you can search the variable name on the page. You can also download the complete MPO Title VI spatial data [here](https://github.com/dongmeic/MPO_Data_Portal/tree/master/PopulationData#download-links-for-the-clmpo-title-vi-data).
