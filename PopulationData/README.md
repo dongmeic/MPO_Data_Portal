@@ -268,7 +268,9 @@ The scripts on Title VI data calculation were reorganized to cover [data since 2
 
 2. Download and organize Title VI data since 2013 and run the [script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI_Since2013.r);
 
-3. [Upload Title VI data to SQL](https://github.com/dongmeic/MPO_Data_Portal/blob/master/Database/upload_Title_VI_data.ipynb)
+3. [Upload Title VI data to SQL](https://github.com/dongmeic/MPO_Data_Portal/blob/master/Database/upload_Title_VI_data.ipynb);
+
+4. Update [Tableau dashboard](https://public.tableau.com/views/CentralLaneMPOTitleVIOverTime/HistoricallyExcludedPopulations?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link) (can't read polygons directly from SQL) 
 
 
 ## A data request related to Title VI from Springfield on July 2021
