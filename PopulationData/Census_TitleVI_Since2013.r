@@ -53,6 +53,7 @@ for(year in yearlist){
 st_write(gdf, dsn = outpath, 
          layer = "MPO_BG_TitleVI_Since2013", 
          driver = "ESRI Shapefile", 
-         delete_layer=TRUE)
+         delete_layer=TRUE, 
+         row.names = FALSE)
 
-
+dat <- adjust_TitleVI_data(year=year)[[1]]

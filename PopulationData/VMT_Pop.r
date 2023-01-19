@@ -18,7 +18,7 @@ year = 2021
 
 # if any mistake found in the new data
 dt <- dt[dt$Year != year,]
-# VMT_State.xls is updated by mannually adding the most recent year data
+# VMT_State.xls is updated by manually adding the most recent year data
 # update the range by adding one to the number
 vmt_state <- read_excel(file.path(vmt_path, "VMT_State.xls"),
                         range = "G18:H18",

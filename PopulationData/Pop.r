@@ -17,88 +17,7 @@ head(pop)
 colnames(pop)
 unique(pop$GEOGRAPHY)
 
-############################## update US population ###############################
-update_pop <- function(years = c(2011:2019, 2021), geo="us"){
-  res <- vector("list",length(years))
-  names(res) <- years
-  
-  for (y in years){
-    # download data
-    if(geo=="us"){
-      ld <- as.data.frame(get_acs(year = y,
-                                  geography=geo,
-                                  survey='acs1',
-                                  variables = 'B01003_001E'))
-    }else{
-      ld <- as.data.frame(get_acs(year = y,
-                                  geography=geo,
-                                  survey='acs1',
-                                  variables = 'B01003_001E',
-                                  state="OR"))
-    }
-    
-    # reshape long to wide
-    ld2 <- reshape(ld,
-                   idvar="GEOID",
-                   timevar="variable",
-                   direction="wide",
-                   drop=c("NAME","moe"))
-    # insert into list and add in year
-    res[[y]] <- ld2
-    res[[y]]$year <- y
-  }
-  
-  # Combining the data frames together for final analysis
-  combo <- do.call("rbind",res)
-  return(combo[,-which(names(combo)=="GEOID")])
-}
-
-uspop <- update_pop()
-
-pop20 <- get_decennial(geography = "us",
-                       year = 2020,
-                       variables = 'P1_001N')
-
-pop10 <- get_decennial(geography = "us",
-                       year = 2010,
-                       variables = 'P001001')
-
-GEO <- "United States"
-for(year in 2010:2021){
-  if(year == 2010){
-    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop10$value
-  }else if(year == 2020){
-    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop20$value
-  }else{
-    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- uspop[uspop$year==year, "estimate.B01003_001"]
-  }
-}
-
-############################## update OR population ###############################
-orpop <- update_pop(geo = "state")
-
-pop20or <- get_decennial(geography = "state",
-                         year = 2020,
-                         variables = 'P1_001N',
-                         state="OR")
-
-pop10or <- get_decennial(geography = "state",
-                         year = 2010,
-                         variables = 'P001001',
-                         state="OR")
-
-GEO <- "Oregon"
-for(year in 2010:2021){
-  if(year == 2010){
-    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop10or$value
-  }else if(year == 2020){
-    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- pop20or$value
-  }else{
-    pop[pop$YEAR==year & pop$GEOGRAPHY==GEO, "POPULATION"] <- orpop[orpop$year==year, "estimate.B01003_001"]
-  }
-}
-
-############################## adding new data ###############################
+############################## check source data ###############################
 # need to review this data first
 raw1 <- read_excel("L:/Research&Analysis/Data/Population/Historical Population/Historical Population.xls",
                    skip=1)
@@ -107,19 +26,21 @@ raw <- read_excel("L:/Research&Analysis/Data/Population/Historical Population/Hi
                   skip=2, n_max=71)
 colnames(raw) <- colnames(raw1)
 raw <- raw[!is.na(raw$YEAR), ]
-newdata <- raw[raw$YEAR %in% c(2020, 2021),]
-dt <- data.frame(YEAR=c(rep(2020, 16), rep(2021, 16)),
-           DATE=c(rep(as.POSIXct("2020-04-01", 
+
+############################## adjust pop data ###############################
+pop[pop$YEAR %in% 2010:2021 & pop$GEOGRAPHY=="United States", "POPULATION"] <- raw[raw$YEAR %in% 2010:2021, "UNITED STATES"]
+pop[pop$YEAR %in% 2010:2021 & pop$GEOGRAPHY=="Oregon", "POPULATION"] <- raw[raw$YEAR %in% 2010:2021, "OREGON"]
+
+############################## adding new data ###############################
+newdata <- raw[raw$YEAR == 2022,]
+dt <- data.frame(YEAR=rep(2022, 16),
+           DATE= rep(as.POSIXct("2022-04-01", 
                                  format = "%Y-%m-%d",
                                  tz="UTC"), 16),
-                  rep(as.POSIXct("2021-04-01", 
-                                 format = "%Y-%m-%d",
-                                 tz="UTC"), 16)),
-           GEOGRAPHY=rep(unique(pop$GEOGRAPHY), 2),
-           POPULATION=c(t(newdata[,-1])[,1],t(newdata[,-1])[,2]))
+           GEOGRAPHY=rep(unique(pop$GEOGRAPHY), 1),
+           POPULATION=t(newdata[,-1])[,1]) #c(t(newdata[,-1])[,1],t(newdata[,-1])[,2])
 
-
-year <- 2021
+year <- 2022
 dt[dt$YEAR==year,"PERCENTAGE OF LANE COUNTY"] <- ifelse(!(dt[dt$YEAR==year,]$GEOGRAPHY %in% c("United States",
                                                                                               "Oregon", 
                                                                                               "Lane County (Total)")),
@@ -133,7 +54,7 @@ dt[dt$YEAR==year,"5-YEAR AVG. ANNUAL GROWTH RATE"] <- ((dt[dt$YEAR == year,
                                                                                                    "POPULATION"] - pop[pop$YEAR == year-5, 
                                                                                                                        "POPULATION"])))-1
 
-dt$GeoNum <- rep(1:16, 2)
+dt$GeoNum <- rep(1:16, 1)
 
 newpop <- rbind(pop, dt)
 newpop$DATE <- as.Date(newpop$DATE)
