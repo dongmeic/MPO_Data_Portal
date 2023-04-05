@@ -10,6 +10,8 @@ library(lubridate)
 library(stringr)
 
 options(warn = -1)
+path <- "T:/Data/LTD Data/MonthlyBoardings/"
+stop.path <- "T:/Data/LTD Data/StopsSince2011"
 
 # functions
 get.stop.coordinates <- function(m="October", yr=2011){
@@ -32,11 +34,13 @@ get.stop.coordinates <- function(m="October", yr=2011){
   return(stops.df)
 }
 
-path <- "T:/Data/LTD Data/MonthlyBoardings/"
-stop.path <- "T:/Data/LTD Data/StopsSince2011"
-
 get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
-  Counts <- read_excel(paste0(path, year, ' Ridership/LTD Ridership_', year, '-', m, '-', month, '.xlsx'), 
+  if(year >= 2022){
+    filepath = paste0(path, year, ' Ridership/LTD Ridership ', month,' ', year, '.xlsx')
+  }else{
+    filepath = paste0(path, year, ' Ridership/LTD Ridership_', year, '-', m, '-', month, '.xlsx')
+  }
+  Counts <- read_excel(filepath, 
                        sheet = "passenger counts", 
                        col_types = c("text", "date", "numeric", "date", 
                                      "date", "text", "text", "text", 
@@ -55,7 +59,18 @@ get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
   Counts$stop <- ifelse(nchar(Counts$stop) == 5, Counts$stop,
                         paste0(zeros[(5 - nchar(Counts$stop))], Counts$stop))
   MonthYear.stops <- unique(file_path_sans_ext(list.files(stop.path)))
-  if(year > 2019){
+  if(year == 2022){
+    if(month %in% c('January', 'February', 'March')){
+      stops.df <- get.stop.coordinates(m="October", yr=2019)
+      stops.df$MonthYear <- "October 2019"
+    }else if(month %in% c('October', 'November', 'December')){
+      stops.df <- get.stop.coordinates(m="October", yr=2022)
+      stops.df$MonthYear <- "October 2022"
+    }else{
+      stops.df <- get.stop.coordinates(m="April", yr=2020)
+      stops.df$MonthYear <- "April 2020"
+    }
+  }else if(year > 2019){
     stops.df <- get.stop.coordinates(m="October", yr=2019)
     stops.df$MonthYear <- "October 2019"
   }else if(month %in% c('Jan', 'Feb', 'Mar')){
@@ -91,6 +106,26 @@ get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
   Counts$month <- month(Counts$date, label=TRUE, abbr=FALSE)
   Counts$year <- year(Counts$date) 
   return(Counts)
+}
+
+get.YearlyCounts <- function(year=2022){
+  months = c('January', 'February', 'March', 'April', 'May', 'June', 
+             'July', 'August', 'September', 'October', 'November', 'December')
+  ptm <- proc.time()
+  for(month in months){
+    if(month == 'January'){
+      ndf <- get.PassengerCounts(year=year, month = month, m = NULL)
+    }else{
+      counts <- get.PassengerCounts(year=year, month = month, m = NULL)
+      ndf <- rbind(ndf, counts)
+    }
+    print(paste(year, month))
+  }
+  print(proc.time() - ptm)
+  ndf$date <- as.character(ndf$date)
+  ndf$trip_end <- as.character(ndf$trip_end)
+  ndf$time <- as.character(ndf$time)
+  return(ndf)
 }
 
 get.MultiYearCounts <- function(years = 2017:2021,

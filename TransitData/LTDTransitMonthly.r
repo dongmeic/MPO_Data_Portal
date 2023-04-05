@@ -4,6 +4,11 @@
 
 source('T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r')
 
+# in 2022
+df <- read.csv("T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv")
+ndf <- get.YearlyCounts()
+# run to update the data
+
 # after 2021 June
 df <- read.csv("T:/Tableau/tableauTransit/Datasources/datacopy/MonthlyPassengerCounts.csv")
 ndf <- get.MultiYearCounts(years = 2021:2021,
@@ -11,7 +16,10 @@ ndf <- get.MultiYearCounts(years = 2021:2021,
                            endmonth = 12)
 
 ndf <- rbind(df, ndf)
+# this might take a while
+ptm <- proc.time()
 write.csv(ndf, "T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv", row.names = FALSE)
+print(proc.time() - ptm)
 
 oldaggdata <- read.csv("T:/Tableau/tableauTransit/Datasources/datacopy/AggPassengerCounts.csv")
 aggdata <-aggregate(x=ndf[c('ons', 'offs', 'load')], 
