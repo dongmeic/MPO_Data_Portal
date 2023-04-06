@@ -9,8 +9,15 @@ library(tools)
 library(lubridate)
 
 source("T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/Bikes_on_Buses_Functions.r")
-inpath <- "T:/Data/LTD Data/BikeOnBuses/Monthly"
+inpath <- "T:/Data/LTD Data/MonthlyBoardings/2022 Ridership"
+
 outfolder <- "T:/Tableau/tableauBikesOnBuses/Datasources"
+data <- read.csv(paste0(outfolder, "/DataCopy/AllBikeCounts.csv"))
+ndata <- get_bikecounts_yr(year=2022, myrs=c("April 2020", "October 2022"))
+# run the update
+
+############################# 2021 ##################################
+inpath <- "T:/Data/LTD Data/BikeOnBuses/Monthly"
 data <- read.csv(paste0(outfolder, "/DataCopy/AllBikeCounts.csv"))
 #excel_sheets(paste0(inpath,"/LTD Bike Count_2021.xlsx"))
 ndata <- get_bikecounts_yr(2021)

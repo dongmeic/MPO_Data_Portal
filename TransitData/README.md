@@ -9,10 +9,10 @@ Data on the counts of passengers and bikes on the buses are provided by LTD via 
 ## Steps
 1. Update the functions according to data needs;
 2. Update the stops folder and routes if new data available;
-3. run data update;
-4. refresh Tableau extract;
-5. make a data copy;
-6. update the MPO web content as needed.
+3. Run data update;
+4. Refresh Tableau extract;
+5. Make a data copy;
+6. Update the MPO web content as needed.
 
 ## Functions
 

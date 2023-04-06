@@ -4,18 +4,23 @@
 
 stop.path <- "T:/Data/LTD Data/StopsSince2011"
 
-get_bikecounts_yr <- function(year, myr="April 2020"){
-  df <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
-                       sheetName = paste0("bike count_Apr", 
-                                          substring(year, 3, 4)),
-                       m="April", yr=year,
-                       myr=myr)
-  ndf <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
-                        sheetName = paste0("bike count_Oct", 
-                                           substring(year, 3, 4)),
-                        m="October", yr=year,
-                        myr=myr)
-  data <- rbind(df, ndf)
+get_bikecounts_yr <- function(year, myrs="April 2020"){
+  if(year >= 2022){
+    data <- get_bikecounts(fileName = paste0("LTD Ridership April and October ", year),
+                   sheetName = "bike counts",
+                   myrs=myrs)
+  }else{
+    df <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
+                         sheetName = paste0("bike count_Apr", 
+                                            substring(year, 3, 4)),
+                         myrs=myrs[1])
+    ndf <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
+                          sheetName = paste0("bike count_Oct", 
+                                             substring(year, 3, 4)),
+                          myrs=myrs[2])
+    data <- rbind(df, ndf)
+  }
+  
   data$date <- as.character(data$date)
   data$trip_end <- as.character(data$trip_end)
   data$time <- as.character(data$time)
@@ -25,9 +30,7 @@ get_bikecounts_yr <- function(year, myr="April 2020"){
 # require the input path (inpath)
 get_bikecounts <- function(fileName = "LTD Bike Count_2021",
                            sheetName = "bike count_Apr21",
-                           m="April",
-                           yr=2021,
-                           myr="October 2019"){
+                           myrs="October 2019"){
   df <- read_excel(paste0(inpath,"/", fileName, ".xlsx"), 
                    sheet = sheetName, 
                    col_types = c("text", "date", "numeric", "date", 
@@ -44,15 +47,37 @@ get_bikecounts <- function(fileName = "LTD Bike Count_2021",
   zeros <- c("0", "00", "000", "0000")
   df$stop <- ifelse(nchar(df$stop) == 5, df$stop,
                     paste0(zeros[(5 - nchar(df$stop))], df$stop))
-  stops.df <- get.stop.coordinates(strsplit(myr, " ")[[1]][1], 
-                                   as.numeric(strsplit(myr, " ")[[1]][2]))
-  df <- merge(df, stops.df, by = 'stop')
+  
+  df$m <- month(df$date)
+  df$M <- as.character(month(df$date, label=TRUE, abbr=FALSE))
+  df$Y <- year(df$date)
   months <- c("April", "October")
   seasons <- c("Spring", "Fall")
-  df$Season <- rep(paste(seasons[months==m], yr), dim(df)[1])
-  df$MonthYear <- paste(as.character(month(df$date, label=TRUE, abbr=FALSE)),
-                          year(df$date))
-  
+  df$Season <- mapply(function(x, y) paste(seasons[months==x], y), df$M, df$Y)
+  df$MonthYear <- paste(df$M, df$Y)
+  if(length(myrs)==1){
+    stops.df <- get.stop.coordinates(strsplit(myrs, " ")[[1]][1], 
+                                     as.numeric(strsplit(myrs, " ")[[1]][2]))
+    stops.df$stop <- ifelse(nchar(stops.df$stop) == 5, stops.df$stop,
+                            paste0(zeros[(5 - nchar(stops.df$stop))], stops.df$stop))
+    df <- merge(df, stops.df, by = 'stop')
+  }else{
+    for(myr in myrs){
+      stops.df <- get.stop.coordinates(strsplit(myr, " ")[[1]][1], 
+                                       as.numeric(strsplit(myr, " ")[[1]][2]))
+      stops.df$stop <- ifelse(nchar(stops.df$stop) == 5, stops.df$stop,
+                        paste0(zeros[(5 - nchar(stops.df$stop))], stops.df$stop))
+      if(myr==myrs[1]){
+        sdf <- merge(df[df$m==4,], stops.df, by = 'stop')
+      }else{
+        nsdf <- merge(df[df$m==10,], stops.df, by = 'stop')
+        df <- rbind(sdf, nsdf)
+      }
+    }
+  }
+  drop <- c('m', 'M', 'Y')
+  df = df[,!(names(df) %in% drop)]
+
   dates <- sort(unique(df$date))
   routes <- unique(df$route)
   for(i in 1:length(dates)){
