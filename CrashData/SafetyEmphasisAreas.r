@@ -7,6 +7,8 @@ library(sf)
 library(dplyr)
 library(reshape2)
 
+# Export data from geodatabase first
+
 ReadFromSQL <- FALSE
 
 if(ReadFromSQL){
@@ -17,7 +19,7 @@ if(ReadFromSQL){
   currTableDF <- sqlQuery(dbhandle, currTableSQL)
 }
 
-fgdb <- "T:/Data/Safety/Lane_County_Crashes/LaneCounty_Crashes_SpatializedDecode.gdb"
+fgdb <- "T:/Data/Safety/Lane_County_Crashes/Lane_County_Crashes__Spatialized_Decode.gdb"
 outpath <- "//clsrv111.int.lcog.org/transpor/Tableau/tableauSafetyEmphasisAreas/Datasources/"
 
 # What output should look like
@@ -32,11 +34,12 @@ if(CheckOldData){
 readData = "csv"
 if(readData == "gdb"){
   # Read data sources, this will take a while to complete
-  data <- readOGR(dsn = fgdb, layer = "Crash", stringsAsFactors = FALSE)
+  data <- st_read(dsn = fgdb, layer = "Crash", stringsAsFactors = FALSE)
   vhcl <- st_read(dsn = fgdb, layer = "Crash_Vehicle", stringsAsFactors = FALSE)
   # Read the participant table for the young drivers and unlicensed drivers measures
   partic <- st_read(dsn = fgdb, layer = "Crash_Participant", stringsAsFactors = FALSE)
 }else{
+  # read historical data, need to export data first
   data <- read.csv(paste0(outpath, "crash.csv"))
   data[data=="-99999"| data==-99999] <- NA
   vhcl <- read.csv(paste0(outpath, "crash_vehicle.csv"))

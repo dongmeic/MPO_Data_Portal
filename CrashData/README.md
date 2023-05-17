@@ -25,11 +25,11 @@ This dashboard requires updates in *LaneAgeGroupPop.xlsx* in T:\Tableau\tableauC
 
 3. [**VMT Crash Rates**](https://www.lcog.org/thempo/page/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb
 
-This dashboard requires updates in *VMT_by_FuncClass.xlsx* in T:\Tableau\tableauCrash\Workbooks, sourced from ODOT VMT report. The detailed steps are addressed in T:\Data\VMT\VMT HPMS\update_notes.txt. The results are calculated in a spreadsheet ("T:\Data\VMT\VMT HPMS\CalculateVMT.xlsx") using daily vehicle miles, the number of days in a year, and unit conversion. Urban collectors include major and minor collectors. Refresh the extract after the data update.
+This dashboard requires updates in *VMT_by_FuncClass.xlsx* in T:\Tableau\tableauCrash\Datasources, sourced from ODOT VMT report. The detailed steps are addressed in T:\Data\VMT\VMT HPMS\update_notes.txt. The results are calculated in a spreadsheet ("T:\Data\VMT\VMT HPMS\CalculateVMT.xlsx") using daily vehicle miles, the number of days in a year, and unit conversion. Urban collectors include major and minor collectors. Refresh the extract after the data update.
 
 4. [**Transportation Safety Emphasis Areas**](https://www.lcog.org/thempo/page/Transportation-Safety-Emphasis-Areas) - EmphasisAreas_UGB.twb
 
-This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau_UGB.csv*, by running the script *SafetyEmphasisAreas.r*.
+This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau_UGB.csv*, by running the script *SafetyEmphasisAreas.r*. [Export data](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CrashData/read_crash_data.ipynb) from `T:/Data/Safety/Lane_County_Crashes/Lane_County_Crashes__Spatialized_Decode.gdb` as CSV to save time and avoid errors in reading data from geodatabase. Errors can occur when data is compressed in geodatabase.  
 
 5. [**NHTSA Core Safety Measures**](https://www.lcog.org/thempo/page/NHTSA-Core-Safety-Measures) - CoreSafetyMeasures_Parameter_DC.twb
 
