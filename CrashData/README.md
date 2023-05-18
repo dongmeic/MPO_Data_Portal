@@ -35,8 +35,8 @@ This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau
 
 6. [**FARS Data**](https://www.lcog.org/thempo/page/fars-data) - US_FARS_VMT Fatality Rate OneMap_DC.twb
 
-This dashboard requires updates in *US_FARS_data.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm) and National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx).
-Download [VM2](https://www.fhwa.dot.gov/policyinformation/statistics/2020/vm2.cfm), copy the TOTAL column and save it as the CSV format. Download [NHTSA](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) and save it as the XLSX format. Run the [script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CrashData/US_FARS.r) to update the input files. Refresh the extract and update the dashboard.
+This dashboard requires updates in *US_FARS_data.xlsx*, sourced from Federal Highway Administration (FHWA) [Table VM-2](https://www.fhwa.dot.gov/policyinformation/statistics/2021/vm2.cfm) and National Highway Traffic Safety Administration (NHTSA) [FARS table](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx).
+Download [VM2](https://www.fhwa.dot.gov/policyinformation/statistics/2021/vm2.cfm), copy the TOTAL column and save it as the CSV format. Download [NHTSA](https://www-fars.nhtsa.dot.gov/States/StatesCrashesAndAllVictims.aspx) and save it as the XLSX format. Run the [script](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CrashData/US_FARS.r) to update the input files. Refresh the extract and update the dashboard.
 
 ## Data Sources
 
