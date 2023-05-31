@@ -10,7 +10,7 @@ library(rjson)
 library(tidycensus)
 library(sf)
 
-source('T:/DCProjects/GitHub/MPO_Data_Portal/PopulationData/Census_TitleVI_functions.r')
+source('C:/Users/clid1852/.0GitHub/MPO_Data_Portal/PopulationData/Census_TitleVI_functions.r')
 
 ############################## Download data ##############################
 
@@ -39,7 +39,7 @@ unzip_data(year=year)
 ############################## Read data ##############################
 # get data for change over time
 # factor
-outdata <- get_MPOavg_data(year = year)
+outdata <- get_geoavg_data(year = year)
 
 ############################## Update change over time ##############################
 # output should look like this, use data from ACS2013-2017

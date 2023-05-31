@@ -13,7 +13,7 @@ The [Population Data](https://www.lcog.org/thempo/page/population-data) dashboar
 
 ## Data Sources for the Title VI dashboards
 
-Data from ten tables (1 - 10) within block group in [Lane County](https://data.census.gov/cedsci/all?g=0500000US41039%241500000), one table (11 - B18101) within census tract (for 1 year and 5 year respectively), and nine tables (12 - 19) by MPO (Eugene, OR urbanized areas) were collected for the Title VI dashboard (the links are updated with the most-recent data, as current as 2021):
+Data from ten tables (1 - 10) within block group in [Lane County](https://data.census.gov/cedsci/all?g=0500000US41039%241500000), one table (11 - B18101) within census tract (for 1 year and 5 year respectively), and nine tables (12 - 20) by MPO (Eugene, OR urbanized areas) were collected for the Title VI dashboard (the links are updated with the most-recent data, as current as 2021):
 
 1. [B01003 Total Population](https://data.census.gov/cedsci/table?q=B01003&g=0500000US41039%241500000&tid=ACSDT5Y2021.B01003)
 
@@ -37,7 +37,7 @@ Data from ten tables (1 - 10) within block group in [Lane County](https://data.c
 
 11. [B18101 Sex By Age By Disability Status 5Y](https://data.census.gov/cedsci/table?q=B18101%3A%20SEX%20BY%20AGE%20BY%20DISABILITY%20STATUS&g=0500000US41039%241400000&tid=ACSDT5Y2021.B18101)
 
-In 2020, [only 5-year data is available](https://www.census.gov/newsroom/press-releases/2021/changes-2020-acs-1-year.html) for the below data sets that were applied with 1-year data before 2020. The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Uncheck the 5-year option before downloading data. Below links provide data in 2019.
+In 2020, [only 5-year data is available](https://www.census.gov/newsroom/press-releases/2021/changes-2020-acs-1-year.html) for the below data sets that were applied with 1-year data before and after 2020. The 1-year data is limited in the Eugene, OR Urbanized Area (2010) Geography. Uncheck the 5-year option before downloading data. Below links provide data in 2021.
 
 12. [B01001 Sex By Age 1Y](https://data.census.gov/cedsci/table?g=400C100US28117&d=ACS%201-Year%20Estimates%20Detailed%20Tables&tid=ACSDT1Y2021.B01001&hidePreview=false), [B01001 Sex By Age 5Y](https://data.census.gov/cedsci/table?q=B01001&g=400XX00US28117&tid=ACSDT5Y2021.B01001)
 
@@ -298,7 +298,7 @@ Repeat the above two steps for Douglas County. Use the same links and edit the f
 
 Extract and save files at T Drive (\\clsrv111.int.lcog.org\transpor\Data\CENSUS\ACS20152019\TitleVI\Others\).
 
-Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=Block+Groups). Save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties (only to check whether the census tracts are connected)
+Download Oregon block group boundary from [TIGER/Line](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2021&layergroup=Block+Groups). Save separately block groups of Lane (COUNTYFP = '039') and Douglas (COUNTYFP = '019') counties (only to check whether the census tracts are connected)
 
 3. Process data
 
@@ -307,6 +307,10 @@ The detailed data processing steps follow the script *TitleVI_Lane_Douglas.r*, a
 4. Visualize data
 
 Read the shapefile in Tableau. Create the map and plots following the 'Communities of Concern' dashboard settings. The dashboard "Lane_Douglas.twb" is saved at T:\Data\CENSUS\ACS20152019\TitleVI\others\processed.
+
+## A data request on Lane County Title VI on May 30, 2023
+
+Data is available from the MPO Title VI work. The map is available [here](https://arcg.is/0CGzOT).
 
 ## Steps for the demographic data updates
 

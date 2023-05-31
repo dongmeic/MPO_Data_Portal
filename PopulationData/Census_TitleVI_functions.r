@@ -3,36 +3,48 @@ outpath <- "T:/Tableau/tableauTitleVI/Datasources"
 
 # functions
 
-unzip_data <- function(year=2021){
+unzip_data <- function(subfolder='', year=2021, mode='both'){
   
-  yrrange <- paste0(year-4, year)
-  # create a new folder if not exist
   mainDir <- "T:/Data/CENSUS"
-  subDir <- sprintf("ACS%s.", yrrange)
-  # prints an warning if exists
-  dir.create(file.path(mainDir, subDir))
-  newDir <- "TitleVI"
-  dir.create(file.path(mainDir, subDir, newDir))
-  # set the work directory for downloads
-  setwd(file.path(mainDir, subDir))
-  #### manual download 5-yr data ####
-  # extract the downloaded files
-  zipfiles <- list.files(path = ".", pattern = "zip", all.files = TRUE)
-  for(zipfile in zipfiles){
-    unzip(zipfile = zipfile, exdir = paste0(getwd(), "/", newDir))
+  
+  if(mode %in% c('5yr', 'both')){
+    yrrange <- paste0(year-4, year)
+    # create a new folder if not exist
+    subDir <- sprintf("ACS%s", yrrange)
+    newDir <- "TitleVI"
+    if(subfolder != ''){
+      dir.create(file.path(mainDir, subDir, subfolder, newDir))
+    }else{
+      dir.create(file.path(mainDir, subDir, newDir))
+    }
+    # set the work directory for downloads
+    setwd(file.path(mainDir, subDir))
+    #### manual download 5-yr data ####
+    # extract the downloaded files
+    zipfiles <- list.files(path = ".", pattern = "zip", all.files = TRUE)
+    for(zipfile in zipfiles){
+      unzip(zipfile = zipfile, exdir = paste0(getwd(), "/", newDir))
+    }
   }
   
-  # repeat the process for the 1-year data
-  subDir1yr <- sprintf("ACS%d.", year)
-  path1yr <- file.path(mainDir, subDir1yr)
-  dir.create(path1yr)
-  #### manual download 1-yr data #### 
-  # the geography is urbanized area instead 
-  # then extract the files
-  zipfiles <- list.files(path = path1yr, pattern = "zip", all.files = TRUE)
-  for(zipfile in zipfiles){
-    unzip(zipfile = paste0(path1yr, "/", zipfile), exdir = path1yr)
+  if(mode %in% c('1yr', 'both')){
+    # repeat the process for the 1-year data
+    subDir1yr <- sprintf("ACS%d", year)
+    if(subfolder != ''){
+      path1yr <- file.path(mainDir, subDir1yr, subfolder)
+    }else{
+      path1yr <- file.path(mainDir, subDir1yr)
+    }
+    dir.create(path1yr)
+    #### manual download 1-yr data #### 
+    # the geography is urbanized area instead 
+    # then extract the files
+    zipfiles <- list.files(path = path1yr, pattern = "zip", all.files = TRUE)
+    for(zipfile in zipfiles){
+      unzip(zipfile = paste0(path1yr, "/", zipfile), exdir = path1yr)
+    }
   }
+
 }
 
 # stren - string end number in the GeoID
@@ -66,10 +78,15 @@ readtable <- function(year=2021,
   return(dat)
 }
 
-read1yrtable <- function(year = 2021, tablenm = "B01001"){
+read1yrtable <- function(year = 2021, geo="MPO", tablenm = "B01001"){
   
   yr <- substr(as.character(year), 3, 4)
-  inpath <- paste0("T:/Data/CENSUS/ACS20", yr)
+  if(geo=="Lane"){
+    inpath <- paste0("T:/Data/CENSUS/ACS20", yr, "/", geo)
+  }else{
+    inpath <- paste0("T:/Data/CENSUS/ACS20", yr)
+  }
+  
   files <- list.files(path = inpath, pattern = '.csv')
   
   filenm <- grep("_with_ann|Data|_data_with_overlays", 
@@ -88,33 +105,33 @@ read1yrtable <- function(year = 2021, tablenm = "B01001"){
   return(dat2)
 }
 
-get_MPOavg_data <- function(year=2021){
-  disabled = sum(read1yrtable(year, "B18101")[c("B18101_004E","B18101_007E", 
+get_geoavg_data <- function(year=2021, geo="MPO"){
+  disabled = sum(read1yrtable(year, geo=geo, "B18101")[c("B18101_004E","B18101_007E", 
                                               "B18101_010E", "B18101_013E",
                                               "B18101_016E", "B18101_019E",
                                               "B18101_023E", "B18101_026E",
                                               "B18101_029E", "B18101_032E",
                                               "B18101_035E", "B18101_038E")])
   
-  elderly = sum(read1yrtable(year, "B01001")[c("B01001_020E","B01001_021E", "B01001_022E", 
+  elderly = sum(read1yrtable(year, geo=geo, "B01001")[c("B01001_020E","B01001_021E", "B01001_022E", 
                                              "B01001_023E","B01001_024E","B01001_025E",
                                              "B01001_044E","B01001_045E","B01001_046E", 
                                              "B01001_047E","B01001_048E","B01001_049E")])
   
-  minority = read1yrtable(year, "B03002")
+  minority = read1yrtable(year, geo=geo, "B03002")
   minority = minority["B03002_001E"] - minority["B03002_003E"]
-  poverty = read1yrtable(year, "B17017")["B17017_002E"]
-  renters = read1yrtable(year, "B25044")["B25044_009E"]
-  unemployed = read1yrtable(year, "B23025")["B23025_005E"]
-  zero_cars = sum(read1yrtable(year, "B25044")[c("B25044_003E", "B25044_010E")])
+  poverty = read1yrtable(year, geo=geo, "B17017")["B17017_002E"]
+  renters = read1yrtable(year, geo=geo, "B25044")["B25044_009E"]
+  unemployed = read1yrtable(year, geo=geo, "B23025")["B23025_005E"]
+  zero_cars = sum(read1yrtable(year, geo=geo, "B25044")[c("B25044_003E", "B25044_010E")])
   
-  disabled.mpo = read1yrtable(year, "B18101")["B18101_001E"]
-  elderly.mpo = read1yrtable(year, "B01001")["B01001_001E"]
-  minority.mpo = read1yrtable(year, "B03002")["B03002_001E"]
-  poverty.mpo = read1yrtable(year, "B17017")["B17017_001E"]
-  renters.mpo = read1yrtable(year, "B25044")["B25044_001E"]
-  unemployed.mpo = read1yrtable(year, "B23025")["B23025_002E"]
-  zero_cars.mpo = read1yrtable(year, "B25044")["B25044_001E"]
+  disabled.tot = read1yrtable(year, geo=geo, "B18101")["B18101_001E"]
+  elderly.tot = read1yrtable(year, geo=geo, "B01001")["B01001_001E"]
+  minority.tot = read1yrtable(year, geo=geo, "B03002")["B03002_001E"]
+  poverty.tot = read1yrtable(year, geo=geo, "B17017")["B17017_001E"]
+  renters.tot = read1yrtable(year, geo=geo, "B25044")["B25044_001E"]
+  unemployed.tot = read1yrtable(year, geo=geo, "B23025")["B23025_002E"]
+  zero_cars.tot = read1yrtable(year, geo=geo, "B25044")["B25044_001E"]
   
   years = rep(year, 7)
   factor = c("Disabled",
@@ -140,13 +157,13 @@ get_MPOavg_data <- function(year=2021){
                   unemployed,
                   zero_cars)
   
-  mpototal = c(disabled.mpo,
-               elderly.mpo,
-               minority.mpo,
-               poverty.mpo,
-               renters.mpo,
-               unemployed.mpo,
-               zero_cars.mpo)
+  geototal = c(disabled.tot,
+               elderly.tot,
+               minority.tot,
+               poverty.tot,
+               renters.tot,
+               unemployed.tot,
+               zero_cars.tot)
   
   outdata <- data.frame(Year=years, Factor=factor, Universe=universe, 
                         FactorTotal=factortotal, MPOTotal=mpototal)
@@ -275,7 +292,7 @@ get_TitleVI_data <- function(year=2021){
   return(bgdata)
 }
 
-adjust_TitleVI_data <- function(year=2021, export=FALSE){
+adjust_TitleVI_data <- function(year=2021, geo="MPO", export=FALSE){
   
   bgdata <- get_TitleVI_data(year)
   
@@ -285,57 +302,58 @@ adjust_TitleVI_data <- function(year=2021, export=FALSE){
     colnames(bgdata)[colnames(bgdata)=='GEO_ID'] <- 'GEOID'
   }
   
-  vars <- names(bgdata)[!(grepl('Pct', names(bgdata)) | (names(bgdata) %in% c("GEO_ID", "CT_ID", "HHsize", 'Occupancy')))]
+  vars <- names(bgdata)[!(grepl('Pct', names(bgdata)) | (names(bgdata) %in% c("GEOID", "CT_ID", "HHsize", 'Occupancy')))]
   
   bgpath <- "T:/Data/CENSUS/TIGER/Lane"
-  bg.shp <- st_read(dsn = bgpath, layer = paste0("MPO_blockgroup", year), quiet = TRUE)
-  bginmpo <- read.csv(paste0(bgpath, "/blockgroup_in_mpo_", year, ".csv"))
   
-  bgdata <- merge(bgdata, bginmpo, by = 'GEOID')
-  
-  # correct data with percentage in MPO
-  for(var in vars[-1]){
-    # if(var == "GQPop"){
-    #   bgdata[,var] <- bgdata[,var] * bgdata$PctGQinside
-    # }else{
-    bgdata[,var] <- bgdata[,var] * bgdata$PctInside
-    # }
+  if(geo=="MPO"){
+    bg.shp <- st_read(dsn = bgpath, layer = paste0("MPO_blockgroup", year), quiet = TRUE)
+    bginmpo <- read.csv(paste0(bgpath, "/blockgroup_in_mpo_", year, ".csv"))
+    bgdata <- merge(bgdata, bginmpo, by = 'GEOID')
+    # correct data with percentage in MPO
+    for(var in vars[-1]){
+      # if(var == "GQPop"){
+      #   bgdata[,var] <- bgdata[,var] * bgdata$PctGQinside
+      # }else{
+      bgdata[,var] <- bgdata[,var] * bgdata$PctInside
+      # }
+    }
+    bgdata <- bgdata[bgdata$PctInside != 0,]
+  }else{
+    bg.shp <- st_read(dsn = bgpath, layer = paste0("Lane_BlockGroup_", year), quiet = TRUE)
   }
   
-  # get MPO data only
-  #bgdata <- bgdata[bgdata$InsideArea != 0,]
-  bgdata <- bgdata[bgdata$PctInside != 0,]
   selected <- names(bgdata)[names(bgdata) %in% grep('Pct', names(bgdata), value = TRUE) &
-                              !(names(bgdata) %in% names(bginmpo))]
-  #mpoavg <- apply(bgdata[,selected], 2, mean, na.rm=TRUE)
-  mpoavg <- c(sum(bgdata$PopEld)/sum(bgdata$TotalPOP), 
-              sum(bgdata$PopNI5Disa)/sum(bgdata$PopNInst5),
-              sum(bgdata$HHPoor)/sum(bgdata$HH),
-              sum(bgdata$PopMinor)/sum(bgdata$TotalPOP),
-              sum(bgdata$PopWrkF16*bgdata$PctUnEmp)/sum(bgdata$PopWrkF16),
-              sum(bgdata$Pop5yrLEP)/sum(bgdata$PopGE5),
-              sum(bgdata$HH0car)/sum(bgdata$HH),
-              sum(bgdata$RenterHHs)/sum(bgdata$HH))
-  names(mpoavg) <- selected
+                              !(names(bgdata) %in% c("GEOID", "PctInside"))]
+  #geoavg <- apply(bgdata[,selected], 2, mean, na.rm=TRUE)
+  geoavg <- c(sum(bgdata$PopEld, na.rm = TRUE)/sum(bgdata$TotalPOP, na.rm = TRUE), 
+              sum(bgdata$PopNI5Disa, na.rm = TRUE)/sum(bgdata$PopNInst5, na.rm = TRUE),
+              sum(bgdata$HHPoor, na.rm = TRUE)/sum(bgdata$HH, na.rm = TRUE),
+              sum(bgdata$PopMinor, na.rm = TRUE)/sum(bgdata$TotalPOP, na.rm = TRUE),
+              sum(bgdata$PopWrkF16*bgdata$PctUnEmp, na.rm = TRUE)/sum(bgdata$PopWrkF16, na.rm = TRUE),
+              sum(bgdata$Pop5yrLEP, na.rm = TRUE)/sum(bgdata$PopGE5, na.rm = TRUE),
+              sum(bgdata$HH0car, na.rm = TRUE)/sum(bgdata$HH, na.rm = TRUE),
+              sum(bgdata$RenterHHs, na.rm = TRUE)/sum(bgdata$HH, na.rm = TRUE))
+  names(geoavg) <- selected
   variables <- c("Elderly", "Disabled", "Poor", "Minority", 
                  "UnEmp", "LEP", "HHzerocar", "Renter")
   
   for(var in selected){
-    bgdata[,variables[which(selected == var)]] <- ifelse(bgdata[,var] > mpoavg[var], 1, 0)
+    bgdata[,variables[which(selected == var)]] <- ifelse(bgdata[,var] > geoavg[var], 1, 0)
   }
   bgdata$ComofConce <- rowSums(bgdata[, c("Minority", "Elderly", "Poor", "Disabled")])
   bgdata <- bgdata[, -which(names(bgdata) %in% c('CT_ID', 'InsideArea', 'PctInside', 'PctGQinside'))]
   bgdata$Year <- rep(year, dim(bgdata)[1])
   
-  bg.shp <- merge(bg.shp, bgdata, by="GEOID")
+  bg.shp <- merge(bgdata, bg.shp, by="GEOID")
   bg.shp$ComofConce <- ifelse(is.na(bg.shp$ComofConce), 0, bg.shp$ComofConce)
   bg.shp$PctPoor <- ifelse(is.na(bg.shp$PctPoor), 0, bg.shp$PctPoor)
   
   if(export){
-    write.csv(bgdata, paste0(outpath, "/MPO_summary.csv"), row.names = FALSE)
+    write.csv(bgdata, paste0(outpath, "/", geo, "_summary.csv"), row.names = FALSE)
     # warnings on "Shape_Area" can be ignored
-    st_write(bg.shp, dsn = outpath, layer = "MPO_BG_TitleVI", driver = "ESRI Shapefile", delete_layer=TRUE)
+    st_write(bg.shp, dsn = outpath, layer = paste0(geo, "_BG_TitleVI"), driver = "ESRI Shapefile", delete_layer=TRUE)
   }
   
-  return(list(bgdata, mpoavg, bg.shp))
+  return(list(bgdata, geoavg, bg.shp))
 }
