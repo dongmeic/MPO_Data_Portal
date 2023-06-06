@@ -8,8 +8,16 @@ library(dplyr)
 library(tools)
 library(lubridate)
 
-source("T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/Bikes_on_Buses_Functions.r")
-inpath <- "T:/Data/LTD Data/MonthlyBoardings/2022 Ridership"
+source("C:/Users/clid1852/.0GitHub/MPO_Data_Portal/TransitData/Bikes_on_Buses_Functions.r")
+
+############################# 2023 ##################################
+year <- 2023
+inpath <- paste0("T:/Data/LTD Data/MonthlyBoardings/", year, " Ridership")
+ndata <- get_bikecounts_yr(year=year, myrs=c("October 2022"), MY="April 2023")
+
+############################# 2022 ##################################
+year <- 2022
+inpath <- paste0("T:/Data/LTD Data/MonthlyBoardings/", year, " Ridership")
 
 outfolder <- "T:/Tableau/tableauBikesOnBuses/Datasources"
 data <- read.csv(paste0(outfolder, "/DataCopy/AllBikeCounts.csv"))

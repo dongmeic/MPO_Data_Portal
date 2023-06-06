@@ -4,20 +4,24 @@
 
 stop.path <- "T:/Data/LTD Data/StopsSince2011"
 
-get_bikecounts_yr <- function(year, myrs="April 2020"){
-  if(year >= 2022){
+get_bikecounts_yr <- function(year, myrs="April 2020", MY=NULL){
+  if(year==2023){
+    data <- get_bikecounts(fileName = paste0("April-May ", year),
+                           sheetName = "bike counts",
+                           myrs=myrs, MY=MY)
+  }else if(year == 2022){
     data <- get_bikecounts(fileName = paste0("LTD Ridership April and October ", year),
                    sheetName = "bike counts",
-                   myrs=myrs)
+                   myrs=myrs, MY=MY)
   }else{
     df <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
                          sheetName = paste0("bike count_Apr", 
                                             substring(year, 3, 4)),
-                         myrs=myrs[1])
+                         myrs=myrs[1], MY=MY)
     ndf <- get_bikecounts(fileName = paste0("LTD Bike Count_", year),
                           sheetName = paste0("bike count_Oct", 
                                              substring(year, 3, 4)),
-                          myrs=myrs[2])
+                          myrs=myrs[2], MY=MY)
     data <- rbind(df, ndf)
   }
   
@@ -30,7 +34,8 @@ get_bikecounts_yr <- function(year, myrs="April 2020"){
 # require the input path (inpath)
 get_bikecounts <- function(fileName = "LTD Bike Count_2021",
                            sheetName = "bike count_Apr21",
-                           myrs="October 2019"){
+                           myrs="October 2019", 
+                           MY=NULL){
   df <- read_excel(paste0(inpath,"/", fileName, ".xlsx"), 
                    sheet = sheetName, 
                    col_types = c("text", "date", "numeric", "date", 
@@ -56,6 +61,7 @@ get_bikecounts <- function(fileName = "LTD Bike Count_2021",
   df$Season <- mapply(function(x, y) paste(seasons[months==x], y), df$M, df$Y)
   df$MonthYear <- paste(df$M, df$Y)
   if(length(myrs)==1){
+    df <- df[df$MonthYear==MY,]
     stops.df <- get.stop.coordinates(strsplit(myrs, " ")[[1]][1], 
                                      as.numeric(strsplit(myrs, " ")[[1]][2]))
     stops.df$stop <- ifelse(nchar(stops.df$stop) == 5, stops.df$stop,

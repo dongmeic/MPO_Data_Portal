@@ -35,7 +35,9 @@ get.stop.coordinates <- function(m="October", yr=2011){
 }
 
 get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
-  if(year >= 2022){
+  if(year==2023){
+    filepath = paste0(path, year, ' Ridership/', month,' ', year, '.xlsx')
+  }else if(year == 2022){
     filepath = paste0(path, year, ' Ridership/LTD Ridership ', month,' ', year, '.xlsx')
   }else{
     filepath = paste0(path, year, ' Ridership/LTD Ridership_', year, '-', m, '-', month, '.xlsx')
@@ -59,7 +61,10 @@ get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
   Counts$stop <- ifelse(nchar(Counts$stop) == 5, Counts$stop,
                         paste0(zeros[(5 - nchar(Counts$stop))], Counts$stop))
   MonthYear.stops <- unique(file_path_sans_ext(list.files(stop.path)))
-  if(year == 2022){
+  if(year == 2023){
+    stops.df <- get.stop.coordinates(m="October", yr=2022)
+    stops.df$MonthYear <- "October 2022"
+  }else if(year == 2022){
     if(month %in% c('January', 'February', 'March')){
       stops.df <- get.stop.coordinates(m="October", yr=2019)
       stops.df$MonthYear <- "October 2019"
@@ -108,12 +113,12 @@ get.PassengerCounts <- function(year=2017, month='Jan', m='01'){
   return(Counts)
 }
 
-get.YearlyCounts <- function(year=2022){
-  months = c('January', 'February', 'March', 'April', 'May', 'June', 
-             'July', 'August', 'September', 'October', 'November', 'December')
+get.YearlyCounts <- function(year=2022, months = c('January', 'February', 'March', 'April', 'May', 'June', 
+                                                   'July', 'August', 'September', 'October', 'November', 'December')){
+  
   ptm <- proc.time()
   for(month in months){
-    if(month == 'January'){
+    if(grepl("Jan", month)){
       ndf <- get.PassengerCounts(year=year, month = month, m = NULL)
     }else{
       counts <- get.PassengerCounts(year=year, month = month, m = NULL)

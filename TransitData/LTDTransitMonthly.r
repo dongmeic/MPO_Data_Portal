@@ -2,10 +2,13 @@
 #  for the LTD transit dashboard based on LTDTransit.r
 # (https://www.lcog.org/thempo/page/Transit-Ridership-Data) on July 21st, 2021
 
-source('T:/DCProjects/GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r')
+source('C:/Users/clid1852/.0GitHub/MPO_Data_Portal/TransitData/LTDTransit_Functions.r')
+
+# in 2023
+df <- read.csv("T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv")
+ndf <- get.YearlyCounts(year=2023, months = c('Jan-March', 'April-May'))
 
 # in 2022
-df <- read.csv("T:/Tableau/tableauTransit/Datasources/MonthlyPassengerCounts.csv")
 ndf <- get.YearlyCounts()
 # run to update the data
 
