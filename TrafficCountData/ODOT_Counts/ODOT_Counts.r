@@ -3,7 +3,7 @@
 # On April 9th, 2020
 
 # load functions
-source("T:/DCProjects/GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Functions.r")
+source("C:/Users/clid1852/.0GitHub/MPO_Data_Portal/TrafficCountData/ODOT_Counts/ODOT_Counts_Functions.r")
 inpath <- "T:/Data/COUNTS/ODOT_Counts and Forecasts/ATR Downloads by Month/"
 
 ############################## Length report after May 2021 ######################
@@ -15,13 +15,23 @@ old.counts <- read.csv(outfile,
 
 # this will run for some hours
 ptm <- proc.time()
-df <- read_LR_files(year=2022, keyw = "Lane County")
+df <- read_LR_files(year=2023, keyw = "Lane County Length Data")
 proc.time() - ptm
 ndf <- rbind(old.counts, df)
 
 write.csv(ndf, outfile, row.names = FALSE)
 
 ############################## Run after Oct 2020 ################################
+# update ODOT counts data after October 2022
+year <- 2023
+month_range <- "Lane County Volume Data 10-2022 to 05-2023"
+counts.df <- read_by_stations(month_range=month_range, year=year)
+df <- counts.df[!grepl("10/", counts.df$Date),]
+old.counts <- read.csv("T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableaU.csv", 
+                       stringsAsFactors = FALSE)
+ndf <- rbind(old.counts, df)
+write.csv(ndf, "T:/Tableau/tableauODOTCounts/Datasources/ODOT_ALL_HourlyForTableau.csv", 
+          row.names = FALSE)
 
 # update ODOT counts data after October 2020
 year <- 2022

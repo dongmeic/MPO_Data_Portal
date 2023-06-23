@@ -141,10 +141,10 @@ read_by_stations <- function(month_range="Oct-Dec",
   
   for(filenm in files){
     if(filenm == files[1]){
-      df = read_by_month_range(month_range=month_range,
+      df = read_by_month_range(year=year, month_range=month_range,
                                filenm=filenm)
     }else{
-      ndf = read_by_month_range(month_range=month_range,
+      ndf = read_by_month_range(year=year, month_range=month_range,
                                 filenm=filenm)
       df = rbind(df, ndf)
     }
@@ -152,10 +152,10 @@ read_by_stations <- function(month_range="Oct-Dec",
   return(df)
 }
 
-read_by_month_range <- function(month_range="Oct-Dec",
+read_by_month_range <- function(year=2020, month_range="Oct-Dec",
                                 filenm="VOLUME_20004_EB_20201001.xlsx"){
   
-  year <- as.numeric(substr(unlist(strsplit(filenm, "_"))[4], 1, 4))
+  #year <- as.numeric(substr(unlist(strsplit(filenm, "_"))[4], 1, 4))
   file <- paste0(inpath, year, "/", month_range, "/", filenm)
   sheet_names <- excel_sheets(path=file)
   for(sheetnm in sheet_names){
@@ -180,24 +180,27 @@ read_by_month <- function(month_range="Oct-Dec",
   file <- paste0(inpath, year, "/", month_range, "/", filenm)
   month <- as.numeric(unlist(strsplit(sheetnm, "_"))[1])
   year <- as.numeric(unlist(strsplit(sheetnm, "_"))[2])
-  range=paste0("A10:Y", (10+days.in.month(month=month, year=year)))
+  range=paste0("A10:AA", (10+days.in.month(month=month, year=year)))
   df <- as.data.frame(read_excel(file, 
                                  sheet=sheetnm, 
-                                 range = range))
-  df[1] <- unlist(lapply(df[1], function(x) paste0(month, "/", x, "/", year)))
-  colnames(df)[1:25] <- c("Date", seq(0, 23, by=1))
-  
-  df <- df %>% 
-    mutate(Date = as.Date(Date, format = "%m/%d/%Y")) %>% 
-    mutate(Day = substr(weekdays(Date), 1, 3)) %>%
-    melt(id.vars = c("Date", "Day")) %>% 
-    rename(Hour = variable, Count = value) %>%
-    mutate(Direction = rep(unlist(strsplit(filenm, "_"))[3],length(.$Date)), 
-           StationID = rep(unlist(strsplit(filenm, "_"))[2],length(.$Date))) %>%
-    select(StationID, Direction, Date, Day, Hour, Count) %>%
-    mutate(Hour = unlist(lapply(as.numeric(Hour), convert.hour))) %>%
-    mutate(Date = format(Date, "%m/%d%/%Y"))
-  
+                                 range = range)) %>%
+    filter(`QC Status` == "Accepted") %>%
+    select(-c("QC Status", "TOTAL"))
+  if(dim(df)[1] != 0){
+    df[1] <- unlist(lapply(df[1], function(x) paste0(month, "/", x, "/", year)))
+    colnames(df)[1:25] <- c("Date", seq(0, 23, by=1))
+    
+    df <- df %>% 
+      mutate(Date = as.Date(Date, format = "%m/%d/%Y")) %>% 
+      mutate(Day = substr(weekdays(Date), 1, 3)) %>%
+      melt(id.vars = c("Date", "Day")) %>% 
+      rename(Hour = variable, Count = value) %>%
+      mutate(Direction = rep(unlist(strsplit(filenm, "_"))[3],length(.$Date)), 
+             StationID = rep(unlist(strsplit(filenm, "_"))[2],length(.$Date))) %>%
+      select(StationID, Direction, Date, Day, Hour, Count) %>%
+      mutate(Hour = unlist(lapply(as.numeric(Hour), convert.hour))) %>%
+      mutate(Date = format(Date, "%m/%d%/%Y"))
+  }
   return(df)
 }
 
