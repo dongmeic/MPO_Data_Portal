@@ -2,6 +2,8 @@
 # By Dongmei Chen (dchen@lcog.org)
 # On June 16th, 2021
 
+library(sf)
+
 stop.path <- "T:/Data/LTD Data/StopsSince2011"
 
 get_bikecounts_yr <- function(year, myrs="April 2020", MY=NULL){
