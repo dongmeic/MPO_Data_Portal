@@ -256,7 +256,7 @@ ArcMap or ArcGIS Pro is required for reading the feature layer and web map local
 
 [2015 - 2019](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/Er0KHmKTvEFEjhmNqK51C48BORpezlfErRSnMB0VR81lzw?e=qaxBsW)
 
-[2016 - 2020](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EiEajxcDM-NDmNYOg-tWH28B4Oog60q_GiN6MoOd2eqoqQ?e=DUHRKG)(notes: the block group boundaries remain the same as the previous years in this version, however, some block group boundaries have changed significantly since 2020; the mistake was noticed only after the maps have been published, and so the boundary update is only reflected in the 2017 - 2021 version)
+[2016 - 2020](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EiEajxcDM-NDmNYOg-tWH28B4Oog60q_GiN6MoOd2eqoqQ?e=DUHRKG) (notes: the block group boundaries remain the same as the previous years in this version, however, some block group boundaries have changed significantly since 2020; the mistake was noticed only after the maps have been published, and so the boundary update is only reflected in the 2017 - 2021 version)
 
 [2017 - 2021](https://lanecouncilofgovernments-my.sharepoint.com/:f:/g/personal/dchen_lcog_org/EvjZBbfiNABIipwVKWXJguMBtUp9RR450yLlKyYb1yc9hg?e=IfZQjs)
 
