@@ -9,5 +9,4 @@ Bike counts are collected by LCOG staff using both permanent and short-duration 
 
 ## Methods
 
-
-## Functions
+The work didn't continue as CLMPO decided to use the actual observations first and consider the modeling a future approach. 

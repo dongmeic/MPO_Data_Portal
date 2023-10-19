@@ -64,6 +64,8 @@ outpath <- 'T:/Tableau/tableauBikeCounts/Datasources'
 write.csv(aggdata, paste0(outpath, "/Daily_Bike_Counts_Permanent.csv"), row.names = FALSE)
 write.csv(AveDailyCnt, paste0(outpath, "/Average_Daily_Bike_Counts_Permanent.csv"), row.names = FALSE)
 
+
+# Below is a one-time change
 # grep("SB|NB|EB|WB| Side", unique(locdata$Location), value=TRUE)
 # grep("13th", unique(locdata$Location), value=TRUE)
  
@@ -71,6 +73,7 @@ write.csv(AveDailyCnt, paste0(outpath, "/Average_Daily_Bike_Counts_Permanent.csv
 # locdata[locdata$Location %in% c("13thEastKincaidNorth", "13thEastKincaidSouth"),]
 
 # reorganize data on the "13thEastKincaid" site
+# this was discussed with Kyle Overstake after visualizing data on Tableau
 df <- data[data$Location %in% c("13thEastKincaidNorth", "13thEastKincaidSouth"),]
 cols <- list()
 cols2 <- list()
