@@ -23,7 +23,7 @@ Most of the dashboards below are connected with the LCOG data server and the com
 
 This dashboard requires updates in *LaneAgeGroupPop.xlsx* in T:\Tableau\tableauCrash\Datasources, sourced from the [Population Research Center at Portland State University](https://www.pdx.edu/population-research/population-estimate-reports). The source table is Table 9 ("Population by Age and Sex for Oregon and Its Counties" - Total Population) in the Annual Population Report Tables ([2018](https://drive.google.com/file/d/1M3ZpX3HwBPESVX0u-Q4hpI0F2yOPzmrc/view), [2019](https://drive.google.com/file/d/1Ul_4qRNTXAsZCEZbAnr4bzxO3Im6ohFd/view), [2020](https://drive.google.com/uc?export=download&id=1nv_-Uep1pP4uTuMcoYb5HqP1WKsYCAlB), [2021](https://drive.google.com/uc?export=download&id=1zUvxkZwADzWMNVnm58hGZ2_ZaQxknFQF); data is downloaded and saved in T:\MPO\DataPortal\Crash\PopData started from 2020). The age groups 15-17 and 18-19 are combined as 15-19. It is a manual table editing step. Refresh the extract after the data update.
 
-3. [**VMT Crash Rates**](https://www.lcog.org/thempo/page/VMT-Crash-Rates)(no scripts needed; refresh the extract) - CrashRatesByVMT - Parameter_DC.twb
+3. [**VMT Crash Rates**](https://www.lcog.org/thempo/page/VMT-Crash-Rates) - CrashRatesByVMT - Parameter_DC.twb
 
 This dashboard requires updates in *VMT_by_FuncClass.xlsx* in T:\Tableau\tableauCrash\Datasources, sourced from ODOT VMT report. The detailed steps are addressed in T:\Data\VMT\VMT HPMS\update_notes.txt. The results are calculated in a spreadsheet ("T:\Data\VMT\VMT HPMS\CalculateVMT.xlsx") using daily vehicle miles, the number of days in a year, and unit conversion. Urban collectors include major and minor collectors. Refresh the extract after the data update.
 
@@ -31,7 +31,7 @@ This dashboard requires updates in *VMT_by_FuncClass.xlsx* in T:\Tableau\tableau
 
 This dashboard requires updates in *Severity_Tableau_UGB.csv* and *Trend_Tableau_UGB.csv*, by running the script *SafetyEmphasisAreas.r*. [Export data](https://github.com/dongmeic/MPO_Data_Portal/blob/master/CrashData/read_crash_data.ipynb) from `T:/Data/Safety/Lane_County_Crashes/Lane_County_Crashes__Spatialized_Decode.gdb` as CSV to save time and avoid errors in reading data from geodatabase. Errors can occur when data is compressed in geodatabase.  
 
-5. [**NHTSA Core Safety Measures**](https://www.lcog.org/thempo/page/NHTSA-Core-Safety-Measures) - CoreSafetyMeasures_Parameter_DC.twb
+5. [**NHTSA Core Safety Measures**](https://www.lcog.org/thempo/page/NHTSA-Core-Safety-Measures)(no scripts needed; refresh the extract) - CoreSafetyMeasures_Parameter_DC.twb
 
 6. [**FARS Data**](https://www.lcog.org/thempo/page/fars-data) - US_FARS_VMT Fatality Rate OneMap_DC.twb
 
