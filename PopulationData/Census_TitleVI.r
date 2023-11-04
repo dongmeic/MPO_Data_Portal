@@ -10,14 +10,15 @@ library(rjson)
 library(tidycensus)
 library(sf)
 
-source('C:/Users/clid1852/.0GitHub/MPO_Data_Portal/PopulationData/Census_TitleVI_functions.r')
+source('G:/ADMIN/GIS Program Management/TransitionPlanning/TransitionPlanning_DChen/GitHub/MPO_Data_Portal/PopulationData/Census_TitleVI_functions.r')
 
 ############################## Download data ##############################
 
 # update year information here
 year <- 2021
 
-unzip_data(year=year)
+# unzip the downloaded zip files using below function or manually unzip the files
+unzip_data(year=year) 
 
 # In 2020, move the 1-year table B18101 from the 5-year folder to 
 # the 1-year folder, since only 1Y data available
@@ -134,20 +135,20 @@ bg.shp <- adjust_TitleVI_data()[[3]]
 #   for(cut in cuts){
 #     df$diff <- df$cumsum - cut
 #     cat(paste0('The ', notes[which(cuts==cut)], ' cut for ', var, ' is ', 
-#                df[abs(df$diff) == min(abs(df$diff)),var], '\n'))
+#                df[abs(df$diff) == min(abs(df$diff)),var], '/n'))
 #     if(which(cuts==cut)==1){
 #       pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
-#       cat(paste0('The total population for this cut is ', pop,'\n'))
+#       cat(paste0('The total population for this cut is ', pop,'/n'))
 #       last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
 #       v <- c(v, pop)
 #     }else{
 #       pop <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))] - last.cum
-#       cat(paste0('The total population for this cut is ', pop,'\n'))
+#       cat(paste0('The total population for this cut is ', pop,'/n'))
 #       last.cum <- df$cumsum[which(abs(df$diff) == min(abs(df$diff)))]
 #       v <- c(v, pop)
 #     }
 #   }
-#   cat(paste("The average population size is", mean(v), "\n"))
-#   cat("\n")
+#   cat(paste("The average population size is", mean(v), "/n"))
+#   cat("/n")
 # }
 # sink()

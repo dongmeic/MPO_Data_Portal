@@ -6,8 +6,8 @@ The [Population Data](https://www.lcog.org/thempo/page/population-data) dashboar
 
 ## Steps for Title VI updates
 
-1. Download data from Census.gov manually or via url (to save raw data for RLID if data is available [here](https://www2.census.gov/)) or via Census API (if raw data is needed);
-2. Run the script [Census_TitleVI.r](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI.r) saved on *T:\DCProjects\GitHub\MPO_Data_Portal\PopulationData* with updated year information;
+1. Download data from Census.gov manually or via url (if data is available [here](https://www2.census.gov/)) or via Census API, if raw data is needed;
+2. Run the script [Census_TitleVI.r](https://github.com/dongmeic/MPO_Data_Portal/blob/master/PopulationData/Census_TitleVI.r) saved on *G:\ADMIN\GIS Program Management\TransitionPlanning\TransitionPlanning_DChen\GitHub\MPO_Data_Portal\PopulationData* with updated year information;
 3. Update the dashboards from *T:\Tableau\tableauTitleVI\Workbooks\Central Lane MPO Title VI_DC.twb*: 1) refresh all extracts, 2) update all year info; 3) update the MPO average indicator lines and the numbers are from the running output in Line 368 or "mpoavg[1:4]"; 4) save to Tableau Public;
 4. Update the static maps.
 

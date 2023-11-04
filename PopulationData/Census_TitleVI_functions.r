@@ -4,6 +4,7 @@ outpath <- "T:/Tableau/tableauTitleVI/Datasources"
 # functions
 
 unzip_data <- function(subfolder='', year=2021, mode='both'){
+  # mode: both - both 1yr and 5yr data; 5yr - only 5yr data; 1yr - only 1yr data
   
   mainDir <- "T:/Data/CENSUS"
   
@@ -166,7 +167,7 @@ get_geoavg_data <- function(year=2021, geo="MPO"){
                zero_cars.tot)
   
   outdata <- data.frame(Year=years, Factor=factor, Universe=universe, 
-                        FactorTotal=factortotal, MPOTotal=mpototal)
+                        FactorTotal=factortotal, MPOTotal=geototal)
   outdata$MPOavg = outdata$FactorTotal / outdata$MPOTotal
   
   return(outdata)
