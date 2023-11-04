@@ -12,6 +12,6 @@ The dashboard [bicycle counts](https://www.lcog.org/thempo/page/bicycle-counts) 
 
 ### Steps to update the dashboard
 
-1. To update the second viz "AADBT", run the script [daily_bike_counts.R](https://github.com/dongmeic/MPO_Data_Portal/blob/master/TrafficCountData/BikeCounts/daily_bike_counts.R) to get the tables *Average_Daily_Bike_Counts_Permanent.csv* and *Daily_Bike_Counts_Permanent.csv*. Skip this step if only to update the first viz "Bicycle Counts". 
+1. To update the second viz "AADBT", run the script [daily_bike_counts.R](https://github.com/dongmeic/MPO_Data_Portal/blob/master/TrafficCountData/BikeCounts/daily_bike_counts.R) to get the tables *Average_Daily_Bike_Counts_Permanent.csv* and *Daily_Bike_Counts_Permanent.csv*. No edits required on the script if the data format is not changed in the input data. Skip this step if only to update the first viz "Bicycle Counts". 
 
 2. Refresh the extracts once the source data is ready. 

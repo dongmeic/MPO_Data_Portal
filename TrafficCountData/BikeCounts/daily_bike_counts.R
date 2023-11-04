@@ -121,37 +121,37 @@ df <- rbind(df, sdf[,colnames(df)])
 out <- rbind(data[!(data$Location %in% c("13thEastKincaidNorth", "13thEastKincaidSouth")),], df)
 write.csv(out, paste0(outpath, 'Bicycle_HourlyForTableau.csv'), row.names = FALSE)
 
-# reorganize the counter info
-nlocdt <- data.frame(LocationId=integer(),
-                     CountType=character(),
-                     Direction=character(),
-                     FacilityType=character(),
-                     ArrowAngle=integer(),
-                     RoadWidth=integer(),
-                     IsAutomatic=logical(),
-                     Location=character(),
-                     HasData=logical(),
-                     City=character(),
-                     DoubleCountLocation=logical(),
-                     IsOneway=logical(),
-                     OnewayDirection=character(),
-                     IsSidewalk=logical(),
-                     Latitude=numeric(),
-                     Longitude=numeric(),
-                     ImageFilePath=character(),
-                     Site_Name=character(),
-                     Location_Description=character(),
-                     TAZ=integer(),
-                     Visual=logical())
-
-nlocdt[1,] = list(219, "Manual", "EW", "Path", 0, 34, FALSE, "13thEastKincaid", 
-                  TRUE, "Eugene", FALSE, FALSE, "<Null>", FALSE, 44.04551, 
-                  -123.0785, "13thEastKincaidNorth.jpg, 13thEastKincaidNorth.jpg", 
-                  "13th Ave East of Kincaid St", 
-                  "13th Ave, 60ft east of Kincaid St, Eugene", 398, TRUE)
-
-locdata <- rbind(locdata, nlocdt)
-write.csv(locdata, paste0(outpath, 'CountLocationInformation.csv'), row.names = FALSE)
+# # reorganize the counter info, review before running if needed
+# nlocdt <- data.frame(LocationId=integer(),
+#                      CountType=character(),
+#                      Direction=character(),
+#                      FacilityType=character(),
+#                      ArrowAngle=integer(),
+#                      RoadWidth=integer(),
+#                      IsAutomatic=logical(),
+#                      Location=character(),
+#                      HasData=logical(),
+#                      City=character(),
+#                      DoubleCountLocation=logical(),
+#                      IsOneway=logical(),
+#                      OnewayDirection=character(),
+#                      IsSidewalk=logical(),
+#                      Latitude=numeric(),
+#                      Longitude=numeric(),
+#                      ImageFilePath=character(),
+#                      Site_Name=character(),
+#                      Location_Description=character(),
+#                      TAZ=integer(),
+#                      Visual=logical())
+# 
+# nlocdt[1,] = list(219, "Manual", "EW", "Path", 0, 34, FALSE, "13thEastKincaid", 
+#                   TRUE, "Eugene", FALSE, FALSE, "<Null>", FALSE, 44.04551, 
+#                   -123.0785, "13thEastKincaidNorth.jpg, 13thEastKincaidNorth.jpg", 
+#                   "13th Ave East of Kincaid St", 
+#                   "13th Ave, 60ft east of Kincaid St, Eugene", 398, TRUE)
+# 
+# locdata <- rbind(locdata, nlocdt)
+# write.csv(locdata, paste0(outpath, 'CountLocationInformation.csv'), row.names = FALSE)
 
 
 # for(col in colnames(locdata)){
